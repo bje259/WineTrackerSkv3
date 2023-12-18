@@ -17,7 +17,8 @@ export const load = async ({ params }) => {
 	if (Id && !bottle) throw error(404, 'Bottle not found.');
 
 	const form = await superValidate(bottle, crudSchema);
-	return { form, bottles };
+	const debug = true;
+	return { form, bottles, debug };
 };
 
 export const actions = {
