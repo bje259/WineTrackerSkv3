@@ -1,0 +1,111 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "vscode-edge-devtools.debug",
+			"request": "launch",
+			"name": "Launch Microsoft Edge and open the Edge DevTools",
+			"url": "http://localhost:5173",
+			"webRoot": "${workspaceFolder}"
+		},
+		{
+			"name": "Attach to Edge",
+			"port": 5173,
+			"request": "attach",
+			"type": "msedge",
+			"webRoot": "${workspaceFolder}"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Debug Current Test File",
+			"autoAttachChildProcesses": true,
+			"skipFiles": ["<node_internals>/**", "**/node_modules/**"],
+			"program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
+			"args": ["run", "${relativeFile}"],
+			"smartStep": true,
+			"console": "integratedTerminal"
+		},
+		{
+			"name": "Attach to Chrome",
+			"port": 5173,
+			"request": "attach",
+			"type": "chrome",
+			"webRoot": "${workspaceFolder}"
+		},
+		{
+			"type": "chrome",
+			"request": "launch",
+			"name": "Launch Chrome against localhost",
+			"url": "localhost:5173",
+			"urlFilter": "localhost:5173",
+			"webRoot": "${workspaceFolder}",
+			"runtimeExecutable": "C:\\Users\\Bradl\\OneDrive\\Documents\\GitHub\\DevChrome\\Chrome Beta\\Application\\chrome.exe",
+			"runtimeArgs": [
+				"--load-extension=C:\\Users\\Bradl\\OneDrive\\Documents\\GitHub\\WineTrackerSK\\wineTrackerSK\\.vscode\\chrome\\Default\\Extensions\\kfidecgcdjjfpeckbblhmfkhmlgecoff\\2.0.1_0",
+				"--load-extension=C:\\Users\\Bradl\\OneDrive\\Documents\\GitHub\\WineTrackerSK\\wineTrackerSK\\.vscode\\chrome\\Default\\Extensions\\bgelkjgjabbfoeiicgoddeadicoofcfk\\1.1.0_0",
+				"--load-extension=C:\\Users\\Bradl\\OneDrive\\Documents\\GitHub\\WineTrackerSK\\wineTrackerSK\\.vscode\\chrome\\Default\\Extensions\\extension"
+			]
+		},
+
+		{
+			"type": "chrome",
+			"request": "launch",
+			"name": "Launch Chrome against localhost2",
+			"url": "localhost:5173",
+			"urlFilter": "localhost:5173",
+			"webRoot": "${workspaceFolder}",
+			"userDataDir": "${workspaceFolder}/.vscode/chrome",
+			"runtimeArgs": [
+				"--load-extension=${workspaceFolder}/.vscode/chrome/Default/Extensions/kfidecgcdjjfpeckbblhmfkhmlgecoff/2.0.1_0",
+				"--load-extension=${workspaceFolder}/.vscode/chrome/Default/Extensions/bgelkjgjabbfoeiicgoddeadicoofcfk/1.1.0_0",
+				"--load-extension=${workspaceFolder}/.vscode/chrome/Default/Extensions/extension"
+			]
+		},
+		{
+			"type": "msedge",
+			"name": "Launch Microsoft Edge",
+			"request": "launch",
+			"runtimeArgs": ["--remote-debugging-port=9222"],
+			"url": "http://localhost:5173",
+			"presentation": {
+				"hidden": true
+			}
+		},
+		{
+			"type": "pwa-msedge",
+			"name": "Launch Microsoft Edge in headless mode",
+			"request": "launch",
+			"runtimeArgs": ["--headless", "--remote-debugging-port=9222"],
+			"url": "http:/localhost:5173",
+			"presentation": {
+				"hidden": true
+			}
+		},
+		{
+			"type": "vscode-edge-devtools.debug",
+			"name": "Open Edge DevTools",
+			"request": "attach",
+			"url": "localhost:5173",
+			"presentation": {
+				"hidden": true
+			}
+		},
+		{
+			"type": "node-terminal",
+			"name": "JavaScript Debug Terminal",
+			"request": "launch",
+			"cwd": "${workspaceFolder}"
+		}
+	],
+	"compounds": [
+		{
+			"name": "Launch Edge Headless and attach DevTools",
+			"configurations": ["Launch Microsoft Edge in headless mode", "Open Edge DevTools"]
+		},
+		{
+			"name": "Launch Edge and attach DevTools",
+			"configurations": ["Launch Microsoft Edge", "Open Edge DevTools"]
+		}
+	]
+}
