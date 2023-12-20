@@ -28,6 +28,7 @@
 			<ul>
 				<li><a href="/">Home</a></li>
 				<li><a href="/bottles">Bottle Management</a></li>
+				<li><a href="/sandbox">Sandbox</a></li>
 			</ul>
 		</nav>
 		<!-- --- -->

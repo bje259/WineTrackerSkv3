@@ -2,7 +2,7 @@
 module.exports = {
 	root: true,
 	extends: [
-		'eslint:recommended',
+		//'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
 		'plugin:svelte/recommended',
 		'prettier'
@@ -13,6 +13,13 @@ module.exports = {
 		sourceType: 'module',
 		ecmaVersion: 2020,
 		extraFileExtensions: ['.svelte']
+	},
+	settings: {
+		svelte: {
+			ignorWarnings: [
+				"@typescript-eslint/no-unused-vars"
+			]
+		}
 	},
 	env: {
 		browser: true,
