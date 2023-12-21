@@ -1,3 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { loginUserDto, registerUserDto, UserDB, userDB } from "$lib/Schemas";
+
+export type UserDB = UserDB;
+export type User = UserDB;
+
 /**
  * The Wine interface represents a wine.
  * @property {string} "Wine Name" - The name of the wine.
@@ -11,38 +17,16 @@
  * The Wine interface is used by the WineCellar class.
  * @see WineCellar
  * @example
- * const myWine: Wine = {
- * 	"Wine Name": "Margaux 2015",
- * 	"Vineyard Location": "Bordeaux, France",
- * 	Variety: "Cabernet Sauvignon",
- * 	Vintage: 2015,
- * 	Bin: "A1",
- * 	Qty: 10,
- * 	Purchased: "2020-01-01",
- * 	Notes: "Excellent vintage"
- * };
- * console.log(myWine);
- * // Output:
- * // {
- * // 	"Wine Name": "Margaux 2015",
- * // 	"Vineyard Location": "Bordeaux, France",
- * // 	Variety: "Cabernet Sauvignon",
- * // 	Vintage: 2015,
- * // 	Bin: "A1",
- * // 	Qty: 10,
- * // 	Purchased: "2020-01-01",
- * // 	Notes: "Excellent vintage"
- * // }
  */
 export interface Wine {
-	'Wine Name': string;
-	'Vineyard Location'?: string;
-	Variety?: string;
-	Vintage: number;
-	Bin?: string;
-	Qty: number;
-	Purchased?: string;
-	Notes?: string;
+  "Wine Name": string;
+  "Vineyard Location"?: string;
+  Variety?: string;
+  Vintage: number;
+  Bin?: string;
+  Qty: number;
+  Purchased?: string;
+  Notes?: string;
 }
 /**
  * Cellar interface represents a wine cellar.
@@ -63,7 +47,7 @@ export interface Wine {
  * @see WineCellar
  */
 export interface Cellar {
-	[Producer: string]: Wine[];
+  [Producer: string]: Wine[];
 }
 
 export type CellarFlat = WineFlat[];
@@ -84,12 +68,12 @@ export type CellarFlat = WineFlat[];
  * @see WineCellarFlatt
  */
 export interface WineFlat {
-	Producer: string;
-	'Wine Name': string;
-	'Vineyard Location'?: string;
-	Variety?: string;
-	Inventory: InvItem[];
-	Notes?: string;
+  Producer: string;
+  "Wine Name": string;
+  "Vineyard Location"?: string;
+  Variety?: string;
+  Inventory: InvItem[];
+  Notes?: string;
 }
 
 /**
@@ -102,10 +86,10 @@ export interface WineFlat {
  * @see WineFlat
  */
 export interface InvItem {
-	Vintage: number;
-	Bin: string;
-	Purchased?: string;
-	Qty: number;
+  Vintage: number;
+  Bin: string;
+  Purchased?: string;
+  Qty: number;
 }
 
 /**
@@ -116,8 +100,8 @@ export interface InvItem {
  * @see SearchParams
  */
 export interface SearchParam {
-	isActive: boolean;
-	value: string | number;
+  isActive: boolean;
+  value: string | number;
 }
 
 /**
@@ -136,30 +120,30 @@ export interface SearchParam {
  * @see WineCellar
  */
 export interface SearchParams {
-	Producer?: SearchParam;
-	'Wine Name'?: SearchParam;
-	'Vineyard Location'?: SearchParam;
-	Variety?: SearchParam;
-	Notes?: SearchParam;
-	Vintage?: SearchParam;
-	Bin?: SearchParam;
-	Purchased?: SearchParam;
-	Qty?: SearchParam;
-	SearchTerm?: SearchParam;
+  Producer?: SearchParam;
+  "Wine Name"?: SearchParam;
+  "Vineyard Location"?: SearchParam;
+  Variety?: SearchParam;
+  Notes?: SearchParam;
+  Vintage?: SearchParam;
+  Bin?: SearchParam;
+  Purchased?: SearchParam;
+  Qty?: SearchParam;
+  SearchTerm?: SearchParam;
 }
 
 export interface Bottle {
-	Id: number;
-	Producer: string;
-	Name: string;
-	Varietal: string;
-	Vintage: number;
-	VineyardLoc: string;
-	VineyardName: string;
-	Bin: string;
-	Purchased: string;
-	Consumed?: string;
-	Notes: string;
+  Id: number;
+  Producer: string;
+  Name: string;
+  Varietal: string;
+  Vintage: number;
+  VineyardLoc: string;
+  VineyardName: string;
+  Bin: string;
+  Purchased: string;
+  Consumed?: string;
+  Notes: string;
 }
 
 /**
@@ -175,28 +159,34 @@ export interface Bottle {
  * @see Bottles
  */
 export interface TBottle {
-	Id: number;
-	Producer: string;
-	Name: string;
-	Vintage: number;
-	Purchased: string;
-	Consumed: string;
+  Id: number;
+  Producer: string;
+  Name: string;
+  Vintage: number;
+  Purchased: string;
+  Consumed: string;
 }
 
 export type TBottles = TBottle[];
 
 export type Bottles = Bottle[];
 
-
 export interface ShowBottleFields {
-	Producer: boolean;
-	Name: boolean;
-	Varietal: boolean;
-	Vintage: boolean;
-	VineyardLoc: boolean;
-	VineyardName: boolean;
-	Bin: boolean;
-	Purchased: boolean;
-	Consumed: boolean;
-	Notes: boolean;
+  Producer: boolean;
+  Name: boolean;
+  Varietal: boolean;
+  Vintage: boolean;
+  VineyardLoc: boolean;
+  VineyardName: boolean;
+  Bin: boolean;
+  Purchased: boolean;
+  Consumed: boolean;
+  Notes: boolean;
+}
+
+interface LoginActionData {
+  data?: LoginUserDto;
+  errors?: z.inferFlattenedErrors<typeof registerUserDto>["fieldErrors"];
+  notVerified?: boolean;
+  invalidCredentials?: boolean;
 }
