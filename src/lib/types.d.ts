@@ -1,8 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { loginUserDto, registerUserDto, UserDB, userDB } from "$lib/Schemas";
+import {
+  loginUserDto,
+  registerUserDto,
+  UserDB,
+  userDB,
+  BottleDB,
+  BottlesDB,
+} from "$lib/Schemas";
 
 export type UserDB = UserDB;
 export type User = UserDB;
+export type BottleDB = BottleDB;
+export type BottlesDB = BottlesDB;
 
 /**
  * The Wine interface represents a wine.
@@ -133,7 +142,7 @@ export interface SearchParams {
 }
 
 export interface Bottle {
-  Id: number;
+  id: number;
   Producer: string;
   Name: string;
   Varietal: string;
@@ -149,7 +158,7 @@ export interface Bottle {
 /**
  * @description Test Bottle interface
  * @interface TBottle
- * @property {number} Id - The id of the bottle.
+ * @property {number} id - The id of the bottle.
  * @property {string} Producer - The name of the producer.
  * @property {string} Name - The name of the wine.
  * @property {number} Vintage - The vintage of the wine.
@@ -159,7 +168,7 @@ export interface Bottle {
  * @see Bottles
  */
 export interface TBottle {
-  Id: number;
+  id: number;
   Producer: string;
   Name: string;
   Vintage: number;

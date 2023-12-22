@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-  import { bottleSchema } from "$lib/BottlesDB";
+  import { bottleSchema } from "$lib/Schemas";
   import { z } from "zod";
 
   const languages = [
@@ -17,7 +17,7 @@
   type Language = (typeof languages)[number]["value"];
 
   export const crudSchema = bottleSchema.extend({
-    Id: bottleSchema.shape.Id.optional(),
+    Id: bottleSchema.shape.id.optional(),
   });
 
   export const formSchema = z.object({

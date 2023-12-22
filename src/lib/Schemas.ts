@@ -4,7 +4,7 @@ import { z } from "zod";
 
 // See https://zod.dev/?id=primitives for schema syntax
 export const bottleSchema = z.object({
-  Id: z.string().regex(/^\d+$/),
+  id: z.string(),
   Name: z
     .string()
     .min(1, { message: "Name cannot be empty" })
@@ -13,20 +13,26 @@ export const bottleSchema = z.object({
     .string()
     .min(1, { message: "Producer cannot be empty" })
     .max(30, { message: "Producer cannot be longer than 30 characters" }),
-  Vintage: z.coerce
-    .number()
-    .min(1900, { message: "Vintage must be after 1900" })
-    .max(getYear(new Date()), {
-      message: "Vintage must be before the current year",
-    }),
+  Vintage: z.coerce.number().min(1, { message: "Vintage is required" }),
   Purchased: z
     .string()
-    .refine((v) => v)
+    .transform((v) => {
+      if (v === "") return undefined;
+      return v;
+    })
     .optional(),
   Consumed: z
     .string()
-    .refine((v) => v)
+    .transform((v) => {
+      if (v === "") return undefined;
+      return v;
+    })
     .optional(),
+});
+
+export const crudSchema = bottleSchema.extend({
+  id: bottleSchema.shape.id.optional(),
+  UserId: z.string().optional(),
 });
 
 type BottleDB = z.infer<typeof bottleSchema>[];
@@ -69,8 +75,9 @@ export const registerUserDto = z
   });
 
 export const loginUserDto = z.object({
-  usernameOrEmail: z
-    .string({ required_error: "Email or Username is required" }),
+  usernameOrEmail: z.string({
+    required_error: "Email or Username is required",
+  }),
   password: z.string({ required_error: "Password is required" }),
 });
 
@@ -97,7 +104,7 @@ export const userSchema = z.object({
 });
 
 const userAdds = userSchema.extend({
-  Id: z.number().optional(),
+  id: z.string().optional(),
   verified: z.boolean().optional(),
   created: z.date().optional(),
   updated: z.date().optional(),

@@ -12,6 +12,6 @@ export const load: LayoutServerLoad = ({ locals }) => {
 
   console.log("Layout clearing user");
   return {
-    user: undefined,
+    user: { username: "", email: "" }, //  Replace with the appropriate values
   };
 };

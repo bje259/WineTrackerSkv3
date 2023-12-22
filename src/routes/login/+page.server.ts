@@ -3,7 +3,6 @@ import { error, fail, redirect } from "@sveltejs/kit";
 import { message, superValidate } from "sveltekit-superforms/server";
 import type { PageServerLoad, Actions } from "./$types";
 import { loginUserDto } from "$lib/Schemas";
-import type { LoginActionData } from "$lib/types";
 import { ClientResponseError } from "pocketbase";
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -12,8 +11,7 @@ export const load: PageServerLoad = async ({ locals }) => {
     throw redirect(303, "/");
   }
   const form = await superValidate(loginUserDto);
-  const debug = true;
-  return { form, debug };
+  return { form };
 };
 
 export const actions: Actions = {
@@ -55,7 +53,7 @@ export const actions: Actions = {
         invalidCredentials: true,
       };
     }
-    //throw redirect(303, "/");
+    throw redirect(303, "/");
 
     return message(formData, "Logged in!");
   },

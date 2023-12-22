@@ -3,8 +3,8 @@ import { getYear } from "date-fns";
 import { z } from "zod";
 
 // See https://zod.dev/?id=primitives for schema syntax
-export const bottleSchema = z.object({
-  Id: z.string().regex(/^\d+$/),
+const bottleSchema = z.object({
+  id: z.string().regex(/^\d+$/),
   Name: z
     .string()
     .min(1, { message: "Name cannot be empty" })
@@ -13,12 +13,7 @@ export const bottleSchema = z.object({
     .string()
     .min(1, { message: "Producer cannot be empty" })
     .max(30, { message: "Producer cannot be longer than 30 characters" }),
-  Vintage: z.coerce
-    .number()
-    .min(1900, { message: "Vintage must be after 1900" })
-    .max(getYear(new Date()), {
-      message: "Vintage must be before the current year",
-    }),
+  Vintage: z.coerce.number().min(1, { message: "Vintage is required" }),
   Purchased: z
     .string()
     .refine((v) => v)
@@ -43,7 +38,7 @@ export const bottleId = () => String(Math.random()).slice(2);
 
 export const bottles: BottleDB = [
   {
-    Id: "1",
+    id: "1",
     Name: "Barbera1",
     Vintage: 2019,
     Producer: "Becker Vineyards",
@@ -51,16 +46,16 @@ export const bottles: BottleDB = [
     Consumed: "2022-06-13",
   },
   {
-    Id: "2",
+    id: "2",
     Name: "Barbera2",
     Vintage: 2019,
     Producer: "Becker Vineyards",
     Purchased: "2021-03-03",
   },
   {
-    Id: bottleId(),
+    id: bottleId(),
     Name: "Barbera23421",
-    Vintage: 2019,
+    Vintage: 2016,
     Producer: "Becker Vineyards",
     Purchased: "2021-03-04",
     Consumed: "2023-05-11",

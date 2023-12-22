@@ -1,9 +1,9 @@
 <script lang="ts">
-import FormSkeleInput from './FormSkeleInput.svelte';
+  import FormSkeleInput from "./FormSkeleInput.svelte";
   import { page } from "$app/stores";
   import * as Form from "$components/ui/form/";
   import * as Popover from "$components/ui/popover";
-  import { bottleSchema } from "$lib/BottlesDB";
+  import { bottleSchema } from "$lib/Schemas";
   import { Button } from "$lib/components/ui/button";
   import { buttonVariants } from "$lib/components/ui/button/";
   import { Calendar } from "$lib/components/ui/calendar/";
@@ -20,12 +20,13 @@ import FormSkeleInput from './FormSkeleInput.svelte';
   import { tick } from "svelte";
   import { writable, type Writable } from "svelte/store";
   import type { SuperValidated } from "sveltekit-superforms";
-  import { superForm } from "sveltekit-superforms/client";
+  import { superForm, actionResult } from "sveltekit-superforms/client";
   import SuperDebug from "sveltekit-superforms/client/SuperDebug.svelte";
+  import { getContext } from "svelte";
+  import { crudSchema } from "./Schemas";
+  import type { User } from "$lib/types";
+  import * as Card from "$lib/components/ui/card";
 
-  const crudSchema = bottleSchema.extend({
-    Id: bottleSchema.shape.Id.optional(),
-  });
   type CrudSchema = typeof crudSchema;
   // Formatter for "MM/DD/YYYY"
   const df = new Intl.DateTimeFormat("en-US", {
@@ -36,7 +37,8 @@ import FormSkeleInput from './FormSkeleInput.svelte';
 
   export let data: SuperValidated<CrudSchema>;
   // 	export let formData: SuperForm<CrudSchema>;
-  export let bottles: Zod.infer<typeof bottleSchema>[];
+  export let bottles: Zod.infer<typeof crudSchema>[];
+  export let currentUser: Writable<User>;
 
   const formData = superForm(data, {
     validators: crudSchema,
@@ -44,8 +46,13 @@ import FormSkeleInput from './FormSkeleInput.svelte';
     onUpdated({ form }) {
       resetFormHelper(form);
     },
+    // onError({ result }) {
+    //   $message = result.error.message;
+    //   console.log("error", result.error.message);
+    // },
   });
 
+  const debug: Writable<boolean> = getContext("debug");
   function resetFormHelper(form: Readonly<SuperValidated<CrudSchema>>) {
     if (form.valid) {
       placeholder = today(getLocalTimeZone());
@@ -53,7 +60,7 @@ import FormSkeleInput from './FormSkeleInput.svelte';
     }
   }
 
-  const { form: theForm, delayed, message } = formData;
+  const { form: theForm, delayed, message, errors, allErrors } = formData;
   let open = false;
   let placeholder: CalendarDate = today(getLocalTimeZone());
   let placeholder2: CalendarDate = today(getLocalTimeZone());
@@ -61,8 +68,8 @@ import FormSkeleInput from './FormSkeleInput.svelte';
   $: value1 = $theForm?.Purchased ? parseDate($theForm.Purchased) : undefined;
   $: value2 = $theForm?.Consumed ? parseDate($theForm.Consumed) : undefined;
   $: value3 = $theForm?.Vintage ? $theForm.Vintage : undefined;
-
-  const yearOptions = Array.from({ length: 10 }, (_, i) => ({
+  // $: console.log($allErrors);
+  const yearOptions = Array.from({ length: 40 }, (_, i) => ({
     label: String(new Date().getFullYear() - i),
     value: new Date().getFullYear() - i,
   }));
@@ -151,7 +158,7 @@ import FormSkeleInput from './FormSkeleInput.svelte';
   const defFilter = defaultFilter;
   const state = createState();
 
-  $: console.log($state);
+  //$: console.log($state);
 </script>
 
 <!-- Start Form Header-->
@@ -165,130 +172,143 @@ import FormSkeleInput from './FormSkeleInput.svelte';
     <div class="grid grid-cols-2 w-full gap-7">
       <div class="bottles">
         {#each bottles as bottle}
-          <a href="/bottles/{bottle.Id}">{bottle.Name}</a>
+          <a class="" href="/bottles/{bottle.id}">{bottle.Name}</a>
         {/each}
-        {#if $theForm.Id}
+        {#if $theForm.id}
           <form action="/bottles">
             <button>Create new</button>
           </form>
         {/if}
       </div>
       <div class="flex text-start">
-        {#if $page.data.debug}<SuperDebug data={$theForm} collapsible />{/if}
+        {#if $debug}<SuperDebug
+            data={{ form: $theForm, $errors, $message }}
+            collapsible
+          />{/if}
       </div>
     </div>
-    <h2>{!$theForm.Id ? "Create" : "Update"} user</h2>
 
-    <!-- End Header, Start Form-->
+    <Card.Root>
+      <Card.Header>
+        <Card.Title
+          ><h2>{!$theForm.id ? "Create" : "Update"} bottle</h2></Card.Title
+        >
+        <!-- <Card.Description>Card Description</Card.Description> -->
 
-    <div class="flex items-center justify-between">
-      <Form.Root
-        form={formData}
-        controlled={true}
-        schema={crudSchema}
-        class="space-y-2"
-        let:config
-        debug={true}
-        let:enhance
-        asChild
-      >
-        <form method="POST" use:enhance>
-          <input type="hidden" name="Id" bind:value={$theForm.Id} />
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <Form.Item>
-                <Form.Field {config} name="Name">
-                  <div class="flex">
-                    <Form.Label class="p-0.5">Wine Name</Form.Label>
-                    <Form.Validation class="ml-8" />
-                  </div>
-                  <Form.Input />
-                  <Form.Description
-                    >The name of this wine bottle.</Form.Description
-                  >
-                </Form.Field>
-              </Form.Item>
-              <Form.Item>
-                <Form.Field {config} name="Producer">
-                  <div class="flex">
-                    <Form.Label class="p-0.5">Producer</Form.Label>
-                    <Form.Validation class="ml-8" />
-                  </div>
-                  <Form.Input />
+        <!-- End Header, Start Form-->
+      </Card.Header>
+      <div class="flex items-center justify-between">
+        <Form.Root
+          form={formData}
+          controlled={true}
+          schema={crudSchema}
+          class="space-y-2"
+          let:config
+          debug={true}
+          let:enhance
+          asChild
+        >
+          <form method="POST" use:enhance>
+            <Card.Content>
+              <input type="hidden" name="id" bind:value={$theForm.id} />
+              <input type="hidden" name="UserId" bind:value={$currentUser.id} />
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <Form.Item>
+                    <Form.Field {config} name="Name">
+                      <div class="flex">
+                        <Form.Label class="p-0.5">Wine Name</Form.Label>
+                        <Form.Validation class="ml-8" />
+                      </div>
+                      <Form.Input />
+                      <Form.Description
+                        >The name of this wine bottle.</Form.Description
+                      >
+                    </Form.Field>
+                  </Form.Item>
+                  <Form.Item>
+                    <Form.Field {config} name="Producer">
+                      <div class="flex">
+                        <Form.Label class="p-0.5">Producer</Form.Label>
+                        <Form.Validation class="ml-8" />
+                      </div>
+                      <Form.Input />
 
-                  <Form.Description
-                    >The producer of this wine bottle.</Form.Description
-                  >
-                </Form.Field>
-              </Form.Item>
-              <Form.Field {config} name="Vintage" let:setValue let:value>
-                <Form.Item class="flex flex-col">
-                  <Form.Label>Vintage</Form.Label>
-                  <Popover.Root bind:open let:ids>
-                    <Popover.Trigger asChild let:builder>
-                      <Form.Control id={ids.trigger} let:attrs>
-                        <Button
-                          builders={[builder]}
-                          {...attrs}
-                          variant="outline"
-                          role="combobox"
-                          type="button"
-                          class={cn(
-                            "w-[200px] justify-between",
-                            !value3 && "text-muted-foreground"
-                          )}
-                        >
-                          {value3 ?? placeholder3}
-                          <ChevronsUpDown
-                            class="ml-2 h-4 w-4 shrink-0 opacity-50"
-                          />
-                        </Button>
-                      </Form.Control>
-                    </Popover.Trigger>
+                      <Form.Description
+                        >The producer of this wine bottle.</Form.Description
+                      >
+                    </Form.Field>
+                  </Form.Item>
+                  <Form.Field {config} name="Vintage" let:setValue let:value>
+                    <Form.Item class="flex flex-col">
+                      <Form.Label>Vintage</Form.Label>
+                      <Popover.Root bind:open let:ids>
+                        <Popover.Trigger asChild let:builder>
+                          <Form.Control id={ids.trigger} let:attrs>
+                            <Button
+                              builders={[builder]}
+                              {...attrs}
+                              variant="outline"
+                              role="combobox"
+                              type="button"
+                              class={cn(
+                                "w-[200px] justify-between",
+                                !value3 && "text-muted-foreground"
+                              )}
+                            >
+                              {value3 ?? placeholder3}
+                              <ChevronsUpDown
+                                class="ml-2 h-4 w-4 shrink-0 opacity-50"
+                              />
+                            </Button>
+                          </Form.Control>
+                        </Popover.Trigger>
 
-                    <Popover.Content class="w-[200px] p-0">
-                      <Command.Root shouldFilter={false}>
-                        <!-- <CustomCmdInput {handleUpdateState} {stateStore} filterFn = {customYearFilter} autofocus placeholder="Search year..."/> -->
-                        <Command.Input
-                          class="input"
-                          bind:value={search}
-                          autofocus
-                          placeholder="2020"
-                        />
-                        <FormCommand.Empty>No year found.</FormCommand.Empty>
-                        <FormCommand.List>
-                          <FormCommand.Group>
-                            {#each filteredYearOptions as year}
-                              <FormCommand.Item
-                                value={year.value}
-                                onSelect={() => {
-                                  console.log("on select firing");
+                        <Popover.Content class="w-[200px] p-0">
+                          <Command.Root shouldFilter={false}>
+                            <!-- <CustomCmdInput {handleUpdateState} {stateStore} filterFn = {customYearFilter} autofocus placeholder="Search year..."/> -->
+                            <Command.Input
+                              class="input"
+                              bind:value={search}
+                              autofocus
+                              placeholder="2020"
+                            />
+                            <FormCommand.Empty>No year found.</FormCommand.Empty
+                            >
+                            <FormCommand.List>
+                              <FormCommand.Group>
+                                {#each filteredYearOptions as year}
+                                  <FormCommand.Item
+                                    value={year.value}
+                                    onSelect={() => {
+                                      console.log("on select firing");
 
-                                  setValue(year.value);
-                                  closeAndFocusTrigger(ids.trigger);
-                                }}
-                              >
-                                <Check
-                                  class={cn(
-                                    "mr-2 h-4 w-4",
-                                    year.value !== value && "text-transparent"
-                                  )}
-                                />
-                                {year.value}
-                              </FormCommand.Item>
-                            {/each}
-                          </FormCommand.Group>
-                        </FormCommand.List>
-                      </Command.Root>
-                    </Popover.Content>
-                  </Popover.Root>
-                  <Form.Description
-                    >This is the bottle's vintage</Form.Description
-                  >
-                  <Form.Validation />
-                </Form.Item>
-              </Form.Field>
-              <!-- <Form.Field {config} name="Vintage">
+                                      setValue(year.value);
+                                      closeAndFocusTrigger(ids.trigger);
+                                    }}
+                                  >
+                                    <Check
+                                      class={cn(
+                                        "mr-2 h-4 w-4",
+                                        year.value !== value &&
+                                          "text-transparent"
+                                      )}
+                                    />
+                                    {year.value}
+                                  </FormCommand.Item>
+                                {/each}
+                              </FormCommand.Group>
+                            </FormCommand.List>
+                          </Command.Root>
+                        </Popover.Content>
+                      </Popover.Root>
+                      <Form.Description
+                        >This is the bottle's vintage</Form.Description
+                      >
+                      <Form.Validation />
+                    </Form.Item>
+                  </Form.Field>
+                  <!-- <Form.Field {config} name="Vintage">
 				<Form.Item>
 					<Form.Label>Vintage</Form.Label>
 					<Form.Select>
@@ -305,7 +325,7 @@ import FormSkeleInput from './FormSkeleInput.svelte';
                   <Form.Validation />
                 </Form.Item>
               </Form.Field> -->
-              <!-- <Form.Item>
+                  <!-- <Form.Item>
                 <Form.Field {config} name="Vintage">
                   <div class="flex">
                     <Form.Label class="p-0.5">Vintage</Form.Label>
@@ -317,25 +337,25 @@ import FormSkeleInput from './FormSkeleInput.svelte';
                   >
                 </Form.Field>
               </Form.Item> -->
-            </div>
-            <div>
-              <Form.Item>
-                <Form.Field {config} name="Purchased">
-                  <Form.Label>Purchased Date</Form.Label>
-				  <FormSkeleInput />
-                  <!-- <input
+                </div>
+                <div>
+                  <Form.Item>
+                    <Form.Field {config} name="Purchased">
+                      <Form.Label>Purchased Date</Form.Label>
+                      <FormSkeleInput />
+                      <!-- <input
                     use:actions.input
                     class="input"
                     title="Purchased (date)"
                     type="date"
                   /> -->
-                  <Form.Description
-                    >The date this wine bottle was purchased</Form.Description
-                  >
-                  <Form.Validation />
-                </Form.Field>
+                      <Form.Description
+                        >The date this wine bottle was purchased</Form.Description
+                      >
+                      <Form.Validation />
+                    </Form.Field>
 
-                <!-- <Form.Field {config} name="Purchased">
+                    <!-- <Form.Field {config} name="Purchased">
                   <Form.Label>Purchased Date</Form.Label>
                   <Popover.Root>
                     <Form.Control id="Purchased" let:attrs>
@@ -378,19 +398,18 @@ import FormSkeleInput from './FormSkeleInput.svelte';
                   >
                   <Form.Validation />
                 </Form.Field> -->
-              </Form.Item>
-              <Form.Item>
-				  <Form.Field {config} name="Consumed">
-					  <Form.Label>Consumed Date</Form.Label>
-					  <FormSkeleInput />
-					  <Form.Description>The date this wine bottle was consumed.</Form.Description>
-					  <Form.Validation />
-				  </Form.Field>
+                  </Form.Item>
+                  <Form.Item>
+                    <Form.Field {config} name="Consumed">
+                      <Form.Label>Consumed Date</Form.Label>
+                      <FormSkeleInput />
+                      <Form.Description
+                        >The date this wine bottle was consumed.</Form.Description
+                      >
+                      <Form.Validation />
+                    </Form.Field>
 
-
-
-
-                <!-- <Form.Field {config} name="Consumed">
+                    <!-- <Form.Field {config} name="Consumed">
                   <Form.Label>Consumed Date</Form.Label>
                   <Popover.Root>
                     <Form.Control id="Consumed" let:attrs>
@@ -433,22 +452,46 @@ import FormSkeleInput from './FormSkeleInput.svelte';
                   >
                   <Form.Validation />
                 </Form.Field> -->
-              </Form.Item>
-            </div>
-          </div>
-          <Form.Item class="flex w-full justify-center ">
-            <Form.Button class="justify-self-center btn">Submit</Form.Button>
-            {#if $delayed}Working...{/if}
-          </Form.Item>
-        </form>
-      </Form.Root>
-    </div>
+                  </Form.Item>
+                </div>
+              </div>
+            </Card.Content>
+            <Card.Footer class="w-full">
+              <div class="space-y-0 space-x-2 flex w-full justify-center">
+                <Form.Item class="">
+                  <Form.Button class="justify-self-center btn"
+                    >Submit</Form.Button
+                  >
+                  {#if $delayed}Working...{/if}
+                </Form.Item>
+                {#if $theForm.id}
+                  <Form.Button
+                    name="delete"
+                    on:click={(e) =>
+                      !confirm("Are you sure?") && e.preventDefault()}
+                    class="bg-warning-800 justify-self-center btn"
+                    >Delete bottle</Form.Button
+                  >
+                {/if}
+              </div>
+            </Card.Footer>
+            <!-- <button
+              name="delete"
+              on:click={(e) => !confirm("Are you sure?") && e.preventDefault()}
+              class="btn danger justify-self-center">Delete user</button
+            > -->
+          </form>
+        </Form.Root>
+      </div>
+    </Card.Root>
 
     <!-- <div class="flex text-start">
 	{#if $page.data.debug}<SuperDebug data={$theForm} collapsible />{/if}
 </div> -->
   </div>
 </div>
+
+<p>Card Footer</p>
 
 <style>
   form {
