@@ -6,6 +6,8 @@ import { loginUserDto } from "$lib/Schemas";
 import type { User } from "$lib/types";
 import type Writable from "svelte/store";
 import PocketBase from "pocketbase";
+import { crudSchema } from "$lib/Schemas";
+type BottlesDB = z.infer<typeof crudSchema>[];
 
 declare global {
   namespace App {
@@ -18,10 +20,15 @@ declare global {
       user: User;
     }
     // interface Error {}
+
     // interface Platform {}
     interface PageState {
-      loginPageData: {
+      loginPageData?: {
         form: SuperValidated<typeof loginUserDto>;
+      };
+      bottlePreLoad?: {
+        form: SuperValidated<typeof crudSchema>;
+        bottlesDB: BottlesDB;
       };
     }
   }

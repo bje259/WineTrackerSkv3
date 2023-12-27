@@ -1,4 +1,9 @@
-<script lang="ts">
+<script lang="ts" context="module">
+  import type { AnyZodObject } from "zod";
+  type T = AnyZodObject;
+</script>
+
+<script lang="ts" generics="T extends AnyZodObject">
   import FormSkeleInput from "./FormSkeleInput.svelte";
   import { page } from "$app/stores";
   import * as Form from "$components/ui/form/";
@@ -26,6 +31,9 @@
   import { crudSchema } from "./Schemas";
   import type { User } from "$lib/types";
   import * as Card from "$lib/components/ui/card";
+  import type { ZodObject } from "zod";
+  import type { ZodValidation, FormPathLeaves } from "sveltekit-superforms";
+  import { formFieldProxy, type SuperForm } from "sveltekit-superforms/client";
 
   type CrudSchema = typeof crudSchema;
   // Formatter for "MM/DD/YYYY"
@@ -35,39 +43,45 @@
     day: "2-digit",
   });
 
-  export let data: SuperValidated<CrudSchema>;
-  // 	export let formData: SuperForm<CrudSchema>;
+  //export let data: SuperValidated<CrudSchema>;
+  export let formData: SuperForm<CrudSchema>;
   export let bottles: Zod.infer<typeof crudSchema>[];
   export let currentUser: Writable<User>;
 
-  const formData = superForm(data, {
-    validators: crudSchema,
-    resetForm: true,
-    onUpdated({ form }) {
-      resetFormHelper(form);
-    },
-    // onError({ result }) {
-    //   $message = result.error.message;
-    //   console.log("error", result.error.message);
-    // },
-  });
+  //export let formData: SuperForm<ZodValidation<T>, unknown>;
+  // const formData = superForm(data, {
+  //   validators: crudSchema,
+  //   resetForm: true,
+  //   onUpdated({ form }) {
+  //     resetFormHelper(form);
+  //   },
+  //   // onError({ result }) {
+  //   //   $message = result.error.message;
+  //   //   console.log("error", result.error.message);
+  //   // },
+  // });
 
   const debug: Writable<boolean> = getContext("debug");
-  function resetFormHelper(form: Readonly<SuperValidated<CrudSchema>>) {
+
+  export function resetFormHelper(form: Readonly<SuperValidated<CrudSchema>>) {
     if (form.valid) {
       placeholder = today(getLocalTimeZone());
       placeholder2 = today(getLocalTimeZone());
     }
   }
-
-  const { form: theForm, delayed, message, errors, allErrors } = formData;
+  export let theForm: Writable<Zod.infer<typeof crudSchema>>;
+  //const { form: theForm, delayed, message, errors, allErrors } = formData;
   let open = false;
   let placeholder: CalendarDate = today(getLocalTimeZone());
   let placeholder2: CalendarDate = today(getLocalTimeZone());
   let placeholder3: string = "Search year...";
   $: value1 = $theForm?.Purchased ? parseDate($theForm.Purchased) : undefined;
   $: value2 = $theForm?.Consumed ? parseDate($theForm.Consumed) : undefined;
-  $: value3 = $theForm?.Vintage ? $theForm.Vintage : undefined;
+  $: value3 = vintageValue
+    ? vintageValue
+    : $theForm?.Vintage?.toString() ?? placeholder3;
+  let vintageValue: string;
+  //$: labelValue = vintageValue;
   // $: console.log($allErrors);
   const yearOptions = Array.from({ length: 40 }, (_, i) => ({
     label: String(new Date().getFullYear() - i),
@@ -78,7 +92,7 @@
   let search = "";
   let filteredYearOptions = [
     {
-      value: "",
+      value: "0",
       score: 0,
     },
   ];
@@ -158,13 +172,13 @@
   const defFilter = defaultFilter;
   const state = createState();
 
-  //$: console.log($state);
+  $: console.log("🚀 ~ file: EditBottle:171 Reactive check ~ page", $page);
 </script>
 
 <!-- Start Form Header-->
 <div class="container h-full mx-auto flex justify-center">
   <div class="px-4 text-center flex flex-col items-center space-y-2">
-    <h1 class="h1">Wine Tracker!!!!</h1>
+    <!-- <h1 class="h1">Wine Tracker!!!!</h1>
     {#if $message}
       <h3 class:invalid={$page.status >= 400}>{$message}</h3>
     {/if}
@@ -186,7 +200,7 @@
             collapsible
           />{/if}
       </div>
-    </div>
+    </div> -->
 
     <Card.Root>
       <Card.Header>
@@ -212,7 +226,7 @@
             <Card.Content>
               <input type="hidden" name="id" bind:value={$theForm.id} />
               <input type="hidden" name="UserId" bind:value={$currentUser.id} />
-              <div class="grid grid-cols-2 gap-3">
+              <div class="grid-cols-2 gap-3">
                 <div>
                   <Form.Item>
                     <Form.Field {config} name="Name">
@@ -256,7 +270,11 @@
                                 !value3 && "text-muted-foreground"
                               )}
                             >
-                              {value3 ?? placeholder3}
+                              {#if value3 !== "0"}
+                                {value3}
+                              {:else}
+                                {placeholder3}
+                              {/if}
                               <ChevronsUpDown
                                 class="ml-2 h-4 w-4 shrink-0 opacity-50"
                               />
@@ -279,10 +297,10 @@
                               <FormCommand.Group>
                                 {#each filteredYearOptions as year}
                                   <FormCommand.Item
-                                    value={year.value}
+                                    bind:value={vintageValue}
                                     onSelect={() => {
                                       console.log("on select firing");
-
+                                      vintageValue = year.value;
                                       setValue(year.value);
                                       closeAndFocusTrigger(ids.trigger);
                                     }}
@@ -462,7 +480,6 @@
                   <Form.Button class="justify-self-center btn"
                     >Submit</Form.Button
                   >
-                  {#if $delayed}Working...{/if}
                 </Form.Item>
                 {#if $theForm.id}
                   <Form.Button
@@ -490,8 +507,6 @@
 </div> -->
   </div>
 </div>
-
-<p>Card Footer</p>
 
 <style>
   form {

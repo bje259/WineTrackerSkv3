@@ -74,6 +74,7 @@ export const actions = {
 
         throw error(501, e);
       }
+      //throw redirect(303, "/bottles");
       return message(form, "bottle created!");
     } else {
       // const index = bottles.findIndex((u) => u.id == form.data.id);
@@ -90,7 +91,11 @@ export const actions = {
 
           throw error(501, e);
         }
-        throw redirect(303, "/bottles");
+        const blankForm = await superValidate(crudSchema);
+        return message(blankForm, {
+          message: "bottle deleted!",
+          deletedBottle: bottle.id,
+        });
       } else {
         // bottles[index] = { ...form.data, id: form.data.id };
         try {
@@ -102,7 +107,7 @@ export const actions = {
 
           throw error(501, e);
         }
-
+        //throw redirect(303, "/bottles");
         return message(form, "bottle updated!");
       }
     }

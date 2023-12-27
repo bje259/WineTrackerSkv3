@@ -314,6 +314,14 @@ body {
 
 [data-fs-input] {
   @apply input;
+  @apply blur-none;
+  --tw-blur: none;
+}
+
+[data-fs-textarea] {
+  @apply textarea;
+  @apply blur-none;
+  --tw-blur: none;
 }
 
 [data-fs-select] {
@@ -330,6 +338,7 @@ body {
 
 input {
   color-scheme: dark;
+  --tw-blur: none;
 }
 
 [data-fs-validation] {

@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getYear } from "date-fns";
 import { z } from "zod";
+import {
+  CalendarDate,
+  getLocalTimeZone,
+  parseDate,
+  today,
+} from "@internationalized/date";
 
 // See https://zod.dev/?id=primitives for schema syntax
 export const bottleSchema = z.object({
@@ -8,24 +14,41 @@ export const bottleSchema = z.object({
   Name: z
     .string()
     .min(1, { message: "Name cannot be empty" })
-    .max(30, { message: "Name cannot be longer than 30 characters" }),
+    .max(85, { message: "Name cannot be longer than 85 characters" }),
   Producer: z
     .string()
     .min(1, { message: "Producer cannot be empty" })
-    .max(30, { message: "Producer cannot be longer than 30 characters" }),
-  Vintage: z.coerce.number().min(1, { message: "Vintage is required" }),
+    .max(85, { message: "Producer cannot be longer than 85 characters" }),
+  Vintage: z
+    .union([z.string(), z.number()])
+    .pipe(z.coerce.number())
+    .pipe(z.number().min(1, { message: "Vintage is required" })),
   Purchased: z
     .string()
     .transform((v) => {
-      if (v === "") return undefined;
-      return v;
+      const datetime = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+      if (datetime.safeParse(v).success) return v;
+      if (v.includes("/")) {
+        const [month, day, year] = v.split("/");
+        const date = new Date(`${year}-${month}-${day}`);
+        const dateString = date.toISOString().split("T")[0];
+        if (datetime.safeParse(dateString).success) return dateString;
+      }
+      return undefined;
     })
     .optional(),
   Consumed: z
     .string()
     .transform((v) => {
-      if (v === "") return undefined;
-      return v;
+      const datetime = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+      if (datetime.safeParse(v).success) return v;
+      if (v.includes("/")) {
+        const [month, day, year] = v.split("/");
+        const date = new Date(`${year}-${month}-${day}`);
+        const dateString = date.toISOString().split("T")[0];
+        if (datetime.safeParse(dateString).success) return dateString;
+      }
+      return undefined;
     })
     .optional(),
 });
@@ -33,6 +56,20 @@ export const bottleSchema = z.object({
 export const crudSchema = bottleSchema.extend({
   id: bottleSchema.shape.id.optional(),
   UserId: z.string().optional(),
+});
+
+export type CrudSchemaInput = z.input<typeof crudSchema>;
+type CrudSchemaOutput = z.output<typeof crudSchema>;
+
+export const inputCrudSchema = crudSchema.extend({
+  Vintage: z.union([z.string(), z.number()]),
+});
+
+export const bottleRecordSchema = bottleSchema.extend({
+  id: z.string(),
+  UserId: z.string(),
+  created: z.string().datetime(),
+  updated: z.string().datetime(),
 });
 
 type BottleDB = z.infer<typeof bottleSchema>[];
@@ -116,5 +153,27 @@ export const userDB = userAdds.omit({
   password: true,
   passwordConfirm: true,
 });
+
+export const exportSchema = z.object({
+  exportString: z.string().optional(),
+  UserId: z.string(),
+});
+
+export const importSchema = z.object({
+  importString: z.string(),
+  UserId: z.string(),
+});
+
+export const importSchemaArray = importSchema.extend({
+  importArray: z.array(crudSchema),
+});
+
+// export const inputImportSchemaArray = importSchemaArray.extend({
+//   importArray: z.array(
+//     crudSchema.extend({
+//       Vintage: z.union([z.string(), z.number()]),
+//     })
+//   ),
+// });
 
 export type UserDB = z.infer<typeof userDB>;

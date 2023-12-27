@@ -4,14 +4,18 @@ import {
   registerUserDto,
   UserDB,
   userDB,
-  BottleDB,
-  BottlesDB,
+  bottleSchema,
+  crudSchema,
+  exportSchema,
 } from "$lib/Schemas";
+import { z } from "zod";
 
 export type UserDB = UserDB;
 export type User = UserDB;
-export type BottleDB = BottleDB;
-export type BottlesDB = BottlesDB;
+export type BottleDB = z.infer<typeof crudSchema>;
+export type BottleDBinput = z.input<typeof crudSchema>;
+export type BottlesDB = BottleDB[];
+export type ExportSchema = Z.infer<typeof exportSchema>;
 
 /**
  * The Wine interface represents a wine.

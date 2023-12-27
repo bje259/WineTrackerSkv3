@@ -35,7 +35,7 @@
   import { Switch } from "$lib/components/ui/switch";
   import { Label } from "$lib/components/ui/label";
 
-  const combinedData = { ...data, ...$page.state.loginPageData };
+  const combinedData = { ...data, ...$page.state.loginPageData! };
 
   let devMenuOpen = false;
 
@@ -86,8 +86,7 @@
   const SHEET_SIDES = ["top", "right", "bottom", "left"] as const;
 
   const debug = writable<boolean>(false);
-  const user = writable<User>();
-  $: user.set(data.user);
+  const user = writable<User>(data.user);
   setContext("debug", debug);
   setContext("user", user);
 
@@ -179,6 +178,8 @@
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="/bottles">Bottle Management</a></li>
+          <li><a href="/export">Export Bottles</a></li>
+          <li><a href="/import">Import Bottles</a></li>
           <li><a href="/sandbox">Sandbox</a></li>
           {#if !x}
             <li>
@@ -213,7 +214,15 @@
   <!-- --- -->
 
   <!-- Page Route Content -->
-  <slot />
+  <div class="flex flex-row flex-shrink-0">
+    <Button
+      type="button"
+      class="h-auto variant-ghost"
+      on:click={() => (devMenuOpen = !devMenuOpen)}
+      ><p class="text-4xl">→</p></Button
+    >
+    <slot />
+  </div>
 </AppShell>
 <Dialog.Root
   open={loginDialogOpen}
