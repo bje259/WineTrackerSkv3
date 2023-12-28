@@ -68,8 +68,8 @@
       "type": "chrome",
       "request": "launch",
       "name": "Launch Chrome against localhost2",
-      "url": "localhost:5173",
-      "urlFilter": "localhost:5173",
+      "url": "http://localhost:5173",
+      "urlFilter": "*localhost:5173",
       "webRoot": "${workspaceFolder}",
       "userDataDir": "${workspaceFolder}/.vscode/chrome",
       "runtimeArgs": [

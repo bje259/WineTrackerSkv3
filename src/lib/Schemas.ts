@@ -176,4 +176,4 @@ export const importSchemaArray = importSchema.extend({
 //   ),
 // });
 
-export type UserDB = z.infer<typeof userDB>;
+type UserDB = z.infer<typeof userDB>;

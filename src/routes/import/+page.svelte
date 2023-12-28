@@ -23,13 +23,20 @@
     validators: importSchemaArray,
     dataType: "json",
   });
-  const { form, message, errors, enhance } = superFrm;
+  const { form, message, errors, enhance, tainted } = superFrm;
   // $: console.log("🚀 ~ file: +page.svelte:12 ~ data:", data);
   const debug: Writable<boolean> = getContext("debug");
   const user: Writable<User> = getContext("user");
   // let textAreaValue: string;
   let importTextAreaValue: string;
-  $: $form.UserId = $user.id ?? "";
+  $: form.update(
+    ($form) => {
+      $form.UserId = $user.id ?? "";
+      return $form;
+    },
+    { taint: false }
+  );
+  //$: $form.UserId = $user.id ?? "";
   //$: if ($user.id) userInputValue = $user.id;
   $: if ($form?.importString) importTextAreaValue = $form.importString;
   // let value: string;
@@ -175,13 +182,18 @@
 
 <Form.Root
   form={superFrm}
-  class="flex flex-col space-y-2 p-6"
+  class="flex flex-col space-y-2 p-6 w-[90%]"
   schema={importSchemaArray}
   let:config
   controlled
   asChild
 >
-  <form method="POST" use:enhance enctype="multipart/form-data">
+  <form
+    method="POST"
+    use:enhance
+    enctype="multipart/form-data"
+    class="flex flex-col flex-auto space-y-2 p-6"
+  >
     <input type="hidden" name="UserId" />
     {#if $errors._errors}
       <Alert.Root>
@@ -238,7 +250,13 @@
     <Form.Button class="h-auto variant-ghost" on:click={handleSubmitParse}>
       Submit Import
     </Form.Button>
+    {#if $debug}
+      <SuperDebug data={{ $form, $tainted }} />
+    {/if}
+    <!--
     <SuperDebug data={$form} />
+    -->
+
     <!-- <button
     type="button"
     on:click={() => {

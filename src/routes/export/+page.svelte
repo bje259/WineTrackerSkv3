@@ -31,7 +31,7 @@
 
 <Form.Root
   form={data.form}
-  class="flex flex-col space-y-2 p-6"
+  class="flex flex-col flex-auto space-y-2 p-6"
   schema={exportSchema}
   let:config
   debug={$debug}

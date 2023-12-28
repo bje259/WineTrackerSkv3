@@ -2,7 +2,6 @@
 import {
   loginUserDto,
   registerUserDto,
-  UserDB,
   userDB,
   bottleSchema,
   crudSchema,
@@ -10,7 +9,7 @@ import {
 } from "$lib/Schemas";
 import { z } from "zod";
 
-export type UserDB = UserDB;
+export type UserDB = z.infer<typeof userDB>;
 export type User = UserDB;
 export type BottleDB = z.infer<typeof crudSchema>;
 export type BottleDBinput = z.input<typeof crudSchema>;
