@@ -32,6 +32,7 @@
   const user: Writable<User> = getContext("user");
   let bottles = data.bottlesDB;
   const debug: Writable<boolean> = getContext("debug");
+  let editTableDialog: Writable<boolean> = getContext("editTableDialog");
   // const formData = superForm(data.form, {
   //   validators: crudSchema,
   //   resetForm: true,
@@ -294,7 +295,7 @@
       </div>
       <div class="flex text-start">
         {#if $debug}<SuperDebug
-            data={{ form: $theForm2, $errors2, $message2 }}
+            data={{ form: $theForm2, $errors2, $message2, $editTableDialog }}
             collapsible
           />{/if}
       </div>
@@ -343,7 +344,6 @@
           /> -->
           <EditBottle
             formData={formData2}
-            {bottles}
             theForm={theForm2}
             currentUser={user}
           />

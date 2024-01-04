@@ -202,3 +202,12 @@ interface LoginActionData {
   notVerified?: boolean;
   invalidCredentials?: boolean;
 }
+
+export interface Admin {
+  id?: string;
+  email?: string;
+  password?: string;
+  verified?: boolean;
+  created?: string;
+  updated?: string;
+}

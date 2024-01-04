@@ -37,7 +37,7 @@
 
   //export let data: SuperValidated<CrudSchema>;
   export let formData: SuperForm<CrudSchema>;
-  export let bottles: Zod.infer<typeof crudSchema>[];
+
   export let currentUser: Writable<User>;
 
   //export let formData: SuperForm<ZodValidation<T>, unknown>;
@@ -164,7 +164,12 @@
   const defFilter = defaultFilter;
   const state = createState();
 
-  $: console.log("🚀 ~ file: EditBottle:171 Reactive check ~ page", $page);
+  $: console.log(
+    "🚀 ~ file: EditBottle:171 Reactive check ~ page",
+    $page,
+    $theForm,
+    formData
+  );
 </script>
 
 <!-- Start Form Header-->
@@ -197,7 +202,7 @@
     <Card.Root>
       <Card.Header>
         <Card.Title
-          ><h2>{!$theForm.id ? "Create" : "Update"} bottle</h2></Card.Title
+          ><h2>{!$theForm?.id ? "Create" : "Update"} bottle</h2></Card.Title
         >
         <!-- <Card.Description>Card Description</Card.Description> -->
 

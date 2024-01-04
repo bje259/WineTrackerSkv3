@@ -3,7 +3,7 @@
 // and what to do when importing types
 import type { SuperValidated } from "sveltekit-superforms";
 import { loginUserDto } from "$lib/Schemas";
-import type { User } from "$lib/types";
+import type { User, Admin } from "$lib/types";
 import type Writable from "svelte/store";
 import PocketBase from "pocketbase";
 import { crudSchema } from "$lib/Schemas";
@@ -13,11 +13,13 @@ declare global {
   namespace App {
     interface Locals {
       pb: PocketBase;
-      user: User;
+      user?: User;
+      admin?: Admin;
     }
     // trying to define the interface below broke many things
     interface PageData {
-      user: User;
+      user?: User;
+      admin?: Admin;
     }
     // interface Error {}
 

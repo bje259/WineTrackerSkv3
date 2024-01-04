@@ -3,15 +3,17 @@
   import { writable, type Writable } from "svelte/store";
   import { getContext } from "svelte";
   import type { User } from "$lib/types";
-  export let data: BottleRecords;
   import * as Table from "$lib/components/ui/table";
-  import { bottleRecordSchema } from "$lib/Schemas";
+  import { bottleRecordSchema, bottleRecordTableSchema } from "$lib/Schemas";
+  type BottleRecordTableSchema = z.infer<typeof bottleRecordTableSchema>;
   import { z } from "zod";
   import {
     addPagination,
     addSortBy,
     addTableFilter,
     addGridLayout,
+    addHiddenColumns,
+    addSelectedRows,
   } from "svelte-headless-table/plugins";
   import { Button } from "$lib/components/ui/button";
   import {
@@ -19,13 +21,22 @@
     Render,
     Subscribe,
     createRender,
+    HeaderRow,
   } from "svelte-headless-table";
-  import { readable } from "svelte/store";
+  import { readable, type Readable } from "svelte/store";
   import DataTableActions from "./data-table-actions.svelte";
-  import { ArrowDownZA, ArrowUpAZ, ArrowUpDown } from "lucide-svelte";
+  import {
+    ArrowDownZA,
+    ArrowUpAZ,
+    ArrowUpDown,
+    ChevronDown,
+  } from "lucide-svelte";
   import type * as DataTablePlugins from "svelte-headless-table/plugins";
   import { Input } from "$lib/components/ui/input";
   import SuperDebug from "sveltekit-superforms/client/SuperDebug.svelte";
+  import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
+  import DataTableCheckbox from "./data-table-checkbox.svelte";
+  export let data: BottleRecordTableSchema[];
 
   type BottleRecord = z.infer<typeof bottleRecordSchema>;
   type BottleRecords = BottleRecord[];
@@ -39,7 +50,8 @@
       fn: ({ filterValue, value }) =>
         value.toLowerCase().includes(filterValue.toLowerCase()),
     }),
-    grid: addGridLayout(),
+    hide: addHiddenColumns(),
+    select: addSelectedRows(),
   });
 
   function formatDateToMMDDYYYY(dateString: string) {
@@ -49,11 +61,39 @@
     let year = date.getFullYear();
     return `${month}/${day}/${year}`;
   }
+  let editBottleDialog: Writable<boolean>;
+  $: if (getContext("editBottleDialog")) {
+    editBottleDialog = getContext("editBottleDialog");
+  }
 
   const columns = table.createColumns([
+    table.display({
+      id: "id",
+      header: (_, { pluginStates }) => {
+        const { allRowsSelected } = pluginStates.select;
+        return createRender(DataTableCheckbox, {
+          checked: allRowsSelected,
+        });
+      },
+      cell: ({ row }, { pluginStates }) => {
+        const { getRowState } = pluginStates.select;
+        const { isSelected } = getRowState(row);
+        return createRender(DataTableCheckbox, {
+          checked: isSelected,
+        });
+      },
+      plugins: {
+        sort: {
+          disable: true,
+        },
+        filter: {
+          exclude: true,
+        },
+      },
+    }),
     table.column({
-      accessor: "id",
-      header: "ID",
+      accessor: "BottleId",
+      header: "BottleId",
       plugins: {
         sort: {
           disable: false,
@@ -164,10 +204,10 @@
       },
     }),
     table.column({
-      accessor: ({ id }: { id: string }) => id,
+      accessor: ({ BottleId }: { BottleId: string }) => BottleId,
       header: "",
       cell: ({ value }) => {
-        return createRender(DataTableActions, { id: value });
+        return createRender(DataTableActions, { BottleId: value });
       },
       plugins: {
         sort: {
@@ -187,32 +227,91 @@
     tableBodyAttrs,
     pluginStates,
     tableHeadAttrs,
+    flatColumns,
+    rows,
   } = table.createViewModel(columns);
 
   const { hasNextPage, hasPreviousPage, pageIndex } = pluginStates.page;
   const { sortKeys } = pluginStates.sort;
   const { filterValue } = pluginStates.filter;
+  const { hiddenColumnIds } = pluginStates.hide;
+  const { selectedDataIds, getRowState } = pluginStates.select;
+
+  const hidableCols: {
+    [key: string]: boolean | null;
+  } = {
+    id: null,
+    BottleId: false,
+    Name: null,
+    Producer: true,
+    Vintage: true,
+    Purchased: true,
+    Consumed: false,
+    created: false,
+    updated: false,
+    "": null,
+  };
+
+  const ids = flatColumns.map((col) => col.id);
+  let hideForId = Object.fromEntries(ids.map((id) => [id, hidableCols[id]]));
+  $: $hiddenColumnIds = Object.entries(hideForId)
+    .filter(([, hide]) => !hide && hide !== null)
+    .map(([id]) => id);
+
+  $: console.log(
+    "checks line 222",
+    $tableAttrs,
+    $tableBodyAttrs,
+    $tableHeadAttrs,
+    pluginStates
+  );
 
   // spacer
 </script>
 
 <!-- <pre>$sortKeys = {JSON.stringify($sortKeys, null, 2)}</pre> -->
 {#if $debug}<SuperDebug
-    data={{ $sortKeys, $filterValue, $tableAttrs, $tableBodyAttrs }}
+    data={{
+      $hiddenColumnIds,
+      $sortKeys,
+      $filterValue,
+      $tableAttrs,
+      $tableBodyAttrs,
+      $tableHeadAttrs,
+      $selectedDataIds,
+      $editBottleDialog,
+    }}
+    collapsible
   />{/if}
 
 <div>
   <div class="flex items-center py-4">
     <Input
       class="max-w-sm"
-      placeholder="Filter bottle names"
+      placeholder="Search bottles"
       type="text"
       bind:value={$filterValue}
     />
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild let:builder>
+        <Button variant="outline" class="ml-auto" builders={[builder]}>
+          Columns <ChevronDown class="ml-2 h-4 w-4" />
+        </Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        {#each flatColumns as col}
+          {#if hidableCols[col.id] !== null}
+            <DropdownMenu.CheckboxItem bind:checked={hideForId[col.id]}>
+              {col.header}
+            </DropdownMenu.CheckboxItem>
+          {/if}
+        {/each}
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
   </div>
   <div class="rounded-md border">
     <Table.Root {...$tableAttrs}>
-      <Table.Header {...$tableHeadAttrs}>
+      <Table.Header {...$tableHeadAttrs} class="[&:has([role=checkbox])]:pl-3">
         {#each $headerRows as headerRow (headerRow.id)}
           <Subscribe rowAttrs={headerRow.attrs()} let:rowAttrs>
             <Table.Row {...rowAttrs}>
@@ -243,7 +342,7 @@
                           />
                         {/if}
                       </Button>
-                    {:else if cell.id !== ""}
+                    {:else if cell.id !== "" && cell.id !== "id"}
                       <Button variant="ghost" on:click={props.sort.toggle}>
                         <Render of={cell.render()} />
                         <ArrowUpDown class={"ml-2"} size={20} strokeWidth={1} />
@@ -262,7 +361,10 @@
       <Table.Body {...$tableBodyAttrs}>
         {#each $pageRows as row (row.id)}
           <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-            <Table.Row {...rowAttrs}>
+            <Table.Row
+              {...rowAttrs}
+              data-state={$selectedDataIds[row.id] && "selected"}
+            >
               {#each row.cells as cell (cell.id)}
                 <Subscribe attrs={cell.attrs()} let:attrs>
                   <Table.Cell {...attrs}>
@@ -277,6 +379,10 @@
     </Table.Root>
   </div>
   <div class="flex items-center justify-end space-x-2 py-4">
+    <div class="flex-1 text-sm text-muted-foreground">
+      {Object.keys($selectedDataIds).length} of{" "}
+      {$rows.length} row(s) selected.
+    </div>
     <Button
       variant="outline"
       size="sm"
@@ -292,3 +398,6 @@
   </div>
   <p>*Hold shift to sort by multiple columns*</p>
 </div>
+
+<style>
+</style>

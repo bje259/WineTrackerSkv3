@@ -1,7 +1,5 @@
 // place files you want to import through the `$lib` alias in this folder.
 
-import * as types from "$lib/types";
-import * as Schemas from "$lib/Schemas";
-export { types, Schemas };
-export * from "$lib/types";
-export * from "$lib/Schemas";
+import("./Schemas");
+export type * from "./types.d.ts";
+export * from "./Schemas";

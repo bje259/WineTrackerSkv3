@@ -15,6 +15,7 @@
   },
   "include": [
     "ambient.d.ts",
+    "../**/ambient.d.ts",
     "non-ambient.d.ts",
     "./types/**/$types.d.ts",
     "./vite.config.js",
@@ -25,7 +26,8 @@
     "./tests/**/*.js",
     "./tests/**/*.ts",
     "./tests/**/*.svelte",
-    "./@types/*.d.ts"
+    "./@types/*.d.ts",
+    ".svelte-kit/ambient.d.ts"
   ],
   "exclude": [
     "./node_modules/**",

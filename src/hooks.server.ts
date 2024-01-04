@@ -2,8 +2,9 @@
 import PocketBase from "pocketbase";
 import type { Handle } from "@sveltejs/kit";
 import { serializeNonPOJOs } from "$lib/utils";
-import type { UserDB as User } from "$lib/types";
+import type { UserDB as User, Admin } from "$lib/types";
 import { PUBLIC_PB_HOST } from "$env/static/public";
+import { ADMIN_USER_ID } from "$env/static/private";
 
 /** @type {import('@sveltejs/kit').Handle} */
 export const handle: Handle = async ({ event, resolve }) => {
@@ -16,14 +17,29 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   try {
     // get an up-to-date auth store state by verifying and refreshing the loaded auth model (if any)
-    event.locals.pb.authStore.isValid &&
-      (await event.locals.pb.collection("users").authRefresh());
+    if (
+      event.locals.pb.authStore.isAdmin &&
+      event.locals.pb.authStore.isValid
+    ) {
+      await event.locals.pb.admins.authRefresh();
+    } else if (event.locals.pb.authStore.isValid) {
+      await event.locals.pb.collection("users").authRefresh();
+    }
   } catch (_) {
     // clear the auth store on failed refresh
     console.log("auth refresh failed");
     event.locals.pb.authStore.clear();
   }
-  if (event.locals.pb.authStore.isValid) {
+
+  if (event.locals.pb.authStore.isAdmin) {
+    event.locals.admin = serializeNonPOJOs<Admin>(
+      event.locals.pb.authStore.model as Admin
+    );
+    const tempUser = await event.locals.pb
+      .collection("users")
+      .getOne<User>(ADMIN_USER_ID);
+    event.locals.user = serializeNonPOJOs<User>(tempUser);
+  } else if (event.locals.pb.authStore.isValid) {
     event.locals.user = serializeNonPOJOs<User>(
       event.locals.pb.authStore.model as User
     );

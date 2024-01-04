@@ -18,7 +18,7 @@
     --card-foreground: 222.2 84% 4.9%;
 
     --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
+    --input: rgba(211, 211, 211, 1); /* rgba(211,211,211,1.0)  */
 
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
@@ -75,7 +75,7 @@
     --card-foreground: 210 40% 98%;
 
     --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%; /* rgba(211,211,211,1.0)  */
     --primary: 217 91% 60%;
     --primary-foreground: 210 40% 98%;
 
@@ -340,9 +340,48 @@ body {
   @apply select;
 }
 
+@layer utilities {
+  .shadtable {
+    @apply border-solid;
+    @apply border-2;
+    @apply border-surface-600;
+  }
+  .shadthead {
+    @apply border-solid;
+    @apply border-2;
+    @apply border-surface-600;
+  }
+  .shadth {
+    @apply text-[rgb(var(--color-secondary-300))];
+    @apply border-solid;
+    @apply border-[1px];
+    @apply border-surface-600;
+  }
+  .shadtbody {
+    @apply border-solid;
+    @apply border-[1px];
+    @apply border-surface-600;
+  }
+  .shadtr {
+    @apply border-solid;
+    @apply [border-width:1px];
+    @apply border-surface-600;
+  }
+  .shadtd {
+    @apply border-solid;
+    @apply border-[1px];
+    @apply border-surface-600;
+  }
+}
+
 input {
   color-scheme: dark;
   --tw-blur: none;
+}
+
+.border-input,
+.border {
+  @apply border-surface-300-600-token;
 }
 
 [data-fs-validation] {

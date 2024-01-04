@@ -19,6 +19,11 @@ export const actions: Actions = {
     const formData = await superValidate(request, loginUserDto);
 
     if (!formData.valid) {
+      console.log(
+        "🚀 ~ file: +page.server.ts:22 ~ login: ~ Not vali formData.valid:",
+        formData
+      );
+
       return fail(400, { form: formData, errors: formData.errors?._errors });
     }
 
@@ -36,7 +41,7 @@ export const actions: Actions = {
       console.log("Verified", locals.pb.authStore?.model?.verified);
       console.log("Id", locals.pb.authStore?.model?.id);
       if (!locals.pb?.authStore?.model?.verified) {
-        console.log("clearing auth store");
+        console.log("clearing auth store - failed authwpwd");
         locals.pb.authStore.clear();
         return {
           notVerified: true,

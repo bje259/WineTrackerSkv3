@@ -72,6 +72,15 @@ export const bottleRecordSchema = bottleSchema.extend({
   updated: z.string().datetime(),
 });
 
+export const bottleRecordTableSchema = bottleRecordSchema
+  .omit({
+    UserId: true,
+  })
+  .extend({
+    id: z.string().optional(),
+    BottleId: z.string(),
+  });
+
 type BottleDB = z.infer<typeof bottleSchema>[];
 
 export const registerUserDto = z
@@ -111,6 +120,9 @@ export const registerUserDto = z
     }
   });
 
+export const completionSchema = z.object({
+  prompt: z.string(),
+});
 export const loginUserDto = z.object({
   usernameOrEmail: z.string({
     required_error: "Email or Username is required",

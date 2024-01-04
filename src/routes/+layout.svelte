@@ -182,6 +182,7 @@
           <li><a href="/import">Import Bottles</a></li>
           <li><a href="/sandbox">Sandbox</a></li>
           <li><a href="/table">Table</a></li>
+          <li><a href="/logs">Logs</a></li>
           {#if !x}
             <li>
               <a href="/login" on:click={onLoginLinkClick}>Test Login</a>
