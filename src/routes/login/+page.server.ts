@@ -43,9 +43,7 @@ export const actions: Actions = {
       if (!locals.pb?.authStore?.model?.verified) {
         console.log("clearing auth store - failed authwpwd");
         locals.pb.authStore.clear();
-        return {
-          notVerified: true,
-        };
+        throw new Error("Not Verified");
       }
     } catch (err) {
       console.log("Error: ", err);
@@ -54,7 +52,7 @@ export const actions: Actions = {
       const { password, ...rest } = formData.data;
 
       return {
-        data: rest,
+        form: rest,
         invalidCredentials: true,
       };
     }

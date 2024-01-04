@@ -20,6 +20,7 @@ declare global {
     interface PageData {
       user?: User;
       admin?: Admin;
+      form?: SuperValidated;
     }
     // interface Error {}
 

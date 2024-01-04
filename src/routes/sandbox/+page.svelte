@@ -21,14 +21,6 @@
 </script>
 
 <div class="flex flex-col w-3/4">
-  <input class="input" title="Input (month)" type="month" />
-  <br />
-  <!-- <Datepickerform /> -->
-  <br />
-  <Calendarform />
-  <br />
-  <Comboboxform />
-
   <br />
   <br />
 

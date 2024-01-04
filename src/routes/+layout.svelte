@@ -21,27 +21,45 @@
   } from "@floating-ui/dom";
   import { Button } from "$lib/components/ui/button";
   import * as Sheet from "$lib/components/ui/sheet";
+  import { loginUserDto } from "$lib/Schemas";
   import type { PageData } from "./$types";
   //import type {LayoutData} from "./$types";
   //export let data: LayoutData;
   export let data: PageData;
   //shallowrouting imports
   import { preloadData, pushState, goto } from "$app/navigation";
+  import type { SuperValidated } from "sveltekit-superforms";
   import * as Dialog from "$lib/components/ui/dialog";
   import LoginPage from "./login/+page.svelte";
+  import { ProgressRadial } from "@skeletonlabs/skeleton";
   import { page } from "$app/stores";
   import type { NavigationEvent } from "@sveltejs/kit";
   import { beforeNavigate } from "$app/navigation";
   import { Switch } from "$lib/components/ui/switch";
   import { Label } from "$lib/components/ui/label";
 
-  const combinedData = { ...data, ...$page.state.loginPageData! };
+  let navState = false;
+  let combinedData: PageData & { form: SuperValidated<typeof loginUserDto> };
+
+  $: if ($page.state?.loginPageData?.form) {
+    combinedData = { ...data, ...$page.state.loginPageData };
+    console.log("🚀 ~ file: +layout.svelte:39 ~ combinedData:", combinedData);
+  }
 
   let devMenuOpen = false;
 
   function onNav() {
     if (devMenuOpen) {
       devMenuOpen = false;
+    }
+  }
+
+  async function handleLogout() {
+    navState = true;
+    const response = await fetch("/logout", { method: "POST" });
+    if (response.ok) {
+      // Redirect to home or login page upon successful logout
+      window.location.href = "/";
     }
   }
 
@@ -70,17 +88,30 @@
     e.preventDefault();
 
     const { href } = e.currentTarget;
+    console.log("🚀 ~ file: +layout.svelte:74 ~ href:", href);
 
     // run `load` functions (or rather, get the result of the `load` functions
     // that are already running because of `data-sveltekit-preload-data`)
-    const result = await preloadData(href);
+    await preloadData(href)
+      .then((result) => {
+        console.log("🚀 ~ file: +layout.svelte:79 ~ result:", result);
 
-    if (result.type === "loaded" && result.status === 200) {
-      pushState(href, { loginPageData: result.data });
-    } else {
-      // something bad happened! try navigating
-      goto(href);
-    }
+        if (result.type === "loaded" && result.status === 200) {
+          pushState(href, { loginPageData: result.data });
+          console.log(
+            "🚀 ~ file: +layout.svelte:83 ~ href,result:",
+            href,
+            result
+          );
+        } else {
+          // something bad happened! try navigating
+          goto(href);
+        }
+      })
+      .catch((err) => {
+        // something bad happened! try navigating
+        goto(href);
+      });
   }
 
   const SHEET_SIDES = ["top", "right", "bottom", "left"] as const;
@@ -115,7 +146,9 @@
         <strong class="text-xl uppercase">Skeleton</strong>
       </svelte:fragment>
       <svelte:fragment slot="trail">
-        {#if !x}
+        {#if navState}
+          <ProgressRadial stroke={30} width="w-8" />
+        {:else if !x}
           <a
             href="/login"
             class="btn variant-glass-primary text-primary-900-50-token h-8 rounded-md font-medium px-4 py-2 hover:bg-primary-50-900-token"
@@ -125,11 +158,12 @@
             <p class="self-center">
               Welcome, {x}!
             </p>
-            <a
-              href="/logout"
+            <button
+              on:click={handleLogout}
               class="btn variant-glass-primary text-primary-900-50-token h-8 rounded-md font-medium px-4 py-2 hover:bg-primary-50-900-token"
-              >Logout</a
             >
+              Logout
+            </button>
           </div>
         {/if}
         <!-- <Button
@@ -188,7 +222,14 @@
               <a href="/login" on:click={onLoginLinkClick}>Test Login</a>
             </li>
           {:else if x}
-            <li><a href="/logout">Log Out</a></li>
+            <li>
+              <button
+                on:click={handleLogout}
+                class="anchor text-primary-900-50-token bg-transparent h-8 rounded-md font-medium px-4 py-2 hover:bg-primary-50-900-token"
+              >
+                Logout
+              </button>
+            </li>
             <li>
               Currently logged in as <br />
               {x}<br /> (userID {y})
@@ -235,6 +276,11 @@
   }}
 >
   <Dialog.Content>
-    <LoginPage data={combinedData} />
+    {#if combinedData.form}
+      <LoginPage data={combinedData} />
+    {:else}
+      <p>Loading...</p>
+    {/if}
+    <!-- <LoginPage data={combinedData} data2={combinedData} /> -->
   </Dialog.Content>
 </Dialog.Root>

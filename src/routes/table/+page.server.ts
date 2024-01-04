@@ -53,7 +53,7 @@ export const actions = {
       // const bottle = { ...form.data, id: bottleId() };
       //bottles.push(bottle);
       //fix UserID if missing
-      if (!bottle.UserId) {
+      if (!bottle.UserId && locals.user) {
         bottle.UserId = locals.user.id!;
         console.log(
           "🚀 ~ file: +page.server.ts:61 ~ default: ~ bottle.UserId:",
