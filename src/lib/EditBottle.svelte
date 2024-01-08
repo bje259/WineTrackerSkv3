@@ -164,12 +164,19 @@
   const defFilter = defaultFilter;
   const state = createState();
 
-  $: console.log(
-    "🚀 ~ file: EditBottle:171 Reactive check ~ page",
+  console.log(
+    "🚀 ~ file: EditBottle:171 non-reactive check ~ page",
     $page,
     $theForm,
     formData
   );
+
+  // $: console.log(
+  //   "🚀 ~ file: EditBottle:171 Reactive check ~ page",
+  //   $page,
+  //   $theForm,
+  //   formData
+  // );
 </script>
 
 <!-- Start Form Header-->

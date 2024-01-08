@@ -1,29 +1,152 @@
 <script lang="ts">
-  import { goto, invalidateAll, preloadData, pushState } from "$app/navigation";
+  import {
+    goto,
+    invalidateAll,
+    preloadData,
+    pushState,
+    replaceState,
+  } from "$app/navigation";
   import { page } from "$app/stores";
   import { crudSchema } from "$lib";
   import EditBottle from "$lib/EditBottle.svelte";
   import { Button } from "$lib/components/ui/button";
   import * as Dialog from "$lib/components/ui/dialog";
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-
-  import type { User } from "$lib";
+  import { bottleRecordSchema, bottleRecordTableSchema } from "$lib/Schemas";
+  type BottleRecordTableSchema = z.infer<typeof bottleRecordTableSchema>;
+  import type { User, BottleDB } from "$lib";
 
   import { MoreHorizontal } from "lucide-svelte";
 
   import { getContext, onMount, setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
   import { superForm, type SuperForm } from "sveltekit-superforms/client";
-  import { z } from "zod";
-
+  import { number, z } from "zod";
+  type BottleRecord = z.infer<typeof bottleRecordSchema>;
+  type IndexRecord = { [key: string]: string | number | undefined };
+  export let dialogBottle: Writable<string>;
   export let BottleId: string;
+  export let dataStore: Writable<IndexRecord[]>;
+  export let updateData: (
+    rowDataId: string,
+    newValue: IndexRecord | null
+  ) => void;
   const user: Writable<User> = getContext("user");
   let openDDL = writable<boolean>(false);
-  let editBottleDialog2 = writable<boolean>(false);
+  // let editBottleDialog2 = writable<boolean>(false);
+  let editBottleDialog2 = false;
   setContext("editBottleDialog2", editBottleDialog2);
-  let editBottleInit = writable<boolean>(true);
+  let editBottleInit = true;
   let theForm2: Writable<z.infer<typeof crudSchema>>, message2, errors2;
   let formData2: SuperForm<typeof crudSchema>;
+  let bottles = $page.data.bottlesDB;
+  let bottles2: BottleDB[];
+
+  function getIndex(BottleId: string): number {
+    return $dataStore.findIndex((bottle) => bottle.BottleId === BottleId);
+  }
+
+  $: $dataStore = bottles;
+
+  let currIndex = getIndex(BottleId);
+
+  $: bottles = $page.state.bottlePreLoad?.bottlesDB || bottles;
+
+  let messageStore = "Listening";
+
+  $: if ($dialogBottle === BottleId)
+    console.log("Reactive message store: ", BottleId, messageStore);
+
+  $: if ($dialogBottle === BottleId)
+    console.log("Reactive dialogBottle", BottleId, $dialogBottle);
+
+  async function onSubmissionSuccess(deleteBottle?: string) {
+    console.log(
+      "onSubmissionSuccess triggered",
+      BottleId,
+      deleteBottle,
+      $dialogBottle
+    );
+    await preloadData("/bottles").then((result) => {
+      // console.log(
+      //   "🚀 ~ file: +page.svelte:50 ~ onSubmissionSuccess ~ result:",
+      //   result
+      // );
+      if (result.type === "loaded" && result.status === 200) {
+        // console.log(
+        //   "🚀 ~ file: +page.svelte:54 ~ pre replacestate ~ result:",
+        //   result,
+        //   $page
+        // );
+        if (deleteBottle) {
+          bottles2 = [...bottles].filter(
+            (bottle) => bottle.id !== deleteBottle
+          );
+          bottles = bottles2;
+          $page.data.bottlesDB = bottles;
+
+          $dataStore = $dataStore.filter(
+            (bottle) => bottle.BottleId !== deleteBottle
+          );
+          updateData(getIndex(deleteBottle).toString(), null);
+        }
+        replaceState("/table", { bottlePreLoad: result.data });
+        replaceState("/bottles/[[]]", { bottlePreLoad: result.data });
+        replaceState("/bottles", { bottlePreLoad: result.data });
+        // console.log(
+        //   "🚀 ~ file: +page.svelte:58 ~ post replacestate ~ result:",
+        //   result,
+        //   $page
+        // );
+        history.back();
+        // console.log(
+        //   "🚀 ~ file: +page.svelte:60 ~ post history back ~ result:",
+        //   result,
+        //   $page
+        // );
+        //pushState("/bottles", { bottlePreLoad: result.data });
+        if (result.data.bottlesDB) bottles = result.data.bottlesDB;
+        // console.log(
+        //   "🚀 ~ file: +page.svelte:76 after push ~ result.data,page.data,page.state:",
+        //   result.data,
+        //   $page.data,
+        //   $page.state
+        // );
+        messageStore = "Listening";
+        editBottleDialog2 = false;
+        if (deleteBottle) {
+          // console.log(
+          //   "🚀 ~ file: +page.svelte:85 ~ onSubmissionSuccess ~ deleteBottle done after historyback:",
+          //   deleteBottle
+          // );
+          bottles2 = [...bottles].filter(
+            (bottle) => bottle.id !== deleteBottle
+          );
+          bottles = bottles2;
+
+          $dataStore = $dataStore.filter(
+            (bottle) => bottle.BottleId !== deleteBottle
+          );
+          // console.log(
+          //   "🚀 ~ file: +page.svelte:91 ~ pre replacestate ~ result,page,bottles2,bottles:",
+          //   result,
+          //   $page,
+          //   bottles2,
+          //   bottles
+          // );
+          result.data.bottlesDB = bottles2;
+          replaceState("/table", { bottlePreLoad: result.data });
+          replaceState("/bottles/[[]]", { bottlePreLoad: result.data });
+          replaceState("/bottles", { bottlePreLoad: result.data });
+          // console.log(
+          //   "🚀 ~ file: +page.svelte:99 ~ post replacestate ~ result:",
+          //   result,
+          //   $page
+          // );
+        }
+      }
+    });
+  }
 
   // onMount(async () => {
   //   try {
@@ -50,41 +173,69 @@
   // });
 
   async function onBottleEditClick(
-    e: MouseEvent & { currentTarget: HTMLElement },
-    hrefParam: string
+    e: MouseEvent & { currentTarget: HTMLElement }
   ): Promise<void> {
-    console.log("🚀 ~ file: data-table-actions.svelte:29 ~ currentTarget:", e);
+    //console.log("🚀 ~ file: data-table-actions.svelte:29 ~ currentTarget:", e);
     // Cast the current target to a type that may have an href
     let target = e?.currentTarget as HTMLAnchorElement;
     // prevent full navigation
     e.preventDefault();
 
-    let href = target?.href || hrefParam;
-    console.log("🚀 ~ file: +page.svelte:60 ~ onClickFunction- href:", href);
+    let href = target?.href || `/bottles/${BottleId}`;
+    // console.log("🚀 ~ file: +page.svelte:60 ~ onClickFunction- href:", href);
     // run `load` functions (or rather, get the result of the `load` functions
     // that are already running because of `data-sveltekit-preload-data`)
-    preloadData(href)
+    await preloadData(href)
       .then((result) => {
-        console.log(
-          "🚀 ~ file: +page.svelte:64 ~ onClickFunction ~ result",
-          result
-        );
+        // console.log(
+        //   "🚀 ~ file: +page.svelte:64 ~ onClickFunction ~ result",
+        //   result
+        // );
+
         if (result.type === "loaded" && result.status === 200) {
           pushState(href, { bottlePreLoad: result.data });
+          // if ($page.state.bottlePreLoad?.form?.data?.id) {
+          //   editBottleDialog2 = true;
+          //   editBottleInit = false;
+          //   console.log(
+          //     "🚀 ~ file: +page.svelte:75 ~ onClickFunction - (loaded=true) Setting result.data,state,init,dialog:",
+          //     result.data,
+          //     $page.state,
+          //     editBottleInit,
+          //     editBottleDialog2
+          //   );
+          // }
+          // editBottleDialog2 = true;
+          $dialogBottle = BottleId;
+          editBottleInit = true;
+          if ($page.state.bottlePreLoad?.form.data.id) editBottleInit = true;
           console.log(
-            "🚀 ~ file: +page.svelte:69 ~ onClickFunction - (loaded=true) Setting init=true result.data:",
-            result.data
+            "🚀 ~ file: +page.svelte:75 ~ onClickFunction - (loaded=true) Setting result.data,state,init,dialog:",
+            result.data,
+            $page.state,
+            editBottleInit,
+            editBottleDialog2
           );
-          if ($page.state.bottlePreLoad?.form?.data?.id) {
-            $editBottleDialog2 = true;
-            $editBottleInit = false;
-          }
+
+          // if ($page.state.bottlePreLoad?.form?.data?.id) {
+
+          //   console.log(
+          //     "🚀 ~ file: data-table-actions.svelte:81 ~ .then ~ editBottleInit, editBottleDialog2:",
+          //     $editBottleInit,
+          //     $editBottleDialog2
+          //   );
+          // }
           // $editBottleDialog2 = true;
         } else {
           //goto(href);
           console.log("🚀 ~ failed to onclick condition", result);
-          $editBottleDialog2 = false;
-          $editBottleInit = true;
+          // editBottleDialog2 = false;
+          // $editBottleInit = true;
+          console.log(
+            "🚀 ~ file: data-table-actions.svelte:89 ~ .then ~ editBottleInit, editBottleDialog2:",
+            editBottleInit,
+            editBottleDialog2
+          );
         }
       })
       .catch((error) => {
@@ -94,18 +245,19 @@
     //console.log("🚀 ~ file: +page.svelte:73 ~ href:", href);
   }
 
-  $: if ($page.state.bottlePreLoad?.form.data.id) {
+  $: if ($page.state.bottlePreLoad?.form.data.id === BottleId) {
     console.log(
-      "🚀 ~ file: +page.svelte:84 ReactiveIf - state ~ ($page:",
+      "🚀 ~ file: +page.svelte:214 ReactiveIf - state ~ ($page, editBottleInit, editBottleDialog2:",
       $page,
-      $editBottleDialog2,
-      $editBottleInit
+      editBottleInit,
+      editBottleDialog2
     );
-    console.log(
-      "Line 88: ReactiveIf - state - Current boolean is",
-      $editBottleDialog2
-    );
-    console.log("pagestate form", $page.state.bottlePreLoad.form);
+    // console.log(
+    //   "Line 107: ReactiveIf - state - Current boolean editBottleInit,editBottleDialog2:",
+    //   $editBottleInit,
+    //   $editBottleDialog2
+    // );
+    // console.log("pagestate form", $page.state.bottlePreLoad.form);
     formData2 = superForm($page.state.bottlePreLoad.form, {
       validators: crudSchema,
       resetForm: true,
@@ -115,25 +267,75 @@
     }) as SuperForm<typeof crudSchema>;
 
     ({ form: theForm2, message: message2, errors: errors2 } = formData2);
-    console.log(
-      "🚀 ~ file: +page.svelte:97 ~ ReactiveIf - state - form: theForm2, message: message2, errors: errors2 } = formData2): and bottles",
-      $theForm2,
-      $message2,
-      $errors2,
-      formData2,
-      $page.state
-    );
 
-    if ($editBottleInit) {
-      $editBottleDialog2 = true;
-      $editBottleInit = false;
+    if (editBottleInit) {
+      editBottleDialog2 = true;
+      editBottleInit = false;
+      console.log(
+        "🚀 ~ file: +page.svelte:239 ReactiveIf - state ~ ($page, editBottleInit, editBottleDialog2:",
+        $page,
+        editBottleInit,
+        editBottleDialog2
+      );
     }
+
+    // console.log(
+    //   "🚀 ~ file: +page.svelte:97 ~ ReactiveIf - state - form: theForm2, message: message2, errors: errors2 } = formData2): and bottles",
+    //   $theForm2,
+    //   $message2,
+    //   $errors2,
+    //   formData2,
+    //   $page.state
+    // );
+
+    // if ($editBottleInit) {
+    //   $editBottleDialog2 = true;
+    //   $editBottleInit = false;
+    //   console.log(
+    //     "🚀 ~ file: data-table-actions.svelte:132 ~ .then ~ editBottleInit, editBottleDialog2:",
+    //     $editBottleInit,
+    //     $editBottleDialog2
+    //   );
+    // }
   } else {
     // if ($editBottleInit) {
     //   $editBottleDialog2 = false;
     //   $editBottleInit = true;
     //   history.back();
     // }
+  }
+
+  $: if ($dialogBottle === BottleId) {
+    messageStore = $page?.form?.form?.message?.deletedBottle
+      ? $page?.form?.form?.message?.deletedBottle
+      : $page?.form?.form?.message ?? "Listening";
+  }
+
+  $: if (
+    $dialogBottle === BottleId &&
+    (messageStore.includes("bottle updated") ||
+      messageStore.includes("bottle created") ||
+      messageStore.includes("bottle deleted"))
+  ) {
+    // console.log(
+    //   "🚀 ~ file: +page.svelte:88 ~ messageStore.includes ~ messageStore,page.data.bottlesDB:",
+    //   messageStore
+    // );
+    onSubmissionSuccess();
+  } else if ($dialogBottle === BottleId && messageStore !== "Listening") {
+    const deletedBottleID = messageStore;
+    // console.log(
+    //   "🚀 ~ file: +page.svelte:93 ~ messageStore !== Listening ~ deletedBottleID:",
+    //   deletedBottleID
+    // );
+    onSubmissionSuccess(deletedBottleID);
+    // bottles2 = [...bottles2].filter((bottle) => bottle.id !== deletedBottleID);
+    // console.log(
+    //   "🚀 ~ file: +page.svelte:96 ~ messageStore !== Listening ~ bottles2:",
+    //   bottles2
+    // );
+
+    //$editBottleDialog = false;
   }
 </script>
 
@@ -144,9 +346,12 @@
       builders={[builder]}
       size="icon"
       class="relative w-8 h-8 p-0"
-      on:mouseenter={async (e) =>
-        await onBottleEditClick(e, `/bottles/${BottleId}`)}
     >
+      <!-- past in above to uncomment
+      on:mouseenter={async (e) => {
+        console.log("preview onmouseenter triggered");
+        await onBottleEditClick(e);
+      }} -->
       <span class="sr-only">Open menu</span>
       <MoreHorizontal class="w-4 h-4" />
     </Button>
@@ -171,7 +376,7 @@
           );
           e.preventDefault();
           const hrefString = `/bottles/${BottleId}`;
-          await onBottleEditClick(e, hrefString);
+          await onBottleEditClick(e);
         }}
       >
         Edit Bottle
@@ -183,27 +388,29 @@
 
 <div class="grid grid-cols-2 w-full gap-7">
   <Dialog.Root
-    open={$editBottleDialog2}
-    onOpenChange={(open) => {
-      if (!open) {
-        $editBottleDialog2 = false;
+    open={editBottleDialog2}
+    onOpenChange={async (open) => {
+      if (!open && $dialogBottle === BottleId) {
+        // $editBottleDialog2 = false;
+        // editBottleInit = true;
         console.log(
           "🚀 ~ file: +page.svelte:180 onOpenChange ~ not open $page:",
           $page
         );
+        editBottleDialog2 = false;
         // invalidateAll();
         history.back();
+        //console.log("swapping init to ture");
       }
     }}
   >
     <Dialog.Trigger let:builder asChild>
       <Button
         builders={[builder]}
-        href="/bottles"
         on:click={async (e) => {
           e.preventDefault();
           const hrefString = `/bottles/${BottleId}`;
-          await onBottleEditClick(e, hrefString);
+          await onBottleEditClick(e);
         }}
         class="hidden btn bg-gradient-to-br variant-gradient-secondary-tertiary col-span-2"
       >

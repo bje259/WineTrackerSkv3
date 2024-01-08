@@ -211,3 +211,7 @@ export interface Admin {
   created?: string;
   updated?: string;
 }
+
+export type IndexRecord = {
+  [key: string]: string | number | undefined;
+};

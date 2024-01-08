@@ -7,6 +7,7 @@
   import { bottleRecordSchema, bottleRecordTableSchema } from "$lib/Schemas";
   type BottleRecordTableSchema = z.infer<typeof bottleRecordTableSchema>;
   import { z } from "zod";
+
   import {
     addPagination,
     addSortBy,
@@ -15,6 +16,7 @@
     addHiddenColumns,
     addSelectedRows,
   } from "svelte-headless-table/plugins";
+  import customCell from "./customCell.svelte";
   import { Button } from "$lib/components/ui/button";
   import {
     createTable,
@@ -22,6 +24,7 @@
     Subscribe,
     createRender,
     HeaderRow,
+    BodyRow,
   } from "svelte-headless-table";
   import { readable, type Readable } from "svelte/store";
   import DataTableActions from "./data-table-actions.svelte";
@@ -43,7 +46,40 @@
   const user: Writable<User> = getContext("user");
   const debug: Writable<boolean> = getContext("debug");
 
-  const table = createTable(readable(data), {
+  type IndexRecord = {
+    [key: string]: string | number | undefined;
+  };
+  const dataStore = writable<IndexRecord[]>(data);
+
+  const dialogBottle = writable<string>("");
+
+  // const updateData = (rowDataId: string, newValue: IndexRecord) => {
+
+  //   const idx = parseInt(rowDataId);
+  //   let currentItem = $dataStore[idx];
+  //   currentItem = { ...newValue }; // is this necessary? Since not every value might have changed?
+  //   const tempStore = [...$dataStore.slice(0, idx), currentItem, ...$dataStore.slice(idx + 1)]
+  //   $dataStore = tempStore;
+  // };
+
+  const updateData = (rowDataId: string, newValue: IndexRecord | null) => {
+    const idx = parseInt(rowDataId);
+    if (newValue === null) {
+      let currentStore = $dataStore;
+      currentStore.splice(idx);
+      $dataStore = currentStore;
+    } else {
+      let currentItem = $dataStore[idx];
+
+      // Update only the changed properties
+      $dataStore[idx] = { ...currentItem, ...newValue };
+
+      // Trigger reactivity by assigning the store to itself
+      $dataStore = $dataStore;
+    }
+  };
+
+  let table = createTable(writable($dataStore), {
     page: addPagination(),
     sort: addSortBy(),
     filter: addTableFilter({
@@ -143,7 +179,9 @@
       accessor: "Purchased",
       header: "Purchased",
       cell: ({ value }) => {
-        const formattedDate = value ? formatDateToMMDDYYYY(value) : "";
+        const formattedDate = value
+          ? formatDateToMMDDYYYY(value.toString())
+          : "";
         return formattedDate;
       },
       plugins: {
@@ -159,7 +197,9 @@
       accessor: "Consumed",
       header: "Consumed",
       cell: ({ value }) => {
-        const formattedDate = value ? formatDateToMMDDYYYY(value) : "";
+        const formattedDate = value
+          ? formatDateToMMDDYYYY(value.toString())
+          : "";
         return formattedDate;
       },
       plugins: {
@@ -175,7 +215,9 @@
       accessor: "created",
       header: "Create Date",
       cell: ({ value }) => {
-        const formattedDate = value ? formatDateToMMDDYYYY(value) : "";
+        const formattedDate = value
+          ? formatDateToMMDDYYYY(value.toString())
+          : "";
         return formattedDate;
       },
       plugins: {
@@ -191,7 +233,9 @@
       accessor: "updated",
       header: "Update Date",
       cell: ({ value }) => {
-        const formattedDate = value ? formatDateToMMDDYYYY(value) : "";
+        const formattedDate = value
+          ? formatDateToMMDDYYYY(value.toString())
+          : "";
         return formattedDate;
       },
       plugins: {
@@ -204,10 +248,15 @@
       },
     }),
     table.column({
-      accessor: ({ BottleId }: { BottleId: string }) => BottleId,
+      accessor: ({ BottleId }) => BottleId,
       header: "",
       cell: ({ value }) => {
-        return createRender(DataTableActions, { BottleId: value });
+        return createRender(DataTableActions, {
+          BottleId: value as string,
+          dialogBottle,
+          dataStore,
+          updateData,
+        });
       },
       plugins: {
         sort: {
@@ -220,7 +269,7 @@
     }),
   ]);
 
-  const {
+  let {
     headerRows,
     pageRows,
     tableAttrs,
@@ -266,8 +315,24 @@
     pluginStates
   );
 
+  $: console.log($dataStore);
+
   // spacer
 </script>
+
+<Button
+  on:click={() => {
+    const i = $dataStore.findIndex(
+      (bottle) => bottle.BottleId === "lkdhtw39s6u7dbw"
+    );
+    const temp = $dataStore;
+    temp[i].Name = "testzzzz";
+    temp[i].Producer = "testzzzzz";
+    updateData(i.toString(), temp[i]);
+    // $dataStore = temp;
+    console.log("Test:", $dataStore);
+  }}>Button</Button
+>
 
 <!-- <pre>$sortKeys = {JSON.stringify($sortKeys, null, 2)}</pre> -->
 {#if $debug}<SuperDebug
@@ -367,8 +432,31 @@
             >
               {#each row.cells as cell (cell.id)}
                 <Subscribe attrs={cell.attrs()} let:attrs>
-                  <Table.Cell {...attrs}>
-                    <Render of={cell.render()} />
+                  <Table.Cell {...attrs} class="[&:has([role=checkbox])]:pl-3">
+                    {#if cell.id === "id"}
+                      <Render
+                        of={createRender(DataTableCheckbox, {
+                          checked: getRowState(row).isSelected,
+                        })}
+                      />
+                    {:else if cell.id === "" || cell.id === "BottleId"}
+                      <Render of={cell.render()} />
+                    {:else}
+                      <Render
+                        of={createRender(customCell, {
+                          value: dataStore,
+                          row,
+                          cell,
+                        })}
+                      />
+                    {/if}
+                    <!-- <Render
+                      of={createRender(customCell, {
+                        value: dataStore,
+                        row,
+                        cell,
+                      })}
+                    /> -->
                   </Table.Cell>
                 </Subscribe>
               {/each}

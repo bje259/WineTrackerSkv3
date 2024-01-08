@@ -33,11 +33,11 @@ export const load = (async ({ locals }) => {
 
 export const actions = {
   default: async ({ request, locals }) => {
-    //console.log("🚀 ~ file: +page.server.ts:39 ~ default: ~ request:", request);
+    // //console.log("🚀 ~ file: +page.server.ts:39 ~ default: ~ request:", request);
 
     const formData = await request.formData();
     const form = await superValidate(formData, crudSchema);
-    console.log("🚀 ~ file: +page.server.ts:43 ~ default: ~ form:", form);
+    // console.log("🚀 ~ file: +page.server.ts:43 ~ default: ~ form:", form);
 
     if (!form.valid) {
       return fail(400, {
@@ -55,22 +55,22 @@ export const actions = {
       //fix UserID if missing
       if (!bottle.UserId && locals.user) {
         bottle.UserId = locals.user.id!;
-        console.log(
-          "🚀 ~ file: +page.server.ts:61 ~ default: ~ bottle.UserId:",
-          bottle.UserId
-        );
+        // console.log(
+        // "🚀 ~ file: +page.server.ts:61 ~ default: ~ bottle.UserId:",
+        // bottle.UserId
+        // );
       }
 
       try {
         console.log("creating bottle: ", bottle);
         await locals.pb.collection("BottlesDB").create(bottle);
-        console.log(
-          "🚀 ~ file: +page.server.ts:69 ~ default: ~ bottle:",
-          bottle
-        );
+        // console.log(
+        // "🚀 ~ file: +page.server.ts:69 ~ default: ~ bottle:",
+        // bottle
+        // );
       } catch (err) {
         const e = err as ClientResponseError;
-        console.log("🚀 ~ file: +page.server.ts:72 ~ default: ~ e:", e);
+        // console.log("🚀 ~ file: +page.server.ts:72 ~ default: ~ e:", e);
 
         throw error(501, e);
       }
@@ -87,7 +87,7 @@ export const actions = {
           await locals.pb.collection("BottlesDB").delete(bottle.id);
         } catch (err) {
           const e = err as ClientResponseError;
-          console.log("🚀 ~ file: +page.server.ts:88 ~ default: ~ e:", e);
+          // console.log("🚀 ~ file: +page.server.ts:88 ~ default: ~ e:", e);
 
           throw error(501, e);
         }
@@ -103,7 +103,7 @@ export const actions = {
           await locals.pb.collection("BottlesDB").update(bottle.id, bottle);
         } catch (err) {
           const e = err as ClientResponseError;
-          console.log("🚀 ~ file: +page.server.ts:100 ~ default: ~ e:", e);
+          // console.log("🚀 ~ file: +page.server.ts:100 ~ default: ~ e:", e);
 
           throw error(501, e);
         }
