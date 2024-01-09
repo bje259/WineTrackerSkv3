@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { PageData } from "./$types";
   import { writable, type Writable } from "svelte/store";
-  import { getContext } from "svelte";
+  import { getContext, setContext } from "svelte";
   import type {
     User,
     BottleRecordTableSchema,
@@ -11,7 +11,7 @@
   import { bottleRecordSchema, bottleRecordTableSchema } from "$lib/Schemas";
   type BottleRecordTableSchema = z.infer<typeof bottleRecordTableSchema>;
   import { z } from "zod";
-
+  import { page } from "$app/stores";
   import {
     addPagination,
     addSortBy,
@@ -38,14 +38,16 @@
     ArrowUpDown,
     ChevronDown,
   } from "lucide-svelte";
-  import type * as DataTablePlugins from "svelte-headless-table/plugins";
+  import * as DataTablePlugins from "svelte-headless-table/plugins";
   import { Input } from "$lib/components/ui/input";
   import SuperDebug from "sveltekit-superforms/client/SuperDebug.svelte";
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import DataTableCheckbox from "./data-table-checkbox.svelte";
   export let data: BottleRecordsTableSchema;
   export let dataStore: Writable<BottleRecordsTableSchema>;
-
+  export let form;
+  import { enhance } from "$app/forms";
+  import { Label } from "$components/ui/label";
   const user: Writable<User> = getContext("user");
   const debug: Writable<boolean> = getContext("debug");
 
@@ -76,6 +78,17 @@
     const bottle = $dataStore.find((bottle) => bottle.BottleId === bottleId);
     return bottle;
   }
+  function pullBottlesData(bottleIdxs: Record<string, boolean>) {
+    let bottles: BottleRecordTableSchema[] = [];
+    Object.keys(bottleIdxs).forEach((idx) => {
+      if (bottleIdxs[idx]) {
+        bottles.push($dataStore[parseInt(idx)]);
+      }
+    });
+    return bottles;
+  }
+
+  let selectedBottles: string;
 
   let table = createTable(dataStore, {
     page: addPagination(),
@@ -104,9 +117,9 @@
     table.display({
       id: "id",
       header: (_, { pluginStates }) => {
-        const { allRowsSelected } = pluginStates.select;
+        const { allPageRowsSelected } = pluginStates.select;
         return createRender(DataTableCheckbox, {
-          checked: allRowsSelected,
+          checked: allPageRowsSelected,
         });
       },
       cell: ({ row }, { pluginStates }) => {
@@ -278,17 +291,27 @@
     rows,
   } = table.createViewModel(columns);
 
-  const { hasNextPage, hasPreviousPage, pageIndex } = pluginStates.page;
+  const { hasNextPage, hasPreviousPage, pageIndex, pageSize, pageCount } =
+    pluginStates.page;
   const { sortKeys } = pluginStates.sort;
   const { filterValue } = pluginStates.filter;
   const { hiddenColumnIds } = pluginStates.hide;
   const { selectedDataIds, getRowState } = pluginStates.select;
+  $pageSize = 8;
+  setContext<DataTablePlugins.WritableSortKeys>("sortKeys", sortKeys);
+
+  sortKeys.update((sortKeys) => {
+    if (sortKeys.length === 0) {
+      sortKeys.push({ id: "Name", order: "asc" });
+    }
+    return sortKeys;
+  });
 
   const hidableCols: {
     [key: string]: boolean | null;
   } = {
     id: null,
-    BottleId: true,
+    BottleId: false,
     Name: null,
     Producer: true,
     Vintage: true,
@@ -312,6 +335,8 @@
     $tableHeadAttrs,
     pluginStates
   );
+
+  $: console.log(console.log("sortkeys", $sortKeys));
 
   // $: console.log("Reactive datastore values:", $dataStore);
   $: {
@@ -348,22 +373,62 @@
       type="text"
       bind:value={$filterValue}
     />
-    <DropdownMenu.Root>
-      <DropdownMenu.Trigger asChild let:builder>
-        <Button variant="outline" class="ml-auto" builders={[builder]}>
-          Columns <ChevronDown class="ml-2 h-4 w-4" />
-        </Button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
-        {#each flatColumns as col}
-          {#if hidableCols[col.id] !== null}
-            <DropdownMenu.CheckboxItem bind:checked={hideForId[col.id]}>
-              {col.header}
-            </DropdownMenu.CheckboxItem>
-          {/if}
-        {/each}
-      </DropdownMenu.Content>
-    </DropdownMenu.Root>
+    <Button
+      variant="outline"
+      class="mr-auto"
+      on:click={() => ($filterValue = "")}>Clear</Button
+    >
+    <div class="flex justify-end ml-auto">
+      <form method="POST" use:enhance action="?/deleteSet">
+        <Button
+          variant="outline"
+          class="mr-auto"
+          type="submit"
+          on:click={(event) => {
+            if (
+              window.confirm(
+                "Are you sure you want to delete the selected bottles?"
+              )
+            ) {
+              selectedBottles = JSON.stringify(
+                pullBottlesData($selectedDataIds)
+              );
+              $selectedDataIds = {};
+              console.log(
+                "selectedDataIds, selectedBottles",
+                $selectedDataIds,
+                selectedBottles
+              );
+              // Proceed with the form submission if confirmed
+            } else {
+              // Prevent the form submission if not confirmed
+              event.preventDefault();
+            }
+          }}>Delete Selected</Button
+        >
+        <input
+          type="hidden"
+          name="selectedBottles"
+          bind:value={selectedBottles}
+        />
+      </form>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger asChild let:builder>
+          <Button variant="outline" class="ml-auto" builders={[builder]}>
+            Columns <ChevronDown class="ml-2 h-4 w-4" />
+          </Button>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          {#each flatColumns as col}
+            {#if hidableCols[col.id] !== null}
+              <DropdownMenu.CheckboxItem bind:checked={hideForId[col.id]}>
+                {col.header}
+              </DropdownMenu.CheckboxItem>
+            {/if}
+          {/each}
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
+    </div>
   </div>
   <div class="rounded-md border">
     <Table.Root {...$tableAttrs}>
@@ -451,10 +516,25 @@
       </Table.Body>
     </Table.Root>
   </div>
-  <div class="flex items-center justify-end space-x-2 py-4">
+  <div class="flex items-end justify-end space-x-2 py-4">
     <div class="flex-1 text-sm text-muted-foreground">
       {Object.keys($selectedDataIds).length} of{" "}
       {$rows.length} row(s) selected.
+    </div>
+    <div class="flex flex-col w-1/8 max-w-sm gap-1.5">
+      <Label for="pageSize">Page Size</Label>
+      <Input
+        id="pageSize"
+        class="w-1/8 text-right h-auto"
+        bind:value={$pageSize}
+      />
+
+      <!-- <Button
+      variant="outline"
+      size="sm"
+      disabled={!$hasNextPage}
+      on:click={() => ($pageIndex = $pageIndex + 1)}>Next</Button
+    > -->
     </div>
     <Button
       variant="outline"
@@ -462,6 +542,7 @@
       on:click={() => ($pageIndex = $pageIndex - 1)}
       disabled={!$hasPreviousPage}>Previous</Button
     >
+    <p>{$pageIndex + 1} out of {$pageCount}</p>
     <Button
       variant="outline"
       size="sm"

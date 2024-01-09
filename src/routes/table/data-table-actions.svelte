@@ -12,7 +12,7 @@
   import { Button } from "$lib/components/ui/button";
   import * as Dialog from "$lib/components/ui/dialog";
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-
+  import * as DataTablePlugins from "svelte-headless-table/plugins";
   import type { User, BottleDB, BottleRecordSchema } from "$lib";
   import type {
     BottleRecordTableSchema,
@@ -68,11 +68,7 @@
     const result = $dataStore.findIndex(
       (bottle) => bottle.BottleId === BottleId
     );
-    // console.log(
-    //   "🚀 ~ file: data-table-actions.svelte:47 ~ getIndex ~ BottleId,result:",
-    //   BottleId,
-    //   result
-    // );
+
     return result;
   }
 
@@ -80,7 +76,7 @@
 
   let currIndex = getIndex(BottleId).toString();
 
-  $: bottles = $page.state.bottlePreLoad?.bottlesDB || bottles;
+  $: bottles = $page.data.bottlesDB || bottles;
 
   let messageStore = "Listening";
 
@@ -89,10 +85,6 @@
 
   $: if ($dialogBottle === BottleId) {
     console.log("Reactive dialogBottle", BottleId, $dialogBottle);
-    // console.log(
-    //   "Reactive bottledetails",
-    //   (bottles as BottlesDB).find((bottle: BottleDB) => bottle.id === BottleId)
-    // );
   }
 
   async function onSubmissionSuccess(deleteBottle?: string) {
@@ -103,16 +95,7 @@
       $dialogBottle
     );
     await preloadData("/bottles").then((result) => {
-      // console.log(
-      //   "🚀 ~ file: +page.svelte:50 ~ onSubmissionSuccess ~ result:",
-      //   result
-      // );
       if (result.type === "loaded" && result.status === 200) {
-        // console.log(
-        //   "🚀 ~ file: +page.svelte:54 ~ pre replacestate ~ result:",
-        //   result,
-        //   $page
-        // );
         if (deleteBottle) {
           bottles2 = [...bottles].filter(
             (bottle) => bottle.id !== deleteBottle
@@ -120,130 +103,49 @@
           bottles = bottles2;
           let temp: BottleRecordsSchema = $page.data.bottlesDB;
           temp.splice(Number(currIndex), 1);
-
-          // $dataStore = $dataStore.filter(
-          //   (bottle) => bottle.id !== deleteBottle
-          // );
-          // updateData(getIndex(deleteBottle).toString(), null);
         }
         replaceState("/table", { bottlePreLoad: result.data });
         replaceState("/bottles/[[]]", { bottlePreLoad: result.data });
         replaceState("/bottles", { bottlePreLoad: result.data });
-        // console.log(
-        //   "🚀 ~ file: +page.svelte:58 ~ post replacestate ~ result:",
-        //   result,
-        //   $page
-        // );
 
         history.back();
-        // console.log(
-        //   "🚀 ~ file: +page.svelte:60 ~ post history back ~ result:",
-        //   result,
-        //   $page
-        // );
-        //pushState("/bottles", { bottlePreLoad: result.data });
+
         if (result.data.bottlesDB) bottles = result.data.bottlesDB;
-        // console.log(
-        //   "🚀 ~ file: +page.svelte:76 after push ~ result.data,page.data,page.state:",
-        //   result.data,
-        //   $page.data,
-        //   $page.state
-        // );
+
         messageStore = "Listening";
         editBottleDialog2 = false;
         if (deleteBottle) {
-          // console.log(
-          //   "🚀 ~ file: +page.svelte:85 ~ onSubmissionSuccess ~ deleteBottle done after historyback:",
-          //   deleteBottle
-          // );
           bottles2 = [...bottles].filter(
             (bottle) => bottle.id !== deleteBottle
           );
           bottles = bottles2;
 
-          // $dataStore = $dataStore.filter(
-          //   (bottle) => bottle.id !== deleteBottle
-          // );
-          // updateData(getIndex(deleteBottle).toString(), null);
-          // console.log(
-          //   "🚀 ~ file: +page.svelte:91 ~ pre replacestate ~ result,page,bottles2,bottles:",
-          //   result,
-          //   $page,
-          //   bottles2,
-          //   bottles
-          // );
           result.data.bottlesDB = bottles2;
           replaceState("/table", { bottlePreLoad: result.data });
           replaceState("/bottles/[[]]", { bottlePreLoad: result.data });
           replaceState("/bottles", { bottlePreLoad: result.data });
-          // console.log(
-          //   "🚀 ~ file: +page.svelte:99 ~ post replacestate ~ result:",
-          //   result,
-          //   $page
-          // );
         }
       }
     });
   }
 
-  // onMount(async () => {
-  //   try {
-  //     const result = await preloadData("/bottles");
-  //     if (result.type === "loaded" && result.status === 200) {
-  //       pushState("/bottles", { bottlePreLoad: result.data });
-  //       console.log(
-  //         "🚀 ~ file: +page.svelte:69 ~ onClickFunction - (loaded=true) Setting init=true result.data:",
-  //         result.data
-  //       );
-  //       console.log(
-  //         "🚀 ~ file: +page.svelte:40 ~ onMount ~ editBottleDialog2,editBottleInit,theForm2",
-  //         editBottleDialog2,
-  //         editBottleInit,
-  //         theForm2
-  //       );
-  //     } else {
-  //       console.log("Failed to load bottles:", result);
-  //       throw error(418, "Failed to load bottles");
-  //     }
-  //   } catch (e) {
-  //     console.error("Error during preload:", e);
-  //   }
-  // });
-
   async function onBottleEditClick(
     e: MouseEvent & { currentTarget: HTMLElement }
   ): Promise<void> {
-    //console.log("🚀 ~ file: data-table-actions.svelte:29 ~ currentTarget:", e);
     // Cast the current target to a type that may have an href
     let target = e?.currentTarget as HTMLAnchorElement;
     // prevent full navigation
     e.preventDefault();
 
     let href = target?.href || `/bottles/${BottleId}`;
-    // console.log("🚀 ~ file: +page.svelte:60 ~ onClickFunction- href:", href);
+
     // run `load` functions (or rather, get the result of the `load` functions
     // that are already running because of `data-sveltekit-preload-data`)
     await preloadData(href)
       .then((result) => {
-        // console.log(
-        //   "🚀 ~ file: +page.svelte:64 ~ onClickFunction ~ result",
-        //   result
-        // );
-
         if (result.type === "loaded" && result.status === 200) {
           pushState(href, { bottlePreLoad: result.data });
-          // if ($page.state.bottlePreLoad?.form?.data?.id) {
-          //   editBottleDialog2 = true;
-          //   editBottleInit = false;
-          //   console.log(
-          //     "🚀 ~ file: +page.svelte:75 ~ onClickFunction - (loaded=true) Setting result.data,state,init,dialog:",
-          //     result.data,
-          //     $page.state,
-          //     editBottleInit,
-          //     editBottleDialog2
-          //   );
-          // }
-          // editBottleDialog2 = true;
+
           $dialogBottle = BottleId;
           editBottleInit = true;
           if ($page.state.bottlePreLoad?.form?.data?.id) editBottleInit = true;
@@ -254,21 +156,9 @@
             editBottleInit,
             editBottleDialog2
           );
-
-          // if ($page.state.bottlePreLoad?.form?.data?.id) {
-
-          //   console.log(
-          //     "🚀 ~ file: data-table-actions.svelte:81 ~ .then ~ editBottleInit, editBottleDialog2:",
-          //     $editBottleInit,
-          //     $editBottleDialog2
-          //   );
-          // }
-          // $editBottleDialog2 = true;
         } else {
-          //goto(href);
           console.log("🚀 ~ failed to onclick condition", result);
-          // editBottleDialog2 = false;
-          // $editBottleInit = true;
+
           console.log(
             "🚀 ~ file: data-table-actions.svelte:89 ~ .then ~ editBottleInit, editBottleDialog2:",
             editBottleInit,
@@ -280,7 +170,6 @@
         // Handle any errors that occurred during preloadData or in the then block
         console.error(error);
       });
-    //console.log("🚀 ~ file: +page.svelte:73 ~ href:", href);
   }
 
   $: if (BottleId && $page.state.bottlePreLoad?.form?.data?.id === BottleId) {
@@ -290,12 +179,7 @@
       editBottleInit,
       editBottleDialog2
     );
-    // console.log(
-    //   "Line 107: ReactiveIf - state - Current boolean editBottleInit,editBottleDialog2:",
-    //   $editBottleInit,
-    //   $editBottleDialog2
-    // );
-    // console.log("pagestate form", $page.state.bottlePreLoad.form);
+
     formData2 = superForm($page.state.bottlePreLoad?.form, {
       validators: crudSchema,
       resetForm: true,
@@ -316,31 +200,7 @@
         editBottleDialog2
       );
     }
-
-    // console.log(
-    //   "🚀 ~ file: +page.svelte:97 ~ ReactiveIf - state - form: theForm2, message: message2, errors: errors2 } = formData2): and bottles",
-    //   $theForm2,
-    //   $message2,
-    //   $errors2,
-    //   formData2,
-    //   $page.state
-    // );
-
-    // if ($editBottleInit) {
-    //   $editBottleDialog2 = true;
-    //   $editBottleInit = false;
-    //   console.log(
-    //     "🚀 ~ file: data-table-actions.svelte:132 ~ .then ~ editBottleInit, editBottleDialog2:",
-    //     $editBottleInit,
-    //     $editBottleDialog2
-    //   );
-    // }
   } else {
-    // if ($editBottleInit) {
-    //   $editBottleDialog2 = false;
-    //   $editBottleInit = true;
-    //   history.back();
-    // }
   }
 
   $: if ($dialogBottle === BottleId) {
@@ -356,44 +216,99 @@
       messageStore.includes("bottle created") ||
       messageStore.includes("bottle deleted"))
   ) {
-    // console.log(
-    //   "🚀 ~ file: +page.svelte:88 ~ messageStore.includes ~ messageStore,page.data.bottlesDB:",
-    //   messageStore
-    // );
+    let origSK: DataTablePlugins.SortKey[];
+    // getContext<DataTablePlugins.WritableSortKeys>("sortKeys").update((sk) => {
+    //   origSK = sk;
+    //   return [...sk, { id: "BottleId", order: "asc" }];
+    // });
+    editBottleDialog2 = false;
+    console.log("🚀 ~ file: +page.svelte:257 ~ messageStore:", messageStore);
+    messageStore = "Listening";
     const tmpPrepBottles = prepTableData([bottles[Number(currIndex)]]);
     updateData(currIndex, tmpPrepBottles[0]);
+    // onSubmissionSuccess();
+    // history.back();
     messageStore = "Listening";
-    onSubmissionSuccess();
-    // updateData(currIndex, bottles[Number(currIndex)]);
+
+    console.log(
+      "Testing history.back() - Before, 1.messageStore, 2.editBottleDialog2+init, 3.currIndex, 4.$dialogBottle, 5.BottleId, 6.$page, 7.bottles, 8.$dataStore---",
+      messageStore,
+      editBottleDialog2,
+      editBottleInit,
+      currIndex,
+      $dialogBottle,
+      BottleId,
+      $page,
+      bottles,
+      $dataStore
+    );
+    history.back();
+    editBottleDialog2 = false;
+    console.log(
+      "Testing history.back() - After, 1.messageStore, 2.editBottleDialog2+init, 3.currIndex, 4.$dialogBottle, 5.BottleId, 6.$page, 7.bottles, 8.$dataStore---",
+      messageStore,
+      editBottleDialog2,
+      editBottleInit,
+      currIndex,
+      $dialogBottle,
+      BottleId,
+      $page,
+      bottles,
+      $dataStore
+    );
+    // getContext<DataTablePlugins.WritableSortKeys>("sortKeys").update(
+    //   () => origSK
+    // );
   } else if (
     $dialogBottle === BottleId &&
     messageStore !== "Listening" &&
     currIndex !== "-1"
   ) {
+    let origSK: DataTablePlugins.SortKey[];
+    // getContext<DataTablePlugins.WritableSortKeys>("sortKeys").update((sk) => {
+    //   origSK = sk;
+    //   return [...sk, { id: "BottleId", order: "asc" }];
+    // });
+    editBottleDialog2 = false;
+    console.log("🚀 ~ file: +page.svelte:257 ~ messageStore:", messageStore);
     messageStore = "Listening";
-
-    // console.log(
-    //   "🚀 ~ file: +page.svelte:93 ~ messageStore !== Listening ~ deletedBottleID:",
-    //   deletedBottleID
-    // );
-
     updateData(currIndex, null);
-    onSubmissionSuccess(currIndex);
-    // updateData(currIndex, null);
-    // bottles2 = [...bottles2].filter((bottle) => bottle.id !== deletedBottleID);
-    // console.log(
-    //   "🚀 ~ file: +page.svelte:96 ~ messageStore !== Listening ~ bottles2:",
-    //   bottles2
+    // onSubmissionSuccess(currIndex);
+    // history.back();
+    bottles2 = [...bottles].filter((bottle) => bottle.id !== messageStore);
+    let temp: BottleRecordsSchema = $page.data.bottlesDB;
+    temp.splice(Number(currIndex), 1);
+    messageStore = "Listening";
+    console.log(
+      "Testing history.back() - Before, messageStore, editBottleDialog2+init, currIndex, $dialogBottle, BottleId, $page, bottles, $dataStore---",
+      messageStore,
+      editBottleDialog2,
+      editBottleInit,
+      currIndex,
+      $dialogBottle,
+      BottleId,
+      $page,
+      bottles,
+      $dataStore
+    );
+    history.back();
+    editBottleDialog2 = false;
+    console.log(
+      "Testing history.back() - After, messageStore, editBottleDialog2+init, currIndex, $dialogBottle, BottleId, $page, bottles, $dataStore---",
+      messageStore,
+      editBottleDialog2,
+      editBottleInit,
+      currIndex,
+      $dialogBottle,
+      BottleId,
+      $page,
+      bottles,
+      $dataStore
+    );
+    // getContext<DataTablePlugins.WritableSortKeys>("sortKeys").update(
+    //   () => origSK
     // );
-
-    //$editBottleDialog = false;
   }
-
-  // $: if ($dialogBottle === BottleId)
-  //   console.log(
-  //     "Reactive datastore values (filtered):",
-  //     $dataStore[Number(currIndex)]
-  //   );
 </script>
 
 <DropdownMenu.Root bind:open={$openDDL}>
@@ -439,7 +354,7 @@
         Edit Bottle
       </a>
     </DropdownMenu.Item>
-    <DropdownMenu.Item>View payment details</DropdownMenu.Item>
+    <!-- <DropdownMenu.Item>View payment details</DropdownMenu.Item> -->
   </DropdownMenu.Content>
 </DropdownMenu.Root>
 
@@ -447,6 +362,7 @@
   <Dialog.Root
     open={editBottleDialog2}
     onOpenChange={async (open) => {
+      console.log("start of onOpenChange", open, $dialogBottle, BottleId);
       if (!open && $dialogBottle === BottleId) {
         // $editBottleDialog2 = false;
         // editBottleInit = true;

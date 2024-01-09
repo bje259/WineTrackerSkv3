@@ -12,7 +12,7 @@
   import * as Table from "$lib/components/ui/table";
   import { bottleRecordSchema, bottleRecordTableSchema } from "$lib/Schemas";
   import { z } from "zod";
-
+  export let form;
   import DataTable from "./data-table.svelte";
   import { Button } from "$components/ui/button";
 
@@ -48,7 +48,7 @@
 >
 <div class="container mx-auto py-10">
   {#if dataForTable}
-    <DataTable data={dataForTable} {dataStore} />
+    <DataTable data={dataForTable} {dataStore} {form} />
   {/if}
 </div>
 
