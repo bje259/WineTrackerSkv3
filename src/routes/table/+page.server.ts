@@ -12,16 +12,18 @@ import { z } from "zod";
 import { error, fail, redirect } from "@sveltejs/kit";
 import type { Import } from "lucide-svelte";
 import type { ClientResponseError } from "pocketbase";
-type BottleDB = z.infer<typeof bottleRecordSchema>;
-type BottlesDB = BottleDB[];
+type BottleRecordSchema = z.infer<typeof bottleRecordSchema>;
+type BottleRecordsSchema = BottleRecordSchema[];
 
 export const load = (async ({ locals }) => {
-  let bottlesDB: BottlesDB = [];
+  let bottlesDB: BottleRecordsSchema = [];
   //const exportFormData: ExportSchema;
   if (locals.user && locals.pb.authStore.isValid) {
-    bottlesDB = await locals.pb.collection("BottlesDB").getFullList<BottleDB>({
-      sort: "Name",
-    });
+    bottlesDB = await locals.pb
+      .collection("BottlesDB")
+      .getFullList<BottleRecordSchema>({
+        sort: "Name",
+      });
   } else {
     throw redirect(303, "/login");
   }

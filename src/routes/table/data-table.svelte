@@ -2,7 +2,11 @@
   import type { PageData } from "./$types";
   import { writable, type Writable } from "svelte/store";
   import { getContext } from "svelte";
-  import type { User } from "$lib/types";
+  import type {
+    User,
+    BottleRecordTableSchema,
+    BottleRecordsTableSchema,
+  } from "$lib/types";
   import * as Table from "$lib/components/ui/table";
   import { bottleRecordSchema, bottleRecordTableSchema } from "$lib/Schemas";
   type BottleRecordTableSchema = z.infer<typeof bottleRecordTableSchema>;
@@ -39,47 +43,41 @@
   import SuperDebug from "sveltekit-superforms/client/SuperDebug.svelte";
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import DataTableCheckbox from "./data-table-checkbox.svelte";
-  export let data: BottleRecordTableSchema[];
+  export let data: BottleRecordsTableSchema;
+  export let dataStore: Writable<BottleRecordsTableSchema>;
 
-  type BottleRecord = z.infer<typeof bottleRecordSchema>;
-  type BottleRecords = BottleRecord[];
   const user: Writable<User> = getContext("user");
   const debug: Writable<boolean> = getContext("debug");
 
-  type IndexRecord = {
-    [key: string]: string | number | undefined;
-  };
-  const dataStore = writable<IndexRecord[]>(data);
-
   const dialogBottle = writable<string>("");
 
-  // const updateData = (rowDataId: string, newValue: IndexRecord) => {
-
-  //   const idx = parseInt(rowDataId);
-  //   let currentItem = $dataStore[idx];
-  //   currentItem = { ...newValue }; // is this necessary? Since not every value might have changed?
-  //   const tempStore = [...$dataStore.slice(0, idx), currentItem, ...$dataStore.slice(idx + 1)]
-  //   $dataStore = tempStore;
-  // };
-
-  const updateData = (rowDataId: string, newValue: IndexRecord | null) => {
+  const updateData = (
+    rowDataId: string,
+    newValue: BottleRecordTableSchema | null
+  ) => {
     const idx = parseInt(rowDataId);
-    if (newValue === null) {
-      let currentStore = $dataStore;
-      currentStore.splice(idx);
-      $dataStore = currentStore;
-    } else {
-      let currentItem = $dataStore[idx];
-
-      // Update only the changed properties
-      $dataStore[idx] = { ...currentItem, ...newValue };
-
-      // Trigger reactivity by assigning the store to itself
-      $dataStore = $dataStore;
-    }
+    dataStore.update((data) => {
+      if (newValue === null) {
+        data.splice(idx, 1);
+      } else {
+        data[idx] = { ...data[idx], ...newValue };
+      }
+      return data; // Ensure to return the updated data
+    });
+    console.log(
+      "Update datastore:newValue,idx,dataStore",
+      newValue,
+      idx,
+      newValue?.BottleId ? pullBottleData(newValue.BottleId as string) : null
+    );
   };
 
-  let table = createTable(writable($dataStore), {
+  function pullBottleData(bottleId: string) {
+    const bottle = $dataStore.find((bottle) => bottle.BottleId === bottleId);
+    return bottle;
+  }
+
+  let table = createTable(dataStore, {
     page: addPagination(),
     sort: addSortBy(),
     filter: addTableFilter({
@@ -290,7 +288,7 @@
     [key: string]: boolean | null;
   } = {
     id: null,
-    BottleId: false,
+    BottleId: true,
     Name: null,
     Producer: true,
     Vintage: true,
@@ -315,24 +313,17 @@
     pluginStates
   );
 
-  $: console.log($dataStore);
-
+  // $: console.log("Reactive datastore values:", $dataStore);
+  $: {
+    if (!$dialogBottle) console.log("Reactive datastore values:", $dataStore);
+    else
+      console.log(
+        "Reactive datastore values filtered:",
+        $dataStore.find((bottle) => bottle.BottleId === $dialogBottle)
+      );
+  }
   // spacer
 </script>
-
-<Button
-  on:click={() => {
-    const i = $dataStore.findIndex(
-      (bottle) => bottle.BottleId === "lkdhtw39s6u7dbw"
-    );
-    const temp = $dataStore;
-    temp[i].Name = "testzzzz";
-    temp[i].Producer = "testzzzzz";
-    updateData(i.toString(), temp[i]);
-    // $dataStore = temp;
-    console.log("Test:", $dataStore);
-  }}>Button</Button
->
 
 <!-- <pre>$sortKeys = {JSON.stringify($sortKeys, null, 2)}</pre> -->
 {#if $debug}<SuperDebug
@@ -439,16 +430,10 @@
                           checked: getRowState(row).isSelected,
                         })}
                       />
-                    {:else if cell.id === "" || cell.id === "BottleId"}
+                    {:else if cell.id === ""}
                       <Render of={cell.render()} />
                     {:else}
-                      <Render
-                        of={createRender(customCell, {
-                          value: dataStore,
-                          row,
-                          cell,
-                        })}
-                      />
+                      <Render of={cell.render()} />
                     {/if}
                     <!-- <Render
                       of={createRender(customCell, {

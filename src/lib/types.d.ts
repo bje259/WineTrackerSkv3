@@ -6,8 +6,10 @@ import {
   bottleSchema,
   crudSchema,
   exportSchema,
+  bottleRecordSchema,
 } from "$lib/Schemas";
 import { z } from "zod";
+import { bottleRecordTableSchema } from "./Schemas";
 
 export type UserDB = z.infer<typeof userDB>;
 export type User = UserDB;
@@ -15,6 +17,9 @@ export type BottleDB = z.infer<typeof crudSchema>;
 export type BottleDBinput = z.input<typeof crudSchema>;
 export type BottlesDB = BottleDB[];
 export type ExportSchema = Z.infer<typeof exportSchema>;
+
+export type BottleRecordSchema = z.infer<typeof bottleRecordSchema>;
+export type BottleRecordsSchema = BottleRecordSchema[];
 
 /**
  * The Wine interface represents a wine.
@@ -212,6 +217,24 @@ export interface Admin {
   updated?: string;
 }
 
-export type IndexRecord = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type IndexRecord<T extends Record<string, any>> = {
   [key: string]: string | number | undefined;
+} & T;
+
+export interface RequiredBottleFields {
+  Name: string;
+  Producer: string;
+  Vintage: number;
+  created: string;
+  updated: string;
+  BottleId: string;
+}
+
+export type BottleRecordTableSchema = IndexRecord<RequiredBottleFields> & {
+  Purchased?: string;
+  Consumed?: string;
+  id?: string;
 };
+
+export type BottleRecordsTableSchema = BottleRecordTableSchema[];

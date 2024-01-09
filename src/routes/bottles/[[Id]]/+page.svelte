@@ -7,7 +7,12 @@
   import type { PageData } from "./$types";
   import type { Writable } from "svelte/store";
   //import TestForm from './TestForm3.svelte';
-  import type { BottleDB, User } from "$lib/types";
+  import type {
+    BottleDB,
+    User,
+    BottleRecordSchema,
+    BottleRecordsSchema,
+  } from "$lib/types";
   import { superForm } from "sveltekit-superforms/client";
   import { crudSchema } from "$lib/Schemas";
   import { page } from "$app/stores";
@@ -31,6 +36,7 @@
   export let data: PageData;
   const user: Writable<User> = getContext("user");
   let bottles = data.bottlesDB;
+  let bottles2: BottleRecordsSchema = [];
   const debug: Writable<boolean> = getContext("debug");
   let editTableDialog: Writable<boolean> = getContext("editTableDialog");
   // const formData = superForm(data.form, {
@@ -147,7 +153,7 @@
     }
     //console.log("🚀 ~ file: +page.svelte:73 ~ href:", href);
   }
-  let bottles2: BottleDB[];
+
   $: bottles2 = $page.state.bottlePreLoad?.bottlesDB || bottles;
   //$: bottles2 = $page?.data?.bottlesDB || bottles;
   // $: console.log(

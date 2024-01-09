@@ -3,7 +3,7 @@
 // and what to do when importing types
 import type { SuperValidated } from "sveltekit-superforms";
 import { loginUserDto } from "$lib/Schemas";
-import type { User, Admin } from "$lib/types";
+import type { User, Admin, BottleRecordsSchema } from "$lib/types";
 import type Writable from "svelte/store";
 import PocketBase from "pocketbase";
 import { crudSchema } from "$lib/Schemas";
@@ -31,7 +31,7 @@ declare global {
       };
       bottlePreLoad?: {
         form: SuperValidated<typeof crudSchema>;
-        bottlesDB: BottlesDB;
+        bottlesDB: BottleRecordsSchema;
       };
     }
   }

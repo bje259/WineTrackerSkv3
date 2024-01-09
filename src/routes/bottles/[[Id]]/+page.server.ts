@@ -8,6 +8,7 @@ import { crudSchema } from "$lib/Schemas";
 import { ClientResponseError } from "pocketbase";
 import type { SuperValidated } from "sveltekit-superforms";
 import { ADMIN_USER_ID } from "$env/static/private";
+import type { BottleRecordSchema, BottleRecordsSchema } from "$lib/types";
 
 type BottleDB = z.infer<typeof crudSchema>;
 type BottlesDB = BottleDB[];
@@ -15,13 +16,13 @@ type BottlesDB = BottleDB[];
 export const load = async ({ params, locals }) => {
   // READ bottle if paramID present
   const id = params.Id;
-  let bottlesDB: BottlesDB;
+  let bottlesDB: BottleRecordsSchema = [];
   //Check authorization
   try {
     if (locals.pb.authStore.isValid) {
       bottlesDB = await locals.pb
         .collection("BottlesDB")
-        .getFullList<BottleDB>({
+        .getFullList<BottleRecordSchema>({
           sort: "Name",
         });
     } else {

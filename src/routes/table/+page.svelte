@@ -2,16 +2,21 @@
   import type { PageData } from "./$types";
   import { writable, type Writable } from "svelte/store";
   import { getContext } from "svelte";
-  import type { User } from "$lib/types";
+  import type {
+    User,
+    BottleRecordTableSchema,
+    BottleRecordsTableSchema,
+    BottleRecordSchema,
+  } from "$lib/types";
   export let data: PageData;
   import * as Table from "$lib/components/ui/table";
   import { bottleRecordSchema, bottleRecordTableSchema } from "$lib/Schemas";
   import { z } from "zod";
-  type BottleRecordTableSchema = z.infer<typeof bottleRecordTableSchema>;
-  type BottleRecordSchema = z.infer<typeof bottleRecordSchema>;
-  import DataTable from "./data-table.svelte";
 
-  const dataForTable: BottleRecordTableSchema[] = data.bottlesDB.map(
+  import DataTable from "./data-table.svelte";
+  import { Button } from "$components/ui/button";
+
+  let dataForTable: BottleRecordTableSchema[] = data.bottlesDB.map(
     (bottle: BottleRecordSchema) => {
       return {
         id: undefined,
@@ -26,10 +31,25 @@
       };
     }
   );
+
+  const dataStore = writable<BottleRecordsTableSchema>([]);
+
+  $: if (dataForTable) $dataStore = dataForTable;
 </script>
 
+<Button
+  on:click={async () => {
+    const response = await fetch("/api/testCreate", { method: "POST" });
+    console.log(
+      "🚀 ~ file: +page.svelte:39 ~ on:click={ ~ response:",
+      response
+    );
+  }}>Button</Button
+>
 <div class="container mx-auto py-10">
-  <DataTable data={dataForTable} />
+  {#if dataForTable}
+    <DataTable data={dataForTable} {dataStore} />
+  {/if}
 </div>
 
 <!-- form Code starts here-->
