@@ -35,7 +35,7 @@ export const load = (async ({ locals }) => {
 
   //const form = await superValidate(importSchemaArray);
 
-  return { bottlesDB, user: locals.user };
+  return { bottlesDB, user: locals.user, admin: locals.admin };
 }) satisfies PageServerLoad;
 
 export const actions = {

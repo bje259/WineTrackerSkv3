@@ -10,6 +10,7 @@
   import { onMount } from "svelte";
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
+  import type { Admin } from "$lib/types";
   import { storePopup } from "@skeletonlabs/skeleton";
   import {
     arrow,
@@ -143,7 +144,7 @@
     <!-- App Bar -->
     <AppBar>
       <svelte:fragment slot="lead">
-        <strong class="text-xl uppercase">Skeleton</strong>
+        <strong class="text-xl uppercase">Wine Tracker!</strong>
       </svelte:fragment>
       <svelte:fragment slot="trail">
         {#if navState}
@@ -232,7 +233,10 @@
             </li>
             <li>
               Currently logged in as <br />
-              {x}<br /> (userID {y})
+              {x}<br /> (userID {y}) <br />
+              {#if data?.admin?.id}
+                Admin user: {data.admin.id}
+              {/if}
             </li>
           {/if}
           <li>
@@ -266,6 +270,15 @@
     >
     <slot />
   </div>
+  <svelte:fragment slot="pageFooter">
+    <div class="flex justify-center space-x-5 p-8">
+      <!-- svelte-ignore a11y-invalid-attribute -->
+      <a href="#" class="termly-display-preferences">Consent Preferences</a>
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/tos">Terms of Service</a>
+      <a href="/cookies">Cookie Policy</a>
+    </div>
+  </svelte:fragment>
 </AppShell>
 <Dialog.Root
   open={loginDialogOpen}

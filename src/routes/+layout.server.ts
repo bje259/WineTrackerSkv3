@@ -18,13 +18,13 @@ export const load: LayoutServerLoad = async ({ locals }) => {
     console.log("Layout User", locals.user);
     return {
       user: locals.user as User,
-      admin: { username: "", email: "" }, //  Replace with the appropriate values
+      admin: { id: "", email: "" }, //  Replace with the appropriate values
     };
   }
 
   console.log("Layout clearing user");
   return {
     user: { username: "", email: "" },
-    admin: { username: "", email: "" }, //  Replace with the appropriate values
+    admin: { id: "", email: "" }, //  Replace with the appropriate values
   };
 };

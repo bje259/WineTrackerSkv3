@@ -37,15 +37,17 @@
   $: if (dataForTable) $dataStore = dataForTable;
 </script>
 
-<Button
-  on:click={async () => {
-    const response = await fetch("/api/testCreate", { method: "POST" });
-    console.log(
-      "🚀 ~ file: +page.svelte:39 ~ on:click={ ~ response:",
-      response
-    );
-  }}>Button</Button
->
+{#if data?.admin}
+  <Button
+    on:click={async () => {
+      const response = await fetch("/api/testCreate", { method: "POST" });
+      console.log(
+        "🚀 ~ file: +page.svelte:39 ~ on:click={ ~ response:",
+        response
+      );
+    }}>Button</Button
+  >
+{/if}
 <div class="container mx-auto py-10">
   {#if dataForTable}
     <DataTable data={dataForTable} {dataStore} {form} />
