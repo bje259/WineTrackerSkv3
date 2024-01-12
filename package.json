@@ -63,6 +63,7 @@
   "type": "module",
   "dependencies": {
     "@floating-ui/dom": "1.5.3",
+    "@sveltejs/adapter-vercel": "^4.0.4",
     "ai": "^2.2.31",
     "bits-ui": "^0.11.8",
     "cmdk-sv": "^0.0.12",
