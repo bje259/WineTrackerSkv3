@@ -132,33 +132,41 @@ export const loginUserDto = z.object({
 
 export const userSchema = z.object({
   username: z
-    .string({ required_error: "Name is required." })
-    .regex(/^[a-zA-Z\s]*$/, {
-      message: "Name can only contain letters and spaces.",
-    })
-    .min(2, { message: "Name must be at least 2 characters" })
-    .max(64, { message: "Name must be less than 64 characters" })
+    .string({ required_error: "Username is required." })
+    .min(2, { message: "Username must be at least 2 characters" })
+    .max(64, { message: "Username must be less than 64 characters" })
     .trim(),
   email: z
     .string({ required_error: "Email is required" })
     .email({ message: "Email must be a valid email." }),
+  name: z.string().optional(),
   password: z
     .string({ required_error: "Password is required" })
-    .min(6, { message: "Password must be at least 6 characters" })
+    .min(6, { message: "Password must be at least 8 characters" })
     .max(64, { message: "Password must be less than 64 characters" }),
   passwordConfirm: z
     .string({ required_error: "Password is required" })
-    .min(6, { message: "Password must be at least 6 characters" })
+    .min(6, { message: "Password must be at least 8 characters" })
     .max(64, { message: "Password must be less than 64 characters" }),
 });
 
-const userAdds = userSchema.extend({
+export const userAdds = userSchema.extend({
   id: z.string().optional(),
   verified: z.boolean().optional(),
   created: z.date().optional(),
   updated: z.date().optional(),
   emailVisibility: z.boolean().optional(),
   avatar: z.string().optional(),
+});
+
+export const userAddVerify = userAdds.extend({}).refine((data) => {
+  return (
+    data.passwordConfirm !== data.password,
+    {
+      passwordConfirm: "Password and Confirm Password must match",
+      password: "Password and Confirm Password must match",
+    }
+  );
 });
 
 export const userDB = userAdds.omit({

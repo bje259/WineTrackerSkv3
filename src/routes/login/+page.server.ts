@@ -4,6 +4,7 @@ import { message, superValidate } from "sveltekit-superforms/server";
 import type { PageServerLoad, Actions } from "./$types";
 import { loginUserDto } from "$lib/Schemas";
 import { ClientResponseError } from "pocketbase";
+const validAuthProviders = ["google"];
 
 export const load: PageServerLoad = async ({ locals }) => {
   if (locals.pb.authStore.isValid) {
@@ -11,7 +12,7 @@ export const load: PageServerLoad = async ({ locals }) => {
     throw redirect(303, "/");
   }
   const form = await superValidate(loginUserDto);
-  return { form };
+  return { form, validAuthProviders };
 };
 
 export const actions: Actions = {
@@ -40,19 +41,24 @@ export const actions: Actions = {
       console.log("Email", locals.pb.authStore?.model?.email);
       console.log("Verified", locals.pb.authStore?.model?.verified);
       console.log("Id", locals.pb.authStore?.model?.id);
-      if (!locals.pb?.authStore?.model?.verified) {
-        console.log("clearing auth store - failed authwpwd");
-        locals.pb.authStore.clear();
-        throw new Error("Not Verified");
-      }
+      // if (!locals.pb?.authStore?.model?.verified) {
+      //   console.log("clearing auth store - failed authwpwd");
+      //   locals.pb.authStore.clear();
+      //   throw new Error("Not Verified");
+      // }
     } catch (err) {
-      console.log("Error: ", err);
+      console.log("Error at catch bottom login: ", err);
       const e = err as ClientResponseError;
+      console.log("formdata at error", formData);
+      const {
+        data: { password, ...dataRest },
+        ...rest
+      } = formData;
 
-      const { password, ...rest } = formData.data;
+      const reconstructedFormData = { ...rest, data: dataRest };
 
       return {
-        form: rest,
+        form: reconstructedFormData,
         invalidCredentials: true,
       };
     }

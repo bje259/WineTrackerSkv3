@@ -6,9 +6,44 @@
   import { getForm } from "formsnap";
   import { writable, type Writable } from "svelte/store";
   import { getContext } from "svelte";
+  import { PUBLIC_PB_HOST } from "$env/static/public";
+  import PocketBase from "pocketbase";
 
   export let data: PageData;
   const debug: Writable<boolean> = getContext("debug");
+  const clientPB = new PocketBase(PUBLIC_PB_HOST);
+
+  const oauthSignup = (e: Event, provider: string = "google"): void => {
+    if (!data.validAuthProviders.includes(provider)) {
+      throw new Error("Invalid auth provider");
+    }
+
+    let w = window.open();
+    if (w)
+      clientPB.collection("users").authWithOAuth2({
+        provider: provider,
+        urlCallback: (url) => {
+          w!.location.href = url;
+        },
+      });
+    console.log(clientPB.authStore.isValid);
+    console.log(clientPB.authStore.token);
+    console.log("Username", clientPB.authStore?.model?.username);
+    console.log("Email", clientPB.authStore?.model?.email);
+    console.log("Verified", clientPB.authStore?.model?.verified);
+    console.log("Id", clientPB.authStore?.model?.id);
+    // clientPB
+    //   .collection("users")
+    //   .authWithOAuth2({ provider: "google" })
+    //   .then((res) => {
+    //     console.log(clientPB.authStore.isValid);
+    //     console.log(clientPB.authStore.token);
+    //     console.log("Username", clientPB.authStore?.model?.username);
+    //     console.log("Email", clientPB.authStore?.model?.email);
+    //     console.log("Verified", clientPB.authStore?.model?.verified);
+    //     console.log("Id", clientPB.authStore?.model?.id);
+    // });
+  };
 
   $: form = data?.form;
 
@@ -61,6 +96,13 @@
           <Form.Validation />
         </Form.Field>
         <Form.Button>Log in</Form.Button>
+        <Form.Button type="button" class="btn-auth" on:click={oauthSignup}>
+          <img
+            class="btn-auth-img"
+            src="/google_signin_buttons/web/1x/btn_google_signin_dark_pressed_web.png"
+            alt="google sign in"
+          />
+        </Form.Button>
       </Form.Root>
     {:else}
       <p>Loading...</p>

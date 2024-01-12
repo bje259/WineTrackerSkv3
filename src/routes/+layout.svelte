@@ -12,6 +12,7 @@
   import { writable } from "svelte/store";
   import type { Admin } from "$lib/types";
   import { storePopup } from "@skeletonlabs/skeleton";
+  const validAuthProviders = ["google"];
   import {
     arrow,
     autoUpdate,
@@ -39,11 +40,19 @@
   import { Switch } from "$lib/components/ui/switch";
   import { Label } from "$lib/components/ui/label";
 
+  type ValidAuthProviders = typeof validAuthProviders;
+
   let navState = false;
-  let combinedData: PageData & { form: SuperValidated<typeof loginUserDto> };
+  let combinedData: PageData & { form: SuperValidated<typeof loginUserDto> } & {
+    validAuthProviders: ValidAuthProviders;
+  };
 
   $: if ($page.state?.loginPageData?.form) {
-    combinedData = { ...data, ...$page.state.loginPageData };
+    combinedData = {
+      ...data,
+      ...$page.state.loginPageData,
+      validAuthProviders,
+    };
     console.log("🚀 ~ file: +layout.svelte:39 ~ combinedData:", combinedData);
   }
 
@@ -218,9 +227,10 @@
           <li><a href="/sandbox">Sandbox</a></li>
           <li><a href="/table">Table</a></li>
           <li><a href="/logs">Logs</a></li>
+          <li><a href="/signup">Sign-up</a></li>
           {#if !x}
             <li>
-              <a href="/login" on:click={onLoginLinkClick}>Test Login</a>
+              <a href="/login" on:click={onLoginLinkClick}>Login</a>
             </li>
           {:else if x}
             <li>
