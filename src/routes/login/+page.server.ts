@@ -56,7 +56,7 @@ export const actions: Actions = {
       } = formData;
 
       const reconstructedFormData = { ...rest, data: dataRest };
-
+      reconstructedFormData?.errors?._errors?.push("Invalid Credentials");
       return {
         form: reconstructedFormData,
         invalidCredentials: true,

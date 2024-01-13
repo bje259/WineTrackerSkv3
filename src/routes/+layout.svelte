@@ -244,7 +244,7 @@
             <li>
               Currently logged in as <br />
               {x}<br /> (userID {y}) <br />
-              {#if data?.admin?.id}
+              {#if data?.admin}
                 Admin user: {data.admin.id}
               {/if}
             </li>

@@ -8,42 +8,51 @@
   import { getContext } from "svelte";
   import { PUBLIC_PB_HOST } from "$env/static/public";
   import PocketBase from "pocketbase";
+  import pb from "$lib/browserclient";
+  import { browser } from "$app/environment";
+  import { invalidate, invalidateAll } from "$app/navigation";
 
   export let data: PageData;
   const debug: Writable<boolean> = getContext("debug");
-  const clientPB = new PocketBase(PUBLIC_PB_HOST);
 
-  const oauthSignup = (e: Event, provider: string = "google"): void => {
+  const oauthSignup = async (
+    e: Event,
+    provider: string = "google"
+  ): Promise<void> => {
     if (!data.validAuthProviders.includes(provider)) {
       throw new Error("Invalid auth provider");
     }
-
-    let w = window.open();
-    if (w)
-      clientPB.collection("users").authWithOAuth2({
-        provider: provider,
-        urlCallback: (url) => {
-          w!.location.href = url;
-        },
-      });
-    console.log(clientPB.authStore.isValid);
-    console.log(clientPB.authStore.token);
-    console.log("Username", clientPB.authStore?.model?.username);
-    console.log("Email", clientPB.authStore?.model?.email);
-    console.log("Verified", clientPB.authStore?.model?.verified);
-    console.log("Id", clientPB.authStore?.model?.id);
-    // clientPB
-    //   .collection("users")
-    //   .authWithOAuth2({ provider: "google" })
-    //   .then((res) => {
-    //     console.log(clientPB.authStore.isValid);
-    //     console.log(clientPB.authStore.token);
-    //     console.log("Username", clientPB.authStore?.model?.username);
-    //     console.log("Email", clientPB.authStore?.model?.email);
-    //     console.log("Verified", clientPB.authStore?.model?.verified);
-    //     console.log("Id", clientPB.authStore?.model?.id);
-    // });
+    if (browser) {
+      try {
+        //const clientPB = new PocketBase(PUBLIC_PB_HOST);
+        let w = window.open();
+        const result = await pb.collection("users").authWithOAuth2({
+          provider: provider,
+          urlCallback: (url) => {
+            w!.location.href = url;
+          },
+        });
+        console.log("check result", result);
+        console.log("Check oauth", pb.authStore.isValid);
+        console.log(pb.authStore.token);
+        console.log("Username", pb.authStore?.model);
+        invalidateAll();
+      } catch (error) {
+        console.log("oauth error", error);
+      }
+    }
   };
+  // clientPB
+  //   .collection("users")
+  //   .authWithOAuth2({ provider: "google" })
+  //   .then((res) => {
+  //     console.log(clientPB.authStore.isValid);
+  //     console.log(clientPB.authStore.token);
+  //     console.log("Username", clientPB.authStore?.model?.username);
+  //     console.log("Email", clientPB.authStore?.model?.email);
+  //     console.log("Verified", clientPB.authStore?.model?.verified);
+  //     console.log("Id", clientPB.authStore?.model?.id);
+  // });
 
   $: form = data?.form;
 

@@ -8,10 +8,12 @@
   import { getContext } from "svelte";
   import PocketBase from "pocketbase";
   import { PUBLIC_PB_HOST } from "$env/static/public";
+  import pb from "$lib/browserclient";
+  import { browser } from "$app/environment";
+  import { invalidate, invalidateAll } from "$app/navigation";
 
   export let data: PageData;
   const debug: Writable<boolean> = getContext("debug");
-  const clientPB = new PocketBase(PUBLIC_PB_HOST);
 
   const oauthSignup = async (
     e: Event,
@@ -20,18 +22,25 @@
     if (!data.validAuthProviders.includes(provider)) {
       throw new Error("Invalid auth provider");
     }
-
-    clientPB
-      .collection("users")
-      .authWithOAuth2({ provider: "google" })
-      .then((res) => {
-        console.log(clientPB.authStore.isValid);
-        console.log(clientPB.authStore.token);
-        console.log("Username", clientPB.authStore?.model?.username);
-        console.log("Email", clientPB.authStore?.model?.email);
-        console.log("Verified", clientPB.authStore?.model?.verified);
-        console.log("Id", clientPB.authStore?.model?.id);
-      });
+    if (browser) {
+      try {
+        //const clientPB = new PocketBase(PUBLIC_PB_HOST);
+        let w = window.open();
+        const result = await pb.collection("users").authWithOAuth2({
+          provider: provider,
+          urlCallback: (url) => {
+            w!.location.href = url;
+          },
+        });
+        console.log("check result", result);
+        console.log("Check oauth", pb.authStore.isValid);
+        console.log(pb.authStore.token);
+        console.log("Username", pb.authStore?.model);
+        invalidateAll();
+      } catch (error) {
+        console.log("oauth error", error);
+      }
+    }
   };
 
   $: form = data?.form;
