@@ -1,10 +1,26 @@
 import type {
-  TreeViewNode,
   RecursiveTreeView,
   RecursiveTreeViewItem,
 } from "@skeletonlabs/skeleton";
 
-export const nodes: TreeViewNode[] = [
+export interface TreeViewNode {
+  /** Nodes Unique ID */
+  id: string;
+  /** Main content. accepts HTML or svelte component. */
+  content: string;
+  /** Main content props. only used when the Content is a svelte component. */
+  contentProps?: object;
+  /** Lead content. accepts HTML or svelte component. */
+  lead?: string;
+  /** lead props. only used when the Lead is a svelte component. */
+  leadProps?: object;
+  /** children nodes. */
+  children?: TreeViewNode[];
+  /** Set the input's value. */
+  value?: unknown;
+}
+
+export const nodesIn: TreeViewNode[] = [
   {
     id: "RecordService",
     content: "<h3>RecordService</h3>",

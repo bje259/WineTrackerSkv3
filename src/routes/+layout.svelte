@@ -156,7 +156,9 @@
     <!-- App Bar -->
     <AppBar>
       <svelte:fragment slot="lead">
-        <strong class="text-xl uppercase">Wine Tracker!</strong>
+        <a href="/" class="text-xl uppercase font-bold">
+          <strong>Wine Tracker!</strong>
+        </a>
       </svelte:fragment>
       <svelte:fragment slot="trail">
         {#if navState}
@@ -290,7 +292,9 @@
       on:click={() => (devMenuOpen = !devMenuOpen)}
       ><p class="text-4xl">→</p></Button
     >
-    <slot />
+    <div class="flex flex-col items-center mx-auto">
+      <slot />
+    </div>
   </div>
   <svelte:fragment slot="pageFooter">
     <div class="flex justify-center space-x-5 p-8">

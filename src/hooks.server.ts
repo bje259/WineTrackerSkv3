@@ -6,6 +6,8 @@ import type { UserDB as User, Admin } from "$lib/types";
 import { PUBLIC_PB_HOST } from "$env/static/public";
 import { ADMIN_USER_ID } from "$env/static/private";
 
+const allowedHeaders = ["retry-after", "content-type"];
+
 /** @type {import('@sveltejs/kit').Handle} */
 export const handle: Handle = async ({ event, resolve }) => {
   event.locals.pb = new PocketBase(PUBLIC_PB_HOST);

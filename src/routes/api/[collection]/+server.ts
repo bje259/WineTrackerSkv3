@@ -1,9 +1,6 @@
-import type { RequestHandler } from "./$types";
-import * as vivino from "$lib/vivino";
 import { error, json } from "@sveltejs/kit";
 import { ClientResponseError, type ListOptions } from "pocketbase";
 
-//get wines
 export async function GET({ locals, params: { collection }, url }) {
   if (!locals.user) error(403, "Forbidden");
   const page = url.searchParams.get("page") || "1";

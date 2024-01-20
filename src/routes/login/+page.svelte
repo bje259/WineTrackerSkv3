@@ -11,6 +11,8 @@
   import pb from "$lib/browserclient";
   import { browser } from "$app/environment";
   import { invalidate, invalidateAll } from "$app/navigation";
+  import Wrapper from "../wrapper.svelte";
+  import ResetPasswordLink from "$routes/reset-password-link.svelte";
 
   export let data: PageData;
   const debug: Writable<boolean> = getContext("debug");
@@ -117,4 +119,5 @@
       <p>Loading...</p>
     {/if}
   </div>
+  <div><ResetPasswordLink /></div>
 </div>

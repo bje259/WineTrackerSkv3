@@ -1,0 +1,822 @@
+[
+  {
+    "id": "RecordService",
+    "content": "<h3>RecordService</h3>",
+    "value": "RecordService",
+    "children": [
+      {
+        "id": "crud",
+        "content": "<h3>crud</h3>",
+        "value": "crud",
+        "children": [
+          {
+            "id": "getList",
+            "content": "\n                        <h3>getList</h3>\n\t\t\t\t\t\t// Returns a paginated records list.<br />\n                        🔓 pb.collection(collectionIdOrName).getList(page = 1, perPage = 30, options = {});",
+            "value": "getList",
+            "command": "pb.collection(collectionIdOrName).getList(page = 1, perPage = 30, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(page = 1, perPage = 30, options = {})"
+            ]
+          },
+          {
+            "id": "getFullList",
+            "content": "\n\t\t\t<h3>getFullList</h3>\n\t\t\t// Returns a list with all records batch fetched at once\n// (by default 200 items per request; to change it set the 'batch' param).<br />\n🔓 pb.collection(collectionIdOrName).getFullList(options = {});",
+            "value": "getFullList",
+            "command": "pb.collection(collectionIdOrName).getFullList(options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(options = {})"
+            ]
+          },
+          {
+            "id": "getFirstListItem",
+            "content": "<h3>getFirstListItem</h3>\n\t\t\t// Returns the first found record matching the specified filter.<br />\n🔓 pb.collection(collectionIdOrName).getFirstListItem(filter, options = {});",
+            "value": "getFirstListItem",
+            "command": "pb.collection(collectionIdOrName).getFirstListItem(filter, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(filter, options = {})"
+            ]
+          },
+          {
+            "id": "getOne",
+            "content": "<h3>getOne</h3>\n\t\t\t// Returns a single record by its id.<br />\n🔓 pb.collection(collectionIdOrName).getOne(recordId, options = {});",
+            "value": "getOne",
+            "command": "pb.collection(collectionIdOrName).getOne(recordId, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(recordId, options = {})"
+            ]
+          },
+          {
+            "id": "create",
+            "content": "<h3>create</h3>\n\t\t\t// Creates (aka. register) a new record.<br />\n🔓 pb.collection(collectionIdOrName).create(bodyParams = {}, options = {});",
+            "value": "create",
+            "command": "pb.collection(collectionIdOrName).create(bodyParams = {}, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(bodyParams = {}, options = {})"
+            ]
+          },
+          {
+            "id": "update",
+            "content": "<h3>update</h3>\n\t\t\t// Updates an existing record by its id.<br />\n🔓 pb.collection(collectionIdOrName).update(recordId, bodyParams = {}, options = {});",
+            "value": "update",
+            "command": "pb.collection(collectionIdOrName).update(recordId, bodyParams = {}, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(recordId, bodyParams = {}, options = {})"
+            ]
+          },
+          {
+            "id": "delete",
+            "content": "<h3>delete</h3>\n\t\t\t// Deletes a single record by its id.<br />\n🔓 pb.collection(collectionIdOrName).delete(recordId, options = {});",
+            "value": "delete",
+            "command": "pb.collection(collectionIdOrName).delete(recordId, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(recordId, options = {})"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "Realtime handlers",
+        "content": "<h3>Realtime handlers</h3>",
+        "value": "Realtime handlers",
+        "children": [
+          {
+            "id": "subscribe",
+            "content": "<h3>subscribe</h3>\n\t\t\t// Subscribe to realtime changes to the specified topic (\"*\" or recordId).<br />\n//<br />\n// It is safe to subscribe multiple times to the same topic.<br />\n//<br />\n// You can use the returned UnsubscribeFunc to remove a single registered subscription.<br />\n// If you want to remove all subscriptions related to the topic use unsubscribe(topic).<br />\n🔓 pb.collection(collectionIdOrName).subscribe(topic, callback, options = {});",
+            "value": "subscribe",
+            "command": "pb.collection(collectionIdOrName).subscribe(topic, callback, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(topic, callback, options = {})"
+            ]
+          },
+          {
+            "id": "unsubscribe",
+            "content": "<h3>unsubscribe</h3>\n\t\t\t// Unsubscribe from all registered subscriptions to the specified topic (\"*\" or recordId).<br />\n// If topic is not set, then it will remove all registered collection subscriptions.<br />\n🔓 pb.collection(collectionIdOrName).unsubscribe([topic]);",
+            "value": "unsubscribe",
+            "command": "pb.collection(collectionIdOrName).unsubscribe([topic]);",
+            "params": [
+              "(collectionIdOrName)",
+              "([topic])"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "Auth handlers",
+        "content": "<h3>Auth handlers</h3>",
+        "value": "Auth handlers",
+        "children": [
+          {
+            "id": "listAuthMethods",
+            "content": "<h3>listAuthMethods</h3>\n\t\t\t// Returns all available application auth methods.\n🔓 pb.collection(collectionIdOrName).listAuthMethods(options = {});",
+            "value": "listAuthMethods",
+            "command": "pb.collection(collectionIdOrName).listAuthMethods(options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(options = {})"
+            ]
+          },
+          {
+            "id": "authWithPassword",
+            "content": "<h3>authWithPassword</h3>\n\t\t\t// Authenticates a record with their username/email and password.\n🔓 pb.collection(collectionIdOrName).authWithPassword(usernameOrEmail, password, options = {});",
+            "value": "authWithPassword",
+            "command": "pb.collection(collectionIdOrName).authWithPassword(usernameOrEmail, password, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(usernameOrEmail, password, options = {})"
+            ]
+          },
+          {
+            "id": "authWithOAuth2",
+            "content": "<h3>authWithOAuth2</h3>\n\t\t\t/// Authenticates a record with OAuth2 provider without custom redirects, deeplinks or even page reload.\n🔓 pb.collection(collectionIdOrName).authWithOAuth2(authConfig);",
+            "value": "authWithOAuth2",
+            "command": "pb.collection(collectionIdOrName).authWithOAuth2(authConfig);",
+            "params": [
+              "(collectionIdOrName)",
+              "(authConfig)"
+            ]
+          },
+          {
+            "id": "authWithOAuth2Code",
+            "content": "<h3>authWithOAuth2Code</h3>\n\t\t\t// Authenticates a record with OAuth2 code.\n🔓 pb.collection(collectionIdOrName).authWithOAuth2Code(provider, code, codeVerifier, redirectUrl, createData = {}, options = {});",
+            "value": "authWithOAuth2Code",
+            "command": "pb.collection(collectionIdOrName).authWithOAuth2Code(provider, code, codeVerifier, redirectUrl, createData = {}, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(provider, code, codeVerifier, redirectUrl, createData = {}, options = {})"
+            ]
+          },
+          {
+            "id": "authRefresh",
+            "content": "<h3>authRefresh</h3>\n\t\t\t// Refreshes the current authenticated record model and auth token.\n🔐 pb.collection(collectionIdOrName).authRefresh(options = {});",
+            "value": "authRefresh",
+            "command": "pb.collection(collectionIdOrName).authRefresh(options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(options = {})"
+            ]
+          },
+          {
+            "id": "requestPasswordReset",
+            "content": "<h3>requestPasswordReset</h3>\n\t\t\t// Sends a user password reset email.\n🔓 pb.collection(collectionIdOrName).requestPasswordReset(email, options = {});",
+            "value": "requestPasswordReset",
+            "command": "pb.collection(collectionIdOrName).requestPasswordReset(email, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(email, options = {})"
+            ]
+          },
+          {
+            "id": "confirmPasswordReset",
+            "content": "<h3>confirmPasswordReset</h3>\n\t\t\t// Confirms a record password reset request.\n🔓 pb.collection(collectionIdOrName).confirmPasswordReset(resetToken, newPassword, newPasswordConfirm, options = {});",
+            "value": "confirmPasswordReset",
+            "command": "pb.collection(collectionIdOrName).confirmPasswordReset(resetToken, newPassword, newPasswordConfirm, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(resetToken, newPassword, newPasswordConfirm, options = {})"
+            ]
+          },
+          {
+            "id": "requestVerification",
+            "content": "<h3>requestVerification</h3>\n\t\t\t// Sends a record verification email request.\n🔓 pb.collection(collectionIdOrName).requestVerification(email, options = {});",
+            "value": "requestVerification",
+            "command": "pb.collection(collectionIdOrName).requestVerification(email, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(email, options = {})"
+            ]
+          },
+          {
+            "id": "confirmVerification",
+            "content": "<h3>confirmVerification</h3>\n\t\t\t// Confirms a record email verification request.\n🔓 pb.collection(collectionIdOrName).confirmVerification(verificationToken, options = {});",
+            "value": "confirmVerification",
+            "command": "pb.collection(collectionIdOrName).confirmVerification(verificationToken, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(verificationToken, options = {})"
+            ]
+          },
+          {
+            "id": "requestEmailChange",
+            "content": "<h3>requestEmailChange</h3>\n\t\t\t// Sends a record email change request to the provider email.\n🔐 pb.collection(collectionIdOrName).requestEmailChange(newEmail, options = {});",
+            "value": "requestEmailChange",
+            "command": "pb.collection(collectionIdOrName).requestEmailChange(newEmail, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(newEmail, options = {})"
+            ]
+          },
+          {
+            "id": "confirmEmailChange",
+            "content": "<h3>confirmEmailChange</h3>\n\t\t\t// Confirms record new email address.\n🔓 pb.collection(collectionIdOrName).confirmEmailChange(emailChangeToken, userPassword, options = {});",
+            "value": "confirmEmailChange",
+            "command": "pb.collection(collectionIdOrName).confirmEmailChange(emailChangeToken, userPassword, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(emailChangeToken, userPassword, options = {})"
+            ]
+          },
+          {
+            "id": "listExternalAuths",
+            "content": "<h3>listExternalAuths</h3>\n\t\t\t// Lists all linked external auth providers for the specified record.\n🔐 pb.collection(collectionIdOrName).listExternalAuths(recordId, options = {});",
+            "value": "listExternalAuths",
+            "command": "pb.collection(collectionIdOrName).listExternalAuths(recordId, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(recordId, options = {})"
+            ]
+          },
+          {
+            "id": "unlinkExternalAuth",
+            "content": "<h3>unlinkExternalAuth</h3>\n\t\t\t// Unlinks a single external auth provider relation from the specified record.\n🔐 pb.collection(collectionIdOrName).unlinkExternalAuth(recordId, provider, options = {});",
+            "value": "unlinkExternalAuth",
+            "command": "pb.collection(collectionIdOrName).unlinkExternalAuth(recordId, provider, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(recordId, provider, options = {})"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "AdminService",
+        "content": "<h3>Auth handlers</h3>",
+        "value": "Auth handlers",
+        "children": [
+          {
+            "id": "authWithPassword",
+            "content": "<h3>authWithPassword</h3>\n\t\t\t/// Authenticates an admin account by its email and password.\n🔓 pb.admins.authWithPassword(email, password, options = {});",
+            "value": "authWithPassword",
+            "command": "pb.collection(collectionIdOrName).authWithPassword(usernameOrEmail, password, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(usernameOrEmail, password, options = {})"
+            ]
+          },
+          {
+            "id": "requestPasswordReset",
+            "content": "<h3>requestPasswordReset</h3>\n\t\t\t/ Refreshes the current admin authenticated model and token.\n🔐 pb.admins.requestPasswordReset(options = {});",
+            "value": "requestPasswordReset",
+            "command": "pb.collection(collectionIdOrName).requestPasswordReset(email, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(email, options = {})"
+            ]
+          },
+          {
+            "id": "confirmPasswordReset",
+            "content": "<h3>authWithOAuth2</h3>\n\t\t\t/// Authenticates a record with OAuth2 provider without custom redirects, deeplinks or even page reload.\n🔓 pb.collection(collectionIdOrName).authWithOAuth2(authConfig);",
+            "value": "authWithOAuth2",
+            "command": "pb.collection(collectionIdOrName).confirmPasswordReset(resetToken, newPassword, newPasswordConfirm, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(resetToken, newPassword, newPasswordConfirm, options = {})"
+            ]
+          },
+          {
+            "id": "authWithOAuth2Code",
+            "content": "<h3>authWithOAuth2Code</h3>\n\t\t\t// Authenticates a record with OAuth2 code.\n🔓 pb.collection(collectionIdOrName).authWithOAuth2Code(provider, code, codeVerifier, redirectUrl, createData = {}, options = {});",
+            "value": "authWithOAuth2Code",
+            "command": "pb.collection(collectionIdOrName).authWithOAuth2Code(provider, code, codeVerifier, redirectUrl, createData = {}, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(provider, code, codeVerifier, redirectUrl, createData = {}, options = {})"
+            ]
+          },
+          {
+            "id": "authRefresh",
+            "content": "<h3>authRefresh</h3>\n\t\t\t// Refreshes the current authenticated record model and auth token.\n🔐 pb.collection(collectionIdOrName).authRefresh(options = {});",
+            "value": "authRefresh",
+            "command": "pb.collection(collectionIdOrName).authRefresh(options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(options = {})"
+            ]
+          },
+          {
+            "id": "requestPasswordReset",
+            "content": "<h3>requestPasswordReset</h3>\n\t\t\t// Sends a user password reset email.\n🔓 pb.collection(collectionIdOrName).requestPasswordReset(email, options = {});",
+            "value": "requestPasswordReset",
+            "command": "pb.collection(collectionIdOrName).requestPasswordReset(email, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(email, options = {})"
+            ]
+          },
+          {
+            "id": "confirmPasswordReset",
+            "content": "<h3>confirmPasswordReset</h3>\n\t\t\t// Confirms a record password reset request.\n🔓 pb.collection(collectionIdOrName).confirmPasswordReset(resetToken, newPassword, newPasswordConfirm, options = {});",
+            "value": "confirmPasswordReset",
+            "command": "pb.collection(collectionIdOrName).confirmPasswordReset(resetToken, newPassword, newPasswordConfirm, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(resetToken, newPassword, newPasswordConfirm, options = {})"
+            ]
+          },
+          {
+            "id": "requestVerification",
+            "content": "<h3>requestVerification</h3>\n\t\t\t// Sends a record verification email request.\n🔓 pb.collection(collectionIdOrName).requestVerification(email, options = {});",
+            "value": "requestVerification",
+            "command": "pb.collection(collectionIdOrName).requestVerification(email, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(email, options = {})"
+            ]
+          },
+          {
+            "id": "confirmVerification",
+            "content": "<h3>confirmVerification</h3>\n\t\t\t// Confirms a record email verification request.\n🔓 pb.collection(collectionIdOrName).confirmVerification(verificationToken, options = {});",
+            "value": "confirmVerification",
+            "command": "pb.collection(collectionIdOrName).confirmVerification(verificationToken, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(verificationToken, options = {})"
+            ]
+          },
+          {
+            "id": "requestEmailChange",
+            "content": "<h3>requestEmailChange</h3>\n\t\t\t// Sends a record email change request to the provider email.\n🔐 pb.collection(collectionIdOrName).requestEmailChange(newEmail, options = {});",
+            "value": "requestEmailChange",
+            "command": "pb.collection(collectionIdOrName).requestEmailChange(newEmail, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(newEmail, options = {})"
+            ]
+          },
+          {
+            "id": "confirmEmailChange",
+            "content": "<h3>confirmEmailChange</h3>\n\t\t\t// Confirms record new email address.\n🔓 pb.collection(collectionIdOrName).confirmEmailChange(emailChangeToken, userPassword, options = {});",
+            "value": "confirmEmailChange",
+            "command": "pb.collection(collectionIdOrName).confirmEmailChange(emailChangeToken, userPassword, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(emailChangeToken, userPassword, options = {})"
+            ]
+          },
+          {
+            "id": "listExternalAuths",
+            "content": "<h3>listExternalAuths</h3>\n\t\t\t// Lists all linked external auth providers for the specified record.\n🔐 pb.collection(collectionIdOrName).listExternalAuths(recordId, options = {});",
+            "value": "listExternalAuths",
+            "command": "pb.collection(collectionIdOrName).listExternalAuths(recordId, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(recordId, options = {})"
+            ]
+          },
+          {
+            "id": "unlinkExternalAuth",
+            "content": "<h3>unlinkExternalAuth</h3>\n\t\t\t// Unlinks a single external auth provider relation from the specified record.\n🔐 pb.collection(collectionIdOrName).unlinkExternalAuth(recordId, provider, options = {});",
+            "value": "unlinkExternalAuth",
+            "command": "pb.collection(collectionIdOrName).unlinkExternalAuth(recordId, provider, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(recordId, provider, options = {})"
+            ]
+          },
+          {
+            "id": "authWithPassword",
+            "content": "<h3>authWithPassword</h3>\n          // Authenticates an admin account by its email and password.\n          🔓 pb.admins.authWithPassword(email, password, options = {});",
+            "value": "authWithPassword",
+            "command": "pb.collection(collectionIdOrName).authWithPassword(usernameOrEmail, password, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(usernameOrEmail, password, options = {})"
+            ]
+          },
+          {
+            "id": "authRefresh",
+            "content": "<h3>authRefresh</h3>\n          // Refreshes the current admin authenticated model and token.\n          🔐 pb.admins.authRefresh(options = {});",
+            "value": "authRefresh",
+            "command": "pb.collection(collectionIdOrName).authRefresh(options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(options = {})"
+            ]
+          },
+          {
+            "id": "requestPasswordReset",
+            "content": "<h3>requestPasswordReset</h3>\n          // Sends an admin password reset email.\n          🔓 pb.admins.requestPasswordReset(email, options = {});",
+            "value": "requestPasswordReset",
+            "command": "pb.collection(collectionIdOrName).requestPasswordReset(email, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(email, options = {})"
+            ]
+          },
+          {
+            "id": "confirmPasswordReset",
+            "content": "<h3>confirmPasswordReset</h3>\n          // Confirms an admin password reset request.\n          🔓 pb.admins.confirmPasswordReset(resetToken, newPassword, newPasswordConfirm, options = {});",
+            "value": "confirmPasswordReset",
+            "command": "pb.collection(collectionIdOrName).confirmPasswordReset(resetToken, newPassword, newPasswordConfirm, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(resetToken, newPassword, newPasswordConfirm, options = {})"
+            ]
+          },
+          {
+            "id": "getList",
+            "content": "<h3>getList</h3>\n          // Returns a paginated admins list.\n          🔐 pb.admins.getList(page = 1, perPage = 30, options = {});",
+            "value": "getList",
+            "command": "pb.collection(collectionIdOrName).getList(page = 1, perPage = 30, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(page = 1, perPage = 30, options = {})"
+            ]
+          },
+          {
+            "id": "getFullList",
+            "content": "<h3>getFullList</h3>\n          // Returns a list with all admins batch fetched at once\n          // (by default 200 items per request; to change it set the `batch` query param).\n          🔐 pb.admins.getFullList(options = {});",
+            "value": "getFullList",
+            "command": "pb.collection(collectionIdOrName).getFullList(options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(options = {})"
+            ]
+          },
+          {
+            "id": "getFirstListItem",
+            "content": "<h3>getFirstListItem</h3>\n          // Returns the first found admin matching the specified filter.\n          🔐 pb.admins.getFirstListItem(filter, options = {});",
+            "value": "getFirstListItem",
+            "command": "pb.collection(collectionIdOrName).getFirstListItem(filter, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(filter, options = {})"
+            ]
+          },
+          {
+            "id": "getOne",
+            "content": "<h3>getOne</h3>\n          // Returns a single admin by their id.\n          🔐 pb.admins.getOne(id, options = {});",
+            "value": "getOne",
+            "command": "pb.collection(collectionIdOrName).getOne(recordId, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(recordId, options = {})"
+            ]
+          },
+          {
+            "id": "create",
+            "content": "<h3>create</h3>\n          // Creates a new admin.\n          🔐 pb.admins.create(bodyParams = {}, options = {});",
+            "value": "create",
+            "command": "pb.collection(collectionIdOrName).create(bodyParams = {}, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(bodyParams = {}, options = {})"
+            ]
+          },
+          {
+            "id": "update",
+            "content": "<h3>update</h3>\n          // Updates an existing admin by their id.\n          🔐 pb.admins.update(id, bodyParams = {}, options = {});",
+            "value": "update",
+            "command": "pb.collection(collectionIdOrName).update(recordId, bodyParams = {}, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(recordId, bodyParams = {}, options = {})"
+            ]
+          },
+          {
+            "id": "delete",
+            "content": "<h3>delete</h3>\n          // Deletes a single admin by their id.\n          🔐 pb.admins.delete(id, options = {});",
+            "value": "delete",
+            "command": "pb.collection(collectionIdOrName).delete(recordId, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(recordId, options = {})"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "CollectionService",
+        "content": "<h3>CollectionService</h3>",
+        "value": "CollectionService",
+        "children": [
+          {
+            "id": "getList",
+            "content": "<h3>getList</h3>\n        // Returns a paginated collections list.\n        🔐 pb.collections.getList(page = 1, perPage = 30, options = {});",
+            "value": "getList",
+            "command": "pb.collection(collectionIdOrName).getList(page = 1, perPage = 30, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(page = 1, perPage = 30, options = {})"
+            ]
+          },
+          {
+            "id": "getFullList",
+            "content": "<h3>getFullList</h3>\n        // Returns a list with all collections batch fetched at once\n        // (by default 200 items per request; to change it set the `batch` query param).\n        🔐 pb.collections.getFullList(options = {});",
+            "value": "getFullList",
+            "command": "pb.collection(collectionIdOrName).getFullList(options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(options = {})"
+            ]
+          },
+          {
+            "id": "getFirstListItem",
+            "content": "<h3>getFirstListItem</h3>\n        // Returns the first found collection matching the specified filter.\n        🔐 pb.collections.getFirstListItem(filter, options = {});",
+            "value": "getFirstListItem",
+            "command": "pb.collection(collectionIdOrName).getFirstListItem(filter, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(filter, options = {})"
+            ]
+          },
+          {
+            "id": "getOne",
+            "content": "<h3>getOne</h3>\n        // Returns a single collection by its id.\n        🔐 pb.collections.getOne(id, options = {});",
+            "value": "getOne",
+            "command": "pb.collection(collectionIdOrName).getOne(recordId, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(recordId, options = {})"
+            ]
+          },
+          {
+            "id": "create",
+            "content": "<h3>create</h3>\n        // Creates (aka. register) a new collection.\n        🔐 pb.collections.create(bodyParams = {}, options = {});",
+            "value": "create",
+            "command": "pb.collection(collectionIdOrName).create(bodyParams = {}, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(bodyParams = {}, options = {})"
+            ]
+          },
+          {
+            "id": "update",
+            "content": "<h3>update</h3>\n        // Updates an existing collection by its id.\n        🔐 pb.collections.update(id, bodyParams = {}, options = {});",
+            "value": "update",
+            "command": "pb.collection(collectionIdOrName).update(recordId, bodyParams = {}, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(recordId, bodyParams = {}, options = {})"
+            ]
+          },
+          {
+            "id": "delete",
+            "content": "<h3>delete</h3>\n        // Deletes a single collection by its id.\n        🔐 pb.collections.delete(id, options = {});",
+            "value": "delete",
+            "command": "pb.collection(collectionIdOrName).delete(recordId, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(recordId, options = {})"
+            ]
+          },
+          {
+            "id": "import",
+            "content": "<h3>import</h3>\n        // Imports the provided collections.\n        🔐 pb.collections.import(collections, deleteMissing = false, options = {});",
+            "value": "import",
+            "command": "pb.collections.import(collections, deleteMissing = false, options = {});",
+            "params": [
+              "(collections, deleteMissing = false, options = {})"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "LogService",
+        "content": "<h3>LogService</h3>",
+        "value": "LogService",
+        "children": [
+          {
+            "id": "getList",
+            "content": "<h3>getList</h3>\n        // Returns a paginated logs list.\n        🔐 pb.logs.getList(page = 1, perPage = 30, options = {});",
+            "value": "getList",
+            "command": "pb.collection(collectionIdOrName).getList(page = 1, perPage = 30, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(page = 1, perPage = 30, options = {})"
+            ]
+          },
+          {
+            "id": "getOne",
+            "content": "<h3>getOne</h3>\n        // Returns a single log by its id.\n        🔐 pb.logs.getOne(id, options = {});",
+            "value": "getOne",
+            "command": "pb.collection(collectionIdOrName).getOne(recordId, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(recordId, options = {})"
+            ]
+          },
+          {
+            "id": "getStats",
+            "content": "<h3>getStats</h3>\n        // Returns logs statistics.\n        🔐 pb.logs.getStats(options = {});",
+            "value": "getStats",
+            "command": "pb.logs.getStats(options = {});",
+            "params": [
+              "(options = {})"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SettingsService",
+        "content": "<h3>SettingsService</h3>",
+        "value": "SettingsService",
+        "children": [
+          {
+            "id": "getAll",
+            "content": "<h3>getAll</h3>\n        // Returns a map with all available app settings.\n        🔐 pb.settings.getAll(options = {});",
+            "value": "getAll",
+            "command": "pb.settings.getAll(options = {});",
+            "params": [
+              "(options = {})"
+            ]
+          },
+          {
+            "id": "update",
+            "content": "<h3>update</h3>\n        // Bulk updates app settings.\n        🔐 pb.settings.update(bodyParams = {}, options = {});",
+            "value": "update",
+            "command": "pb.collection(collectionIdOrName).update(recordId, bodyParams = {}, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(recordId, bodyParams = {}, options = {})"
+            ]
+          },
+          {
+            "id": "testS3",
+            "content": "<h3>testS3</h3>\n        // Performs a S3 storage connection test.\n        🔐 pb.settings.testS3(filesystem = \"storage\", options = {});",
+            "value": "testS3",
+            "command": "pb.settings.testS3(filesystem = \"storage\", options = {});",
+            "params": [
+              "(filesystem = \"storage\", options = {})"
+            ]
+          },
+          {
+            "id": "testEmail",
+            "content": "<h3>testEmail</h3>\n        // Sends a test email (verification, password-reset, email-change).\n        🔐 pb.settings.testEmail(toEmail, template, options = {});",
+            "value": "testEmail",
+            "command": "pb.settings.testEmail(toEmail, template, options = {});",
+            "params": [
+              "(toEmail, template, options = {})"
+            ]
+          },
+          {
+            "id": "generateAppleClientSecret",
+            "content": "<h3>generateAppleClientSecret</h3>\n        // Generates a new Apple OAuth2 client secret.\n        🔐 pb.settings.generateAppleClientSecret(clientId, teamId, keyId, privateKey, duration, options = {} {});",
+            "value": "generateAppleClientSecret",
+            "command": "pb.settings.generateAppleClientSecret(clientId, teamId, keyId, privateKey, duration, options = {} {});",
+            "params": [
+              "(clientId, teamId, keyId, privateKey, duration, options = {} {})"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "RealtimeService",
+        "content": "<h3>RealtimeService</h3>",
+        "value": "RealtimeService",
+        "children": [
+          {
+            "id": "subscribe",
+            "content": "<h3>subscribe</h3>\n        // Initialize the realtime connection (if not already) and register the subscription listener.\n        //\n        // You can subscribe to the `PB_CONNECT` event if you want to listen to the realtime connection connect/reconnect events.\n        🔓 pb.realtime.subscribe(topic, callback, options = {});",
+            "value": "subscribe",
+            "command": "pb.collection(collectionIdOrName).subscribe(topic, callback, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(topic, callback, options = {})"
+            ]
+          },
+          {
+            "id": "unsubscribe",
+            "content": "<h3>unsubscribe</h3>\n        // Unsubscribe from all subscription listeners with the specified topic.\n        🔓 pb.realtime.unsubscribe(topic?);",
+            "value": "unsubscribe",
+            "command": "pb.collection(collectionIdOrName).unsubscribe([topic]);",
+            "params": [
+              "(collectionIdOrName)",
+              "([topic])"
+            ]
+          },
+          {
+            "id": "unsubscribeByPrefix",
+            "content": "<h3>unsubscribeByPrefix</h3>\n        // Unsubscribe from all subscription listeners starting with the specified topic prefix.\n        🔓 pb.realtime.unsubscribeByPrefix(topicPrefix);",
+            "value": "unsubscribeByPrefix",
+            "command": "pb.realtime.unsubscribeByPrefix(topicPrefix);",
+            "params": [
+              "(topicPrefix)"
+            ]
+          },
+          {
+            "id": "unsubscribeByTopicAndListener",
+            "content": "<h3>unsubscribeByTopicAndListener</h3>\n        // Unsubscribe from all subscriptions matching the specified topic and listener function.\n        🔓 pb.realtime.unsubscribeByTopicAndListener(topic, callback);",
+            "value": "unsubscribeByTopicAndListener",
+            "command": "pb.realtime.unsubscribeByTopicAndListener(topic, callback);",
+            "params": [
+              "(topic, callback)"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "BackupService",
+        "content": "<h3>BackupService</h3>",
+        "value": "BackupService",
+        "children": [
+          {
+            "id": "getFullList",
+            "content": "<h3>getFullList</h3>\n        // Returns list with all available backup files.\n        🔐 pb.backups.getFullList(options = {});",
+            "value": "getFullList",
+            "command": "pb.collection(collectionIdOrName).getFullList(options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(options = {})"
+            ]
+          },
+          {
+            "id": "create",
+            "content": "<h3>create</h3>\n        // Initializes a new backup.\n        🔐 pb.backups.create(basename = \"\", options = {});",
+            "value": "create",
+            "command": "pb.collection(collectionIdOrName).create(bodyParams = {}, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(bodyParams = {}, options = {})"
+            ]
+          },
+          {
+            "id": "upload",
+            "content": "<h3>upload</h3>\n        // Upload an existing app data backup.\n        🔐 pb.backups.upload({ file: File/Blob }, options = {});",
+            "value": "upload",
+            "command": "pb.backups.upload({ file: File/Blob }, options = {});",
+            "params": [
+              "({ file: File/Blob }, options = {})"
+            ]
+          },
+          {
+            "id": "delete",
+            "content": "<h3>delete</h3>\n        // Deletes a single backup by its name.\n        🔐 pb.backups.delete(key, options = {});",
+            "value": "delete",
+            "command": "pb.collection(collectionIdOrName).delete(recordId, options = {});",
+            "params": [
+              "(collectionIdOrName)",
+              "(recordId, options = {})"
+            ]
+          },
+          {
+            "id": "restore",
+            "content": "<h3>restore</h3>\n        // Initializes an app data restore from an existing backup.\n        🔐 pb.backups.restore(key, options = {});",
+            "value": "restore",
+            "command": "pb.backups.restore(key, options = {});",
+            "params": [
+              "(key, options = {})"
+            ]
+          },
+          {
+            "id": "getDownloadUrl",
+            "content": "<h3>getDownloadUrl</h3>\n        // Builds a download url for a single existing backup using an\n        // admin file token and the backup file key.\n        🔐 pb.backups.getDownloadUrl(token, key);",
+            "value": "getDownloadUrl",
+            "command": "pb.backups.getDownloadUrl(token, key);",
+            "params": [
+              "(token, key)"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "HealthService",
+        "content": "<h3>HealthService</h3>",
+        "value": "HealthService",
+        "children": [
+          {
+            "id": "check",
+            "content": "<h3>check</h3>\n        // Checks the health status of the api.\n        🔓 pb.health.check(options = {});",
+            "value": "check",
+            "command": "pb.health.check(options = {});",
+            "params": [
+              "(options = {})"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "FileService",
+        "content": "<h3>FileService</h3>",
+        "value": "FileService",
+        "children": [
+          {
+            "id": "getUrl",
+            "content": "<h3>getUrl</h3>\n        // Builds and returns an absolute record file url for the provided filename.\n        🔓 pb.files.getUrl(record, filename, options = {});",
+            "value": "getUrl",
+            "command": "pb.files.getUrl(record, filename, options = {});",
+            "params": [
+              "(record, filename, options = {})"
+            ]
+          },
+          {
+            "id": "getToken",
+            "content": "<h3>getToken</h3>\n        // Requests a new private file access token for the current auth model (admin or record).\n        🔐 pb.files.getToken(options = {});",
+            "value": "getToken",
+            "command": "pb.files.getToken(options = {});",
+            "params": [
+              "(options = {})"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

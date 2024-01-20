@@ -206,5 +206,11 @@ type UserDB = z.infer<typeof userDB>;
 export const adminToolsSchema = z.object({
   input1: z.string().optional(),
   input2: z.string().optional(),
+  input3: z.string().optional(),
+  command: z.string().optional(),
   result: z.string().optional(),
+});
+
+export const resetPassSchema = z.object({
+  email: z.string().email(),
 });

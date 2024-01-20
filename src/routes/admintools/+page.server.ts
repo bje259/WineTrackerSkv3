@@ -38,3 +38,35 @@ export const load = (async ({ locals, cookies, parent }) => {
 
   return { admin, user, form };
 }) satisfies PageServerLoad;
+
+export const actions: Actions = {
+  default: async ({ request, locals, cookies }) => {
+    const formData = await superValidate(request, adminToolsSchema);
+    let response;
+    console.log(
+      "🚀 ~ file: +page.server.ts:22 ~ login: ~ formData.valid:",
+      formData
+    );
+    if (!formData.valid) {
+      setFlash({ type: "error", message: "Command failed" }, cookies);
+      return fail(400, { form: formData, errors: formData.errors?._errors });
+    }
+
+    try {
+      if (formData?.data.command) {
+        console.log("formData.data.command", formData.data.command);
+        const test = "locals." + formData.data.command!;
+        console.log("test!!!!!!!!!!!!!!!!!!!!!!!!!!", test);
+        response = await eval(formData.data.command!);
+        console.log("response", response);
+        formData.data.result = response;
+        setFlash({ type: "success", message: response }, cookies);
+        return message(formData, response);
+      }
+    } catch (error) {
+      console.log("error", error);
+      setFlash({ type: "error", message: "Command failed" }, cookies);
+      return fail(400, { form: formData, errors: error });
+    }
+  },
+};

@@ -16,9 +16,12 @@
   import type { ZodValidation } from "sveltekit-superforms";
   import { getFlash } from "sveltekit-flash-message";
   import { page } from "$app/stores";
+  import { PUBLIC_PB_HOST } from "$env/static/public";
+  import PocketBase from "pocketbase";
+  import pb from "$lib/browserclient";
   const flash = getFlash(page);
   export let data: PageData;
-
+  let inputValue: string;
   type InputCrudSchema = z.input<typeof inputCrudSchema>;
 
   const superFrm = superForm(data.form, {
@@ -31,13 +34,14 @@
   const user: Writable<User> = getContext("user");
   // let textAreaValue: string;
   let importTextAreaValue: string;
-  $: form.update(
-    ($form) => {
-      $form.UserId = $user.id ?? "";
-      return $form;
-    },
-    { taint: false }
-  );
+  $: if (!data?.admin?.id)
+    form.update(
+      ($form) => {
+        $form.UserId = $user.id ?? "";
+        return $form;
+      },
+      { taint: false }
+    );
   //$: $form.UserId = $user.id ?? "";
   //$: if ($user.id) userInputValue = $user.id;
   $: if ($form?.importString) importTextAreaValue = $form.importString;
@@ -246,7 +250,32 @@
     enctype="multipart/form-data"
     class="flex flex-col flex-auto space-y-2 p-6"
   >
-    <input type="hidden" name="UserId" />
+    {#if data.admin?.id}
+      <Form.Field {config} name="UserId">
+        <Form.Item>
+          <Form.Label>User:</Form.Label>
+          <Form.Input
+            placeholder="Select a user"
+            class="select"
+            bind:value={inputValue}
+            on:change={async (e) => {
+              //const { value: tmpValue } = getFormField();
+              // const res = await fetch(`/api/users/${inputValue}`).then((res) =>
+              //   res.json()
+              // );
+              // $user = res.json();
+              // $user = inputValue;
+            }}
+          />
+          <Form.Description>
+            Select a user to import bottles for.
+          </Form.Description>
+          <Form.Validation />
+        </Form.Item>
+      </Form.Field>
+    {:else}
+      <input type="hidden" name="UserId" />
+    {/if}
     {#if $errors._errors}
       <Alert.Root>
         <Alert.Title>Uh oh!</Alert.Title>
