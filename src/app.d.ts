@@ -8,6 +8,7 @@ import type Writable from "svelte/store";
 import PocketBase from "pocketbase";
 import { crudSchema } from "$lib/Schemas";
 type BottlesDB = z.infer<typeof crudSchema>[];
+type ValidAuthProviders = string[];
 
 declare global {
   namespace App {
@@ -18,21 +19,42 @@ declare global {
     }
     // trying to define the interface below broke many things
     interface PageData {
+      flash?: { type: "success" | "error"; message: string };
       user?: User;
       admin?: Admin;
       form?: SuperValidated;
-    }
-    // interface Error {}
-
-    // interface Platform {}
-    interface PageState {
       loginPageData?: {
-        form: SuperValidated<typeof loginUserDto>;
+        form?: SuperValidated<typeof loginUserDto>;
+        validAuthProviders?: ValidAuthProviders;
+        user?: User;
+        admin?: Admin;
       };
       bottlePreLoad?: {
         form: SuperValidated<typeof crudSchema>;
         bottlesDB: BottleRecordsSchema;
       };
+      validAuthProviders?: ValidAuthProviders;
+    }
+    // interface Error {}
+
+    // interface Platform {}
+    interface PageState {
+      user?: User;
+      flash?: { type: "success" | "error"; message: string };
+      admin?: Admin;
+      form?: SuperValidated;
+      bottlesDB?: BottleRecordsSchema;
+      loginPageData?: {
+        form?: SuperValidated<typeof loginUserDto>;
+        validAuthProviders?: ValidAuthProviders;
+        user?: User;
+        admin?: Admin;
+      };
+      bottlePreLoad?: {
+        form?: SuperValidated<typeof crudSchema>;
+        bottlesDB?: BottleRecordsSchema;
+      };
+      validAuthProviders?: ValidAuthProviders;
     }
   }
 }

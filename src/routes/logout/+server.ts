@@ -1,20 +1,26 @@
 import type { User } from "$lib/types";
-import { redirect } from "@sveltejs/kit";
+import { redirect } from "sveltekit-flash-message/server";
 import type { RequestHandler } from "./$types";
 
 const DefaultUser: User = <User>{};
 
-export const POST: RequestHandler = ({ locals }) => {
+export const POST: RequestHandler = ({ locals, cookies }) => {
   console.log("logout server clearing user");
   locals.pb.authStore.clear();
   locals.user = DefaultUser;
-
-  throw redirect(303, "/");
+  const message = {
+    type: "success",
+    message: "Logout successful!",
+  } as const;
+  throw redirect(303, "/", message, cookies);
 };
-export const GET: RequestHandler = ({ locals }) => {
+export const GET: RequestHandler = ({ locals, cookies }) => {
   console.log("logout server clearing user");
   locals.pb.authStore.clear();
   locals.user = DefaultUser;
-
-  throw redirect(303, "/");
+  const message = {
+    type: "success",
+    message: "Logout successful!",
+  } as const;
+  throw redirect(303, "/", message, cookies);
 };

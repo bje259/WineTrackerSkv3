@@ -27,7 +27,8 @@
     "./tests/**/*.ts",
     "./tests/**/*.svelte",
     "./@types/*.d.ts",
-    ".svelte-kit/ambient.d.ts"
+    ".svelte-kit/ambient.d.ts",
+    "**/.svelte-kit/**/*.d.ts"
   ],
   "exclude": [
     "./node_modules/**",

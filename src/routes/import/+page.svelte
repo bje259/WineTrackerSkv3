@@ -14,7 +14,9 @@
   import { FileButton } from "@skeletonlabs/skeleton";
   import { Label } from "$lib/components/ui/label";
   import type { ZodValidation } from "sveltekit-superforms";
-
+  import { getFlash } from "sveltekit-flash-message";
+  import { page } from "$app/stores";
+  const flash = getFlash(page);
   export let data: PageData;
 
   type InputCrudSchema = z.input<typeof inputCrudSchema>;
@@ -60,7 +62,7 @@
 
     const file = files[0]; // Assuming you're only handling the first file
     const reader = new FileReader();
-
+    $form.importString = "";
     reader.onload = function (event) {
       const fileContent = event.target?.result || null;
       if (typeof fileContent === "string") {
@@ -86,7 +88,14 @@
         "🚀 ~ file: +page.svelte:77 ~ transformVintage ~ error",
         error
       );
-      parseIssues.push(`Row ${i} for bottle ${row[9]} has an invalid vintage.`);
+      const NameIndex = row.indexOf("Name");
+      $flash = {
+        type: "error",
+        message: `Row ${i} for bottle ${row[NameIndex]} has an invalid vintage.`,
+      };
+      parseIssues.push(
+        `Row ${i} for bottle ${row[NameIndex]} has an invalid vintage.`
+      );
       return 0;
     }
   }
@@ -113,15 +122,54 @@
     //remove empty lines
     parsedArray = removeEmptyLines(parsedArray);
     //assign value to hidden form field
+
+    const headerRow = parsedArray[0];
+    const ConsumedIndex = headerRow.indexOf("Consumed");
+    const NameIndex = headerRow.indexOf("Name");
+    const ProducerIndex = headerRow.indexOf("Producer");
+    const PurchasedIndex = headerRow.indexOf("Purchased");
+    const VintageIndex = headerRow.indexOf("Vintage");
+    const idIndex = headerRow.indexOf("id");
+    const userIndex = headerRow.indexOf("UserId");
+    const VarietalIndex = headerRow.indexOf("Varietal");
+    const VineyardLocIndex = headerRow.indexOf("VineyardLoc");
+    const VineyardNameIndex = headerRow.indexOf("VineyardName");
+    const BinIndex = headerRow.indexOf("Bin");
+    const NotesIndex = headerRow.indexOf("Notes");
+    console.log(
+      "🚀 ~ file: +page.svelte:29 ~ handleSubmitParse ~ headerRow:",
+      headerRow
+    );
+    console.log(
+      "🚀 ~ file: +page.svelte:29 ~ handleSubmitParse ~ ConsumedIndex,NameIndex,ProducerIndex,PurchasedIndex,VintageIndex,idIndex:",
+      ConsumedIndex,
+      NameIndex,
+      ProducerIndex,
+      PurchasedIndex,
+      VintageIndex,
+      idIndex,
+      userIndex,
+      VarietalIndex,
+      VineyardLocIndex,
+      VineyardNameIndex,
+      BinIndex,
+      NotesIndex
+    );
+
     let parseIssues: string[] = [];
     tmpSubmitData = parsedArray.map((row, i) => {
       const bottle: BottleDB = {
-        Consumed: row[0] || undefined,
-        Name: row[1],
-        Producer: row[2],
-        Purchased: row[3] || undefined,
-        UserId: $user.id,
-        Vintage: transformVintage(row[5], i, row, parseIssues),
+        Consumed: row[ConsumedIndex] || undefined,
+        Name: row[NameIndex],
+        Producer: row[ProducerIndex],
+        Purchased: row[PurchasedIndex] || undefined,
+        UserId: row[userIndex] || $user.id,
+        Vintage: transformVintage(row[VintageIndex], i, row, parseIssues),
+        Varietal: row[VarietalIndex] || undefined,
+        VineyardLoc: row[VineyardLocIndex] || undefined,
+        VineyardName: row[VineyardNameIndex] || undefined,
+        Bin: row[BinIndex] || undefined,
+        Notes: row[NotesIndex] || undefined,
         // Vintage: ((str) => {
         //   try {
         //     return z.number().or(z.string()).pipe(z.coerce.number()).parse(str);
@@ -132,11 +180,11 @@
         //     return 0;
         //   }
         // })(row[4]),
-        id: row[9],
+        id: row[idIndex],
       };
-      if (row.length > 11) {
+      if (row.length > 15) {
         parseIssues.push(
-          `Row ${i} for bottle ${row[9]} has too many fields. Extra fields are ignored.`
+          `Row ${i} for bottle ${row[NameIndex]} has too many fields. Extra fields are ignored.`
         );
       }
       return bottle;
@@ -147,6 +195,10 @@
     );
     if (parseIssues.length > 0) {
       $message = "Parse warnings: \n" + parseIssues.join("\n");
+      $flash = {
+        type: "error",
+        message: $message,
+      };
     }
     if ((tmpSubmitData[0].Consumed = "Consumed")) tmpSubmitData.shift();
 

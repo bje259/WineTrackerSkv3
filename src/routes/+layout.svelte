@@ -12,6 +12,7 @@
   import { writable } from "svelte/store";
   import type { Admin } from "$lib/types";
   import { storePopup } from "@skeletonlabs/skeleton";
+  import { getFlash } from "sveltekit-flash-message";
   const validAuthProviders = ["google"];
   import {
     arrow,
@@ -39,21 +40,23 @@
   import { beforeNavigate } from "$app/navigation";
   import { Switch } from "$lib/components/ui/switch";
   import { Label } from "$lib/components/ui/label";
-
+  const flash = getFlash(page, { clearAfterMs: 4000 });
   type ValidAuthProviders = typeof validAuthProviders;
 
   let navState = false;
-  let combinedData: PageData & { form: SuperValidated<typeof loginUserDto> } & {
+  type CombinedData = PageData & {
+    form: SuperValidated<typeof loginUserDto>;
     validAuthProviders: ValidAuthProviders;
   };
+  let combinedData: CombinedData;
 
-  $: if ($page.state?.loginPageData?.form) {
+  $: if ($page.state?.loginPageData?.form && validAuthProviders) {
+    const { form, validAuthProviders } = $page.state.loginPageData;
     combinedData = {
-      ...data,
-      ...$page.state.loginPageData,
-      validAuthProviders,
+      ...data, // Spread all properties from data (which should be of type PageData)
+      form, // Provide form data
+      validAuthProviders: validAuthProviders || ["google"], // Provide validAuthProviders data
     };
-    console.log("🚀 ~ file: +layout.svelte:39 ~ combinedData:", combinedData);
   }
 
   let devMenuOpen = false;
@@ -185,6 +188,12 @@
       </svelte:fragment>
     </AppBar>
   </svelte:fragment>
+  <svelte:fragment slot="pageHeader">
+    {#if $flash}
+      {@const bg = $flash.type == "success" ? "bg-success-800" : "bg-error-800"}
+      <div class={"flash " + bg}>{$flash.message}</div>
+    {/if}
+  </svelte:fragment>
 
   <!-- <svelte:fragment slot="sidebarLeft">
    
@@ -228,6 +237,9 @@
           <li><a href="/table">Table</a></li>
           <li><a href="/logs">Logs</a></li>
           <li><a href="/signup">Sign-up</a></li>
+          {#if data?.admin?.id}
+            <li><a href="/admin">Admin</a></li>
+          {/if}
           {#if !x}
             <li>
               <a href="/login" on:click={onLoginLinkClick}>Login</a>
@@ -244,7 +256,7 @@
             <li>
               Currently logged in as <br />
               {x}<br /> (userID {y}) <br />
-              {#if data?.admin}
+              {#if data?.admin?.id}
                 Admin user: {data.admin.id}
               {/if}
             </li>
@@ -292,18 +304,24 @@
 </AppShell>
 <Dialog.Root
   open={loginDialogOpen}
-  onOpenChange={(open) => {
+  on:OpenChange={() => {
     if (!open) {
       history.back();
     }
   }}
 >
-  <Dialog.Content>
+  <!-- <Dialog.Content>
     {#if combinedData.form}
       <LoginPage data={combinedData} />
     {:else}
       <p>Loading...</p>
+    {/if} -->
+  <!-- <LoginPage data={combinedData} data2={combinedData} /> -->
+  <Dialog.Content>
+    {#if $page.state.loginPageData?.form && $page.state.loginPageData?.user && $page.state.loginPageData?.admin}
+      <LoginPage data={combinedData} />
+    {:else}
+      <p>Loading...</p>
     {/if}
-    <!-- <LoginPage data={combinedData} data2={combinedData} /> -->
   </Dialog.Content>
 </Dialog.Root>

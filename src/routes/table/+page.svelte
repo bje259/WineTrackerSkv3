@@ -28,6 +28,11 @@
         Consumed: bottle.Consumed,
         created: bottle.created,
         updated: bottle.updated,
+        Varietal: bottle.Varietal,
+        VineyardLoc: bottle.VineyardLoc,
+        VineyardName: bottle.VineyardName,
+        Bin: bottle.Bin,
+        Notes: bottle.Notes,
       };
     }
   );
@@ -37,7 +42,7 @@
   $: if (dataForTable) $dataStore = dataForTable;
 </script>
 
-{#if data?.admin}
+{#if data?.admin && false}
   <Button
     on:click={async () => {
       const response = await fetch("/api/testCreate", { method: "POST" });

@@ -215,14 +215,15 @@
     //   $editBottleDialog
     // );
     // console.log("pagestate form", $page.state.bottlePreLoad.form);
-    formData2 = superForm($page.state.bottlePreLoad.form, {
-      validators: crudSchema,
-      resetForm: true,
-      warnings: {
-        duplicateId: false,
-      },
-    }) as SuperForm<typeof crudSchema>;
-
+    if ($page.state.bottlePreLoad?.form) {
+      formData2 = superForm($page.state.bottlePreLoad.form, {
+        validators: crudSchema,
+        resetForm: true,
+        warnings: {
+          duplicateId: false,
+        },
+      }) as SuperForm<typeof crudSchema>;
+    }
     ({ form: theForm2, message: message2, errors: errors2 } = formData2);
     // console.log(
     //   "🚀 ~ file: +page.svelte:97 ~ ReactiveIf - state - form: theForm2, message: message2, errors: errors2 } = formData2): and bottles",

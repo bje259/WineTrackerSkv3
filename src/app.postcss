@@ -321,7 +321,7 @@ body {
 [data-fs-textarea] {
   @apply textarea;
   @apply blur-none;
-  @apply w-[70%];
+  @apply w-[100%];
   --tw-blur: none;
 }
 
@@ -338,6 +338,7 @@ body {
 
 [data-fs-control] {
   @apply select;
+  @apply pr-0;
 }
 
 @layer utilities {
@@ -403,4 +404,23 @@ input {
   transition: height 100ms ease;
   scroll-padding-block-start: 8px;
   scroll-padding-block-end: 8px;
+}
+
+.thtd {
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+  padding: 0.5rem;
+}
+.th {
+  position: relative;
+}
+.resizer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -4px;
+  width: 2px;
+  background: lightgray;
+  cursor: col-resize;
+  z-index: 1;
 }

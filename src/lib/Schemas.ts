@@ -51,6 +51,11 @@ export const bottleSchema = z.object({
       return undefined;
     })
     .optional(),
+  Varietal: z.string().optional(),
+  VineyardLoc: z.string().optional(),
+  VineyardName: z.string().optional(),
+  Bin: z.string().optional(),
+  Notes: z.string().optional(),
 });
 
 export const crudSchema = bottleSchema.extend({
@@ -197,3 +202,9 @@ export const importSchemaArray = importSchema.extend({
 // });
 
 type UserDB = z.infer<typeof userDB>;
+
+export const adminToolsSchema = z.object({
+  input1: z.string().optional(),
+  input2: z.string().optional(),
+  result: z.string().optional(),
+});

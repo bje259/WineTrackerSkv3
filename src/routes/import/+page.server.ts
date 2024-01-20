@@ -5,9 +5,11 @@ import type PocketBase from "pocketbase";
 import { message, superValidate } from "sveltekit-superforms/server";
 import { bottleSchema, crudSchema } from "$lib/Schemas";
 import { z } from "zod";
-import { error, fail, redirect } from "@sveltejs/kit";
+import { error, fail } from "@sveltejs/kit";
 import type { Import } from "lucide-svelte";
 import type { ClientResponseError } from "pocketbase";
+import { setFlash } from "sveltekit-flash-message/server";
+import { redirect } from "sveltekit-flash-message/server";
 type BottleDB = z.infer<typeof crudSchema>;
 type BottlesDB = BottleDB[];
 type ImportSchema = z.infer<typeof importSchema>;
@@ -30,7 +32,7 @@ export const load = (async ({ locals }) => {
 }) satisfies PageServerLoad;
 
 export const actions = {
-  default: async ({ request, locals }) => {
+  default: async ({ request, locals, cookies }) => {
     //console.log("🚀 ~ file: +page.server.ts:39 ~ default: ~ request:", request);
 
     const formData: FormData = await request.formData();
@@ -42,6 +44,7 @@ export const actions = {
     console.log("🚀 ~ file: +page.server.ts:38 ~ default: ~ form:", form);
 
     if (!form.valid) {
+      setFlash({ type: "error", message: "Invalid Form" }, cookies);
       return fail(400, {
         data: form,
         message: "Invalid form",
@@ -93,7 +96,7 @@ export const actions = {
     } catch (err) {
       const e = err as ClientResponseError;
       console.log("🚀 ~ file: +page.server.ts:100 ~ default: ~ e:", e);
-
+      setFlash({ type: "error", message: "Error in processing" }, cookies);
       throw error(501, e);
     }
 
@@ -112,7 +115,7 @@ export const actions = {
     } catch (err) {
       const e = err as ClientResponseError;
       console.log("🚀 ~ file: +page.server.ts:100 ~ default: ~ e:", e);
-
+      setFlash({ type: "error", message: "Error" }, cookies);
       throw error(501, e);
     }
     console.log("🚀 ~ file: +page.server.ts:106 ~ default: ~ form:", form);

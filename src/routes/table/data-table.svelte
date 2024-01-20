@@ -19,6 +19,7 @@
     addGridLayout,
     addHiddenColumns,
     addSelectedRows,
+    addResizedColumns,
   } from "svelte-headless-table/plugins";
   import customCell from "./customCell.svelte";
   import { Button } from "$lib/components/ui/button";
@@ -99,6 +100,7 @@
     }),
     hide: addHiddenColumns(),
     select: addSelectedRows(),
+    resize: addResizedColumns(),
   });
 
   function formatDateToMMDDYYYY(dateString: string) {
@@ -136,6 +138,11 @@
         filter: {
           exclude: true,
         },
+        resize: {
+          initialWidth: 40,
+          maxWidth: 40,
+          disable: true,
+        },
       },
     }),
     table.column({
@@ -147,6 +154,11 @@
         },
         filter: {
           exclude: false,
+        },
+        resize: {
+          initialWidth: 160,
+          minWidth: 130,
+          disable: false,
         },
       },
     }),
@@ -160,6 +172,11 @@
         filter: {
           exclude: false,
         },
+        resize: {
+          initialWidth: 280,
+          minWidth: 100,
+          disable: false,
+        },
       },
     }),
     table.column({
@@ -172,6 +189,11 @@
         filter: {
           exclude: false,
         },
+        resize: {
+          initialWidth: 130,
+          minWidth: 115,
+          disable: false,
+        },
       },
     }),
     table.column({
@@ -183,6 +205,12 @@
         },
         filter: {
           exclude: false,
+        },
+        resize: {
+          initialWidth: 110,
+          minWidth: 110,
+          maxWidth: 110,
+          disable: false,
         },
       },
     }),
@@ -202,6 +230,12 @@
         filter: {
           exclude: false,
         },
+        resize: {
+          initialWidth: 120,
+          minWidth: 120,
+          maxWidth: 120,
+          disable: false,
+        },
       },
     }),
     table.column({
@@ -219,6 +253,12 @@
         },
         filter: {
           exclude: false,
+        },
+        resize: {
+          initialWidth: 120,
+          minWidth: 120,
+          maxWidth: 120,
+          disable: false,
         },
       },
     }),
@@ -238,6 +278,12 @@
         filter: {
           exclude: false,
         },
+        resize: {
+          initialWidth: 120,
+          minWidth: 120,
+          maxWidth: 120,
+          disable: false,
+        },
       },
     }),
     table.column({
@@ -255,6 +301,98 @@
         },
         filter: {
           exclude: false,
+        },
+        resize: {
+          initialWidth: 120,
+          minWidth: 120,
+          maxWidth: 120,
+          disable: false,
+        },
+      },
+    }),
+    table.column({
+      accessor: "Varietal",
+      header: "Varietal",
+      plugins: {
+        sort: {
+          disable: false,
+        },
+        filter: {
+          exclude: false,
+        },
+        resize: {
+          initialWidth: 160,
+          minWidth: 115,
+          disable: false,
+        },
+      },
+    }),
+    table.column({
+      accessor: "VineyardLoc",
+      header: "Vineyard Location",
+      plugins: {
+        sort: {
+          disable: false,
+        },
+        filter: {
+          exclude: false,
+        },
+        resize: {
+          initialWidth: 180,
+          minWidth: 180,
+          disable: false,
+        },
+      },
+    }),
+    table.column({
+      accessor: "VineyardName",
+      header: "Vineyard Name",
+      plugins: {
+        sort: {
+          disable: false,
+        },
+        filter: {
+          exclude: false,
+        },
+        resize: {
+          initialWidth: 160,
+          minWidth: 160,
+          disable: false,
+        },
+      },
+    }),
+    table.column({
+      accessor: "Bin",
+      header: "Bin Label",
+      plugins: {
+        sort: {
+          disable: false,
+        },
+        filter: {
+          exclude: false,
+        },
+        resize: {
+          initialWidth: 115,
+          minWidth: 115,
+          maxWidth: 115,
+          disable: false,
+        },
+      },
+    }),
+    table.column({
+      accessor: "Notes",
+      header: "Notes",
+      plugins: {
+        sort: {
+          disable: false,
+        },
+        filter: {
+          exclude: false,
+        },
+        resize: {
+          initialWidth: 270,
+          minWidth: 90,
+          disable: false,
         },
       },
     }),
@@ -276,6 +414,12 @@
         filter: {
           exclude: true,
         },
+        resize: {
+          initialWidth: 75,
+          minWidth: 75,
+          maxWidth: 75,
+          disable: false,
+        },
       },
     }),
   ]);
@@ -291,14 +435,69 @@
     rows,
   } = table.createViewModel(columns);
 
+  interface Resize {
+    (node: Element): void;
+    drag: (node: Element) => void;
+    reset: (node: Element) => void;
+    disabled: boolean;
+  }
+
   const { hasNextPage, hasPreviousPage, pageIndex, pageSize, pageCount } =
     pluginStates.page;
   const { sortKeys } = pluginStates.sort;
   const { filterValue } = pluginStates.filter;
   const { hiddenColumnIds } = pluginStates.hide;
   const { selectedDataIds, getRowState } = pluginStates.select;
-  $pageSize = 8;
+  const { columnWidths } = pluginStates.resize;
+  $pageSize = 100;
   setContext<DataTablePlugins.WritableSortKeys>("sortKeys", sortKeys);
+  // $columnWidths = {
+  //   ...$columnWidths,
+  //   id: 40,
+  //   BottleId: 160,
+  //   Name: 280,
+  //   Producer: 130,
+  //   Vintage: 110,
+  //   Purchased: 120,
+  //   Consumed: 120,
+  //   created: 120,
+  //   updated: 120,
+  // };
+
+  // $columnWidths = {
+  //   ...$columnWidths,
+  //   id: 40,
+  //   Vintage: 110,
+  //   Purchased: 120,
+  //   Consumed: 120,
+  //   created: 120,
+  //   updated: 120,
+  // };
+
+  function setColumnWidths() {
+    $columnWidths = {
+      ...$columnWidths,
+      id: 40,
+      BottleId: 160,
+      Name: 250,
+      Producer: 130,
+      Vintage: 110,
+      Purchased: 120,
+      Consumed: 120,
+      created: 120,
+      updated: 120,
+      Varietal: 160,
+      VineyardLoc: 180,
+      VineyardName: 160,
+      Bin: 115,
+      Notes: 270,
+      [""]: 75,
+    };
+  }
+
+  $: if ($columnWidths.id > 45) {
+    setColumnWidths();
+  }
 
   sortKeys.update((sortKeys) => {
     if (sortKeys.length === 0) {
@@ -319,6 +518,11 @@
     Consumed: false,
     created: false,
     updated: false,
+    Varietal: false,
+    VineyardLoc: false,
+    VineyardName: false,
+    Bin: false,
+    Notes: false,
     "": null,
   };
 
@@ -354,6 +558,7 @@
 {#if $debug}<SuperDebug
     data={{
       $hiddenColumnIds,
+      $columnWidths,
       $sortKeys,
       $filterValue,
       $tableAttrs,
@@ -412,7 +617,7 @@
           bind:value={selectedBottles}
         />
       </form>
-      <DropdownMenu.Root>
+      <DropdownMenu.Root closeOnItemClick={false}>
         <DropdownMenu.Trigger asChild let:builder>
           <Button variant="outline" class="ml-auto" builders={[builder]}>
             Columns <ChevronDown class="ml-2 h-4 w-4" />
@@ -443,7 +648,7 @@
                   props={cell.props()}
                   let:props
                 >
-                  <Table.Head {...attrs}>
+                  <Table.Head {...attrs} class="thtd th" resize={props.resize}>
                     {#if $sortKeys.find((v) => v.id === cell.id)}
                       <Button variant="ghost" on:click={props.sort.toggle}>
                         <Render of={cell.render()} />
@@ -471,6 +676,9 @@
                     {:else}
                       <Render of={cell.render()} />
                     {/if}
+                    {#if !props.resize.disabled}
+                      <div class="resizer" use:props.resize.drag />
+                    {/if}
                   </Table.Head>
                 </Subscribe>
               {/each}
@@ -488,7 +696,10 @@
             >
               {#each row.cells as cell (cell.id)}
                 <Subscribe attrs={cell.attrs()} let:attrs>
-                  <Table.Cell {...attrs} class="[&:has([role=checkbox])]:pl-3">
+                  <Table.Cell
+                    {...attrs}
+                    class="thtd [&:has([role=checkbox])]:text-center"
+                  >
                     {#if cell.id === "id"}
                       <Render
                         of={createRender(DataTableCheckbox, {
@@ -553,5 +764,30 @@
   <p>*Hold shift to sort by multiple columns*</p>
 </div>
 
+<!-- <input type="hidden" name="setWidth" on:load={setColumnWidths} /> -->
+
 <style>
+  table {
+    border-spacing: 0;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+  }
+  .thtd {
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+    padding: 0.5rem;
+  }
+  .th {
+    position: relative;
+  }
+  .resizer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: -4px;
+    width: 2px;
+    background: lightgray;
+    cursor: col-resize;
+    z-index: 1;
+  }
 </style>

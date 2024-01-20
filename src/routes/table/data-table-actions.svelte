@@ -58,6 +58,11 @@
         Consumed: bottle.Consumed,
         created: bottle.created,
         updated: bottle.updated,
+        Varietal: bottle.Varietal,
+        VineyardLoc: bottle.VineyardLoc,
+        VineyardName: bottle.VineyardName,
+        Bin: bottle.Bin,
+        Notes: bottle.Notes,
       };
     });
   }
@@ -361,6 +366,7 @@
 <div class="grid grid-cols-2 w-full gap-7">
   <Dialog.Root
     open={editBottleDialog2}
+    preventScroll={false}
     onOpenChange={async (open) => {
       console.log("start of onOpenChange", open, $dialogBottle, BottleId);
       if (!open && $dialogBottle === BottleId) {

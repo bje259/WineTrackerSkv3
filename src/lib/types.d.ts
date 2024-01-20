@@ -235,6 +235,12 @@ export type BottleRecordTableSchema = IndexRecord<RequiredBottleFields> & {
   Purchased?: string;
   Consumed?: string;
   id?: string;
+  Varietal?: string;
+  VineyardLoc?: string;
+  VineyardName?: string;
+  Bin?: string;
+  Notes?: string;
+  UserId?: string;
 };
 
 export type BottleRecordsTableSchema = BottleRecordTableSchema[];

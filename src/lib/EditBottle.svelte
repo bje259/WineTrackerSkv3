@@ -180,9 +180,8 @@
 </script>
 
 <!-- Start Form Header-->
-<div class="container h-full mx-auto flex justify-center">
-  <div class="px-4 text-center flex flex-col items-center space-y-2">
-    <!-- <h1 class="h1">Wine Tracker!!!!</h1>
+
+<!-- <h1 class="h1">Wine Tracker!!!!</h1>
     {#if $message}
       <h3 class:invalid={$page.status >= 400}>{$message}</h3>
     {/if}
@@ -205,7 +204,8 @@
           />{/if}
       </div>
     </div> -->
-
+<div class="container h-full mx-auto flex justify-center">
+  <div class="text-center flex flex-col items-center space-y-2">
     <Card.Root>
       <Card.Header>
         <Card.Title
@@ -215,7 +215,8 @@
 
         <!-- End Header, Start Form-->
       </Card.Header>
-      <div class="flex items-center justify-between">
+      <!-- <div class="flex items-center justify-between"> -->
+      <Card.Content>
         <Form.Root
           form={formData}
           controlled={true}
@@ -226,111 +227,108 @@
           let:enhance
           asChild
         >
-          <form method="POST" use:enhance>
-            <Card.Content>
-              <input type="hidden" name="id" bind:value={$theForm.id} />
-              <input type="hidden" name="UserId" bind:value={$currentUser.id} />
-              <div class="grid-cols-2 gap-3">
-                <div>
-                  <Form.Item>
-                    <Form.Field {config} name="Name">
-                      <div class="flex">
-                        <Form.Label class="p-0.5">Wine Name</Form.Label>
-                        <Form.Validation class="ml-8" />
-                      </div>
-                      <Form.Input />
-                      <Form.Description
-                        >The name of this wine bottle.</Form.Description
-                      >
-                    </Form.Field>
-                  </Form.Item>
-                  <Form.Item>
-                    <Form.Field {config} name="Producer">
-                      <div class="flex">
-                        <Form.Label class="p-0.5">Producer</Form.Label>
-                        <Form.Validation class="ml-8" />
-                      </div>
-                      <Form.Input />
+          <form method="POST" use:enhance class="form-grid">
+            <input type="hidden" name="id" bind:value={$theForm.id} />
+            <input type="hidden" name="UserId" bind:value={$currentUser.id} />
+            <!-- <div class="grid-cols-2 gap-3"> -->
+            <!-- Column 1 -->
 
-                      <Form.Description
-                        >The producer of this wine bottle.</Form.Description
+            <Form.Item class="grid-cell">
+              <Form.Field {config} name="Name">
+                <div class="flex">
+                  <Form.Label class="p-0.5">Wine Name</Form.Label>
+                  <Form.Validation class="ml-8" />
+                </div>
+                <Form.Input />
+                <Form.Description
+                  >The name of this wine bottle.</Form.Description
+                >
+              </Form.Field>
+            </Form.Item>
+            <Form.Item class="grid-cell">
+              <Form.Field {config} name="Producer">
+                <div class="flex">
+                  <Form.Label class="p-0.5">Producer</Form.Label>
+                  <Form.Validation class="ml-8" />
+                </div>
+                <Form.Input />
+
+                <Form.Description
+                  >The producer of this wine bottle.</Form.Description
+                >
+              </Form.Field>
+            </Form.Item>
+            <Form.Field {config} name="Vintage" let:setValue let:value>
+              <Form.Item class="grid-cell">
+                <Form.Label>Vintage</Form.Label>
+                <Popover.Root bind:open let:ids>
+                  <Popover.Trigger asChild let:builder>
+                    <Form.Control id={ids.trigger} let:attrs>
+                      <Button
+                        builders={[builder]}
+                        {...attrs}
+                        variant="outline"
+                        role="combobox"
+                        type="button"
+                        class={cn(
+                          "w-[200px] justify-between",
+                          !value3 && "text-muted-foreground"
+                        )}
                       >
-                    </Form.Field>
-                  </Form.Item>
-                  <Form.Field {config} name="Vintage" let:setValue let:value>
-                    <Form.Item class="flex flex-col">
-                      <Form.Label>Vintage</Form.Label>
-                      <Popover.Root bind:open let:ids>
-                        <Popover.Trigger asChild let:builder>
-                          <Form.Control id={ids.trigger} let:attrs>
-                            <Button
-                              builders={[builder]}
-                              {...attrs}
-                              variant="outline"
-                              role="combobox"
-                              type="button"
-                              class={cn(
-                                "w-[200px] justify-between",
-                                !value3 && "text-muted-foreground"
-                              )}
+                        {#if value3 !== "0"}
+                          {value3}
+                        {:else}
+                          {placeholder3}
+                        {/if}
+                        <ChevronsUpDown
+                          class="ml-2 h-4 w-4 shrink-0 opacity-50"
+                        />
+                      </Button>
+                    </Form.Control>
+                  </Popover.Trigger>
+
+                  <Popover.Content class="w-[200px] p-0">
+                    <Command.Root shouldFilter={false}>
+                      <!-- <CustomCmdInput {handleUpdateState} {stateStore} filterFn = {customYearFilter} autofocus placeholder="Search year..."/> -->
+                      <Command.Input
+                        class="input"
+                        bind:value={search}
+                        autofocus
+                        placeholder="2020"
+                      />
+                      <FormCommand.Empty>No year found.</FormCommand.Empty>
+                      <FormCommand.List>
+                        <FormCommand.Group>
+                          {#each filteredYearOptions as year}
+                            <FormCommand.Item
+                              bind:value={vintageValue}
+                              onSelect={() => {
+                                console.log("on select firing");
+                                vintageValue = year.value;
+                                setValue(year.value);
+                                closeAndFocusTrigger(ids.trigger);
+                              }}
                             >
-                              {#if value3 !== "0"}
-                                {value3}
-                              {:else}
-                                {placeholder3}
-                              {/if}
-                              <ChevronsUpDown
-                                class="ml-2 h-4 w-4 shrink-0 opacity-50"
+                              <Check
+                                class={cn(
+                                  "mr-2 h-4 w-4",
+                                  year.value !== value && "text-transparent"
+                                )}
                               />
-                            </Button>
-                          </Form.Control>
-                        </Popover.Trigger>
-
-                        <Popover.Content class="w-[200px] p-0">
-                          <Command.Root shouldFilter={false}>
-                            <!-- <CustomCmdInput {handleUpdateState} {stateStore} filterFn = {customYearFilter} autofocus placeholder="Search year..."/> -->
-                            <Command.Input
-                              class="input"
-                              bind:value={search}
-                              autofocus
-                              placeholder="2020"
-                            />
-                            <FormCommand.Empty>No year found.</FormCommand.Empty
-                            >
-                            <FormCommand.List>
-                              <FormCommand.Group>
-                                {#each filteredYearOptions as year}
-                                  <FormCommand.Item
-                                    bind:value={vintageValue}
-                                    onSelect={() => {
-                                      console.log("on select firing");
-                                      vintageValue = year.value;
-                                      setValue(year.value);
-                                      closeAndFocusTrigger(ids.trigger);
-                                    }}
-                                  >
-                                    <Check
-                                      class={cn(
-                                        "mr-2 h-4 w-4",
-                                        year.value !== value &&
-                                          "text-transparent"
-                                      )}
-                                    />
-                                    {year.value}
-                                  </FormCommand.Item>
-                                {/each}
-                              </FormCommand.Group>
-                            </FormCommand.List>
-                          </Command.Root>
-                        </Popover.Content>
-                      </Popover.Root>
-                      <Form.Description
-                        >This is the bottle's vintage</Form.Description
-                      >
-                      <Form.Validation />
-                    </Form.Item>
-                  </Form.Field>
-                  <!-- <Form.Field {config} name="Vintage">
+                              {year.value}
+                            </FormCommand.Item>
+                          {/each}
+                        </FormCommand.Group>
+                      </FormCommand.List>
+                    </Command.Root>
+                  </Popover.Content>
+                </Popover.Root>
+                <Form.Description>This is the bottle's vintage</Form.Description
+                >
+                <Form.Validation />
+              </Form.Item>
+            </Form.Field>
+            <!-- <Form.Field {config} name="Vintage">
 				<Form.Item>
 					<Form.Label>Vintage</Form.Label>
 					<Form.Select>
@@ -347,7 +345,7 @@
                   <Form.Validation />
                 </Form.Item>
               </Form.Field> -->
-                  <!-- <Form.Item>
+            <!-- <Form.Item>
                 <Form.Field {config} name="Vintage">
                   <div class="flex">
                     <Form.Label class="p-0.5">Vintage</Form.Label>
@@ -359,25 +357,23 @@
                   >
                 </Form.Field>
               </Form.Item> -->
-                </div>
-                <div>
-                  <Form.Item>
-                    <Form.Field {config} name="Purchased">
-                      <Form.Label>Purchased Date</Form.Label>
-                      <FormSkeleInput />
-                      <!-- <input
+            <Form.Item class="grid-cell">
+              <Form.Field {config} name="Purchased">
+                <Form.Label>Purchased Date</Form.Label>
+                <FormSkeleInput />
+                <!-- <input
                     use:actions.input
                     class="input"
                     title="Purchased (date)"
                     type="date"
                   /> -->
-                      <Form.Description
-                        >The date this wine bottle was purchased</Form.Description
-                      >
-                      <Form.Validation />
-                    </Form.Field>
+                <Form.Description
+                  >The date this wine bottle was purchased</Form.Description
+                >
+                <Form.Validation />
+              </Form.Field>
 
-                    <!-- <Form.Field {config} name="Purchased">
+              <!-- <Form.Field {config} name="Purchased">
                   <Form.Label>Purchased Date</Form.Label>
                   <Popover.Root>
                     <Form.Control id="Purchased" let:attrs>
@@ -420,18 +416,18 @@
                   >
                   <Form.Validation />
                 </Form.Field> -->
-                  </Form.Item>
-                  <Form.Item>
-                    <Form.Field {config} name="Consumed">
-                      <Form.Label>Consumed Date</Form.Label>
-                      <FormSkeleInput />
-                      <Form.Description
-                        >The date this wine bottle was consumed.</Form.Description
-                      >
-                      <Form.Validation />
-                    </Form.Field>
+            </Form.Item>
+            <Form.Item class="grid-cell">
+              <Form.Field {config} name="Consumed">
+                <Form.Label>Consumed Date</Form.Label>
+                <FormSkeleInput />
+                <Form.Description
+                  >The date this wine bottle was consumed.</Form.Description
+                >
+                <Form.Validation />
+              </Form.Field>
 
-                    <!-- <Form.Field {config} name="Consumed">
+              <!-- <Form.Field {config} name="Consumed">
                   <Form.Label>Consumed Date</Form.Label>
                   <Popover.Root>
                     <Form.Control id="Consumed" let:attrs>
@@ -474,28 +470,74 @@
                   >
                   <Form.Validation />
                 </Form.Field> -->
-                  </Form.Item>
-                </div>
-              </div>
-            </Card.Content>
-            <Card.Footer class="w-full">
-              <div class="space-y-0 space-x-2 flex w-full justify-center">
-                <Form.Item class="">
-                  <Form.Button class="justify-self-center btn"
-                    >Submit</Form.Button
-                  >
-                </Form.Item>
-                {#if $theForm.id}
-                  <Form.Button
-                    name="delete"
-                    on:click={(e) =>
-                      !confirm("Are you sure?") && e.preventDefault()}
-                    class="bg-warning-800 justify-self-center btn"
-                    >Delete bottle</Form.Button
-                  >
-                {/if}
-              </div>
-            </Card.Footer>
+            </Form.Item>
+
+            <!-- Column 2 -->
+
+            <Form.Item class="grid-cell">
+              <Form.Field {config} name="Varietal">
+                <Form.Label>Varietal</Form.Label>
+                <Form.Input />
+                <Form.Description>Wine varietal</Form.Description>
+                <Form.Validation />
+              </Form.Field>
+            </Form.Item>
+            <Form.Item class="grid-cell">
+              <Form.Field {config} name="VineyardLoc">
+                <Form.Label>Vineyard Location</Form.Label>
+                <Form.Input />
+                <Form.Description>The Vineyard Location</Form.Description>
+                <Form.Validation />
+              </Form.Field>
+            </Form.Item>
+            <Form.Item class="grid-cell">
+              <Form.Field {config} name="VineyardName">
+                <Form.Label>Vineyard Name</Form.Label>
+                <Form.Input />
+                <Form.Description>The Vineyard Name</Form.Description>
+                <Form.Validation />
+              </Form.Field>
+            </Form.Item>
+            <Form.Item class="grid-cell">
+              <Form.Field {config} name="Bin">
+                <Form.Label>Bin Label</Form.Label>
+                <Form.Input />
+                <Form.Description>Wine Storage Bin Description</Form.Description
+                >
+                <Form.Validation />
+              </Form.Field>
+            </Form.Item>
+            <div class="grid-cell"></div>
+            <Form.Field {config} name="Notes">
+              <Form.Item class=" col-start-1 col-span-2">
+                <Form.Label>Additional Notes</Form.Label>
+                <Form.Textarea
+                  placeholder="Notes"
+                  class="resize-none form-textarea flex-shrink-0 w-full"
+                />
+                <Form.Description>
+                  Enter any additional notes here.
+                </Form.Description>
+                <Form.Validation />
+              </Form.Item>
+            </Form.Field>
+
+            <!-- <div class="space-y-0 space-x-2 flex w-full justify-center"> -->
+            <div class="form-buttons">
+              <Form.Item class="">
+                <Form.Button class="justify-self-center btn">Submit</Form.Button
+                >
+              </Form.Item>
+              {#if $theForm.id}
+                <Form.Button
+                  name="delete"
+                  on:click={(e) =>
+                    !confirm("Are you sure?") && e.preventDefault()}
+                  class="bg-warning-800 justify-self-center btn"
+                  >Delete bottle</Form.Button
+                >
+              {/if}
+            </div>
             <!-- <button
               name="delete"
               on:click={(e) => !confirm("Are you sure?") && e.preventDefault()}
@@ -503,7 +545,8 @@
             > -->
           </form>
         </Form.Root>
-      </div>
+      </Card.Content>
+      <Card.Footer class="w-full"></Card.Footer>
     </Card.Root>
 
     <!-- <div class="flex text-start">
@@ -513,14 +556,43 @@
 </div>
 
 <style>
-  form {
+  /* form {
     display: flex;
     flex-direction: column;
     gap: 1em;
     align-items: flex-start;
     margin-bottom: 2em;
+  } */
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(5, auto);
+    gap: 1em;
   }
 
+  /* .form-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  } */
+
+  /* .grid-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  } */
+
+  .form-textarea {
+    grid-column: 1 / -1; /* Span the textarea across all columns */
+  }
+
+  .form-buttons {
+    grid-column: 1 / -1; /* Center the buttons below the columns */
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+  }
   .bottles {
     columns: 1 150px;
   }

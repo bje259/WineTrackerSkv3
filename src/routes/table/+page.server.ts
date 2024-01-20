@@ -62,6 +62,11 @@ export const actions = {
             UserId: UserId,
             Purchased: b.Purchased,
             Consumed: b.Consumed,
+            Varietal: b.Varietal,
+            VineyardLoc: b.VineyardLoc,
+            VineyardName: b.VineyardName,
+            Bin: b.Bin,
+            Notes: b.Notes,
           };
           return bottle;
         });
