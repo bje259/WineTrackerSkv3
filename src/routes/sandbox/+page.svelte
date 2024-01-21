@@ -25,9 +25,11 @@
   <br />
 
   <Form.Root form={data.form} schema={completionSchema} let:config debug={true}>
-    <Form.Item>
+    <Form.Item class="flex flex-auto flex-col">
       <Form.Field {config} name="prompt" let:value>
-        <Form.Label>Slogan Generator</Form.Label>
+        <Form.Label class="text-center text-3xl text-slate-300"
+          >AI Playground</Form.Label
+        >
         <Form.Input
           on:change={() => ($input = value)}
           placeholder="Describe your business..."
@@ -35,7 +37,22 @@
 
         <Form.Validation />
       </Form.Field>
-      <Form.Button on:click={handleSubmit}>Submit</Form.Button>
+      <Form.Field {config} name="prompt">
+        <Form.Item>
+          <Form.Select>
+            <Form.SelectTrigger placeholder="Select the AI prompt/scenario" />
+            <Form.SelectContent>
+              <Form.SelectItem value="Slogan Generator"
+                >"Slogan Generator"</Form.SelectItem
+              >
+              <Form.SelectItem value="Scenario2">Scenario2</Form.SelectItem>
+              <Form.SelectItem value="Scenario3">Scenario3</Form.SelectItem>
+            </Form.SelectContent>
+          </Form.Select>
+          <Form.Validation />
+        </Form.Item>
+      </Form.Field>
+      <Form.Button class="mr-0" on:click={handleSubmit}>Submit</Form.Button>
     </Form.Item>
   </Form.Root>
   <p>{$completion}</p>

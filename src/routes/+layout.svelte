@@ -292,7 +292,7 @@
       on:click={() => (devMenuOpen = !devMenuOpen)}
       ><p class="text-4xl">→</p></Button
     >
-    <div class="flex flex-col items-center mx-auto">
+    <div class="flex flex-col items-center mx-auto w-7/12">
       <slot />
     </div>
   </div>

@@ -12,7 +12,7 @@ export const config = {
   runtime: "edge",
 };
 
-export async function POST({ request }) {
+export async function POST({ request, params }) {
   const { prompt } = await request.json();
 
   // Ask OpenAI for a streaming completion given the prompt
