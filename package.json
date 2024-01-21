@@ -1,5 +1,5 @@
 {
-  "name": "WineTracker",
+  "name": "winetracker",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -74,5 +74,14 @@
     "openai": "^4.24.7",
     "puppeteer": "^21.7.0",
     "zod-to-ts": "^1.2.0"
-  }
+  },
+  "description": "Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).",
+  "main": "svelte.config.js",
+  "directories": {
+    "example": "example",
+    "test": "tests"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
