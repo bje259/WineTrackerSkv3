@@ -41,9 +41,9 @@
           ><span data-custom-class="body_text"
             ><bdt class="question"
               ><a
-                href="https://wine-tracker-skv3.vercel.app"
+                href="https://wine-tracker.app"
                 target="_blank"
-                data-custom-class="link">https://wine-tracker-skv3.vercel.app</a
+                data-custom-class="link">https://wine-tracker.app</a
               ></bdt
             ></span
           ></span
