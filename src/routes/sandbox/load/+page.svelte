@@ -7,12 +7,20 @@
   import { Document } from "@langchain/core/documents";
   import type { EmbeddingsInterface } from "@langchain/core/embeddings";
 
-  import type { WineData } from "$lib/index.js";
+  import type {
+    WineData,
+    WineFacts,
+    BaseStats,
+    Stylestats,
+    Recommendedvintage,
+    WineInfo,
+  } from "$lib/index.js";
   import { onMount } from "svelte";
   export let data: PageData;
   import { browser } from "$app/environment";
   import { lazyLoad, p, pt } from "$lib/utils.js";
   // const { documents, config, OAIString } = data;
+  const { documents } = data;
   let output: WineData[] = [];
   import fs from "fs";
   import { flatten } from "flat";
@@ -25,7 +33,7 @@
   let pathValue = "";
   let qOutput = "";
 
-  function capitalizeWords(input) {
+  function capitalizeWords(input: string) {
     return input
       .replaceAll("_", " ")
       .split(" ")
@@ -152,7 +160,7 @@
 
   // await neo4jVectorIndex.close();
 
-  async function validateResponse(response): Promise<boolean> {
+  async function validateResponse(response: Response): Promise<boolean> {
     try {
       const resp = response;
       console.log(resp);
@@ -323,9 +331,9 @@
         </div>
         <div class="p-2 col-start-3 col-span-4 align-top">
           <h3 class="text-center">Wine Facts</h3>
-          {#each Object.keys(wineData.wineFacts) as key}
+          {#each Object.entries(wineData.wineFacts) as [key, value]}
             <div class="">
-              <p>{key}: {wineData.wineFacts[key]}</p>
+              <p>{key}: {value}</p>
             </div>
           {/each}
           <p>Winery Rating: {wineData.wineryRating}</p>
@@ -354,14 +362,14 @@
           Wine Style
         </h3>
         <div class="p-2 col-start-3 col-span-9 align-top text-start">
-          {#if wineData?.style_stats?.["Description"] !== "N/A"}
+          {#if wineData?.styleStats?.["Description"] !== "N/A"}
             <p class="text-start mb-3">
-              Description: {wineData?.style_stats?.["Description"]}
+              Description: {wineData?.styleStats?.["Description"]}
             </p>
           {/if}
-          {#if wineData?.style_stats?.["Interesting Facts"] !== "N/A"}
+          {#if wineData?.styleStats?.["Interesting Facts"] !== "N/A"}
             <p class="text-start">
-              Interesting Facts: {wineData?.style_stats?.["Interesting Facts"]}
+              Interesting Facts: {wineData?.styleStats?.["Interesting Facts"]}
             </p>
           {/if}
           <div class="grid grid-cols-3">
@@ -371,17 +379,15 @@
             </div>
             <div class="p-2 grid col-start-2 col-span-1 align-top">
               <div class=" p-1 text-start align-top">
-                <p>Body Rating: {wineData?.style_stats?.["Body Rating"]}</p>
+                <p>Body Rating: {wineData?.styleStats?.["Body Rating"]}</p>
                 <p>
-                  Body Description: {wineData?.style_stats?.[
-                    "Body Description"
-                  ]}
+                  Body Description: {wineData?.styleStats?.["Body Description"]}
                 </p>
                 <p>
-                  Acidity Rating: {wineData?.style_stats?.["Acidity Rating"]}
+                  Acidity Rating: {wineData?.styleStats?.["Acidity Rating"]}
                 </p>
                 <p>
-                  Acidity Description: {wineData?.style_stats?.[
+                  Acidity Description: {wineData?.styleStats?.[
                     "Acidity Description"
                   ]}
                 </p>
@@ -390,25 +396,25 @@
             <div class="p-2 grid col-start-3 col-span-1 align-top">
               <div class=" p-1 text-start align-top">
                 <p>
-                  Acidity: {wineData?.style_stats?.["BaseStats"]?.["acidity"]}
+                  Acidity: {wineData?.styleStats?.["BaseStats"]?.["acidity"]}
                 </p>
                 <p>
-                  Fizziness: {wineData?.style_stats?.["BaseStats"]?.[
+                  Fizziness: {wineData?.styleStats?.["BaseStats"]?.[
                     "fizziness"
                   ]}
                 </p>
                 <p>
-                  Intensity: {wineData?.style_stats?.["BaseStats"]?.[
+                  Intensity: {wineData?.styleStats?.["BaseStats"]?.[
                     "intensity"
                   ]}
                 </p>
                 <p>
-                  Sweetness: {wineData?.style_stats?.["BaseStats"]?.[
+                  Sweetness: {wineData?.styleStats?.["BaseStats"]?.[
                     "sweetness"
                   ]}
                 </p>
                 <p>
-                  Tannin: {wineData?.style_stats?.["BaseStats"]?.["tannin"]}
+                  Tannin: {wineData?.styleStats?.["BaseStats"]?.["tannin"]}
                 </p>
               </div>
             </div>

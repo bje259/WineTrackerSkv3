@@ -1,19 +1,21 @@
 export interface WineData {
-  wineFacts: Record<string, any>;
+  //   wineFacts: Record<string, any>;
+  wineFacts: WineFacts;
   wineryRating: number;
   foodPairings: string[];
   style: string;
   varietal: string;
-  style_stats: {
-    description: string;
-    interestingFacts: string;
-    bodyRating: number;
-    bodyDesc: string;
-    acidityRating: number;
-    acidityDesc: string;
-    BaseStats: Record<string, number>;
-  };
-  recommended_vintages: { year: number; type: string }[] | string;
+  //   stylestats: {
+  //     description: string;
+  //     interestingFacts: string;
+  //     bodyRating: number;
+  //     bodyDesc: string;
+  //     acidityRating: number;
+  //     acidityDesc: string;
+  //     BaseStats: Record<string, number>;
+  //   };
+  styleStats: Stylestats;
+  recommended_vintages: Recommendedvintage[] | Recommendedvintage | string;
   image: string;
 }
 
@@ -23,7 +25,7 @@ export interface WineInfo {
   foodPairings: string[];
   style: string;
   varietal: string;
-  stylestats: Stylestats;
+  styleStats: Stylestats;
   recommended_vintages: Recommendedvintage[] | Recommendedvintage | string;
   image: string;
 }
@@ -54,6 +56,7 @@ export interface BaseStats {
 
 export interface WineFacts {
   "Wine Name"?: string;
+  wineName?: string;
   Winery?: string;
   Grapes?: string;
   Region?: string;
