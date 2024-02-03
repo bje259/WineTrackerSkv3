@@ -8,7 +8,7 @@
   import { getContext } from "svelte";
   import { PUBLIC_PB_HOST } from "$env/static/public";
   import PocketBase from "pocketbase";
-  import pb from "$lib/browserclient";
+  // import pb from "$lib/browserclient";
   import { browser } from "$app/environment";
   import { invalidate, invalidateAll } from "$app/navigation";
   import SuperDebug from "sveltekit-superforms/client/SuperDebug.svelte";

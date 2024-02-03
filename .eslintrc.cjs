@@ -38,6 +38,8 @@ module.exports = {
     "svelte/no-at-html-tags": "off",
     "svelte/no-unused-svelte-ignore": "off",
     "svelte/require-stores-init": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-explicit-any": "off",
   },
   overrides: [
     {
@@ -54,6 +56,8 @@ module.exports = {
             varsIgnorePattern: "^\\$\\$(Props|Events|Slots|Generic)$",
           },
         ],
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-explicit-any": "off",
       },
     },
     {

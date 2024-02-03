@@ -8,7 +8,6 @@
       "skipFiles": ["<node_internals>/**"],
       "type": "node"
     },
-
     {
       "name": "Launch Edge",
       "request": "launch",
@@ -16,7 +15,6 @@
       "url": "http://localhost:5173",
       "webRoot": "${workspaceFolder}"
     },
-
     {
       "type": "vscode-edge-devtools.debug",
       "request": "launch",
@@ -63,7 +61,6 @@
         "--load-extension=C:\\Users\\Bradl\\OneDrive\\Documents\\GitHub\\WineTrackerSK\\wineTrackerSK\\.vscode\\chrome\\Default\\Extensions\\extension"
       ]
     },
-
     {
       "type": "chrome",
       "request": "launch",
@@ -79,11 +76,11 @@
       ]
     },
     {
-      "type": "msedge",
+      "type": "pwa-msedge",
       "name": "Launch Microsoft Edge",
       "request": "launch",
       "runtimeArgs": ["--remote-debugging-port=9222"],
-      "url": "http://localhost:5173",
+      "url": "localhost:5173",
       "presentation": {
         "hidden": true
       }
@@ -93,7 +90,7 @@
       "name": "Launch Microsoft Edge in headless mode",
       "request": "launch",
       "runtimeArgs": ["--headless", "--remote-debugging-port=9222"],
-      "url": "http:/localhost:5173",
+      "url": "file://c:\\Users\\Bradl\\OneDrive\\Documents\\GitHub\\svkt2.0\\Base\\WineTrackerSkv3\\templates\\verify.html",
       "presentation": {
         "hidden": true
       }
@@ -102,7 +99,7 @@
       "type": "vscode-edge-devtools.debug",
       "name": "Open Edge DevTools",
       "request": "attach",
-      "url": "localhost:5173",
+      "url": "file://c:\\Users\\Bradl\\OneDrive\\Documents\\GitHub\\svkt2.0\\Base\\WineTrackerSkv3\\templates\\verify.html",
       "presentation": {
         "hidden": true
       }

@@ -12,3 +12,5 @@ vite.config.ts.timestamp-*
 templates/verify.html
 templates/verify.mjml
 templates/emailtemplate.html
+templates/emailchange.html
+templates/resetpass.html

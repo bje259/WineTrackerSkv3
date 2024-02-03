@@ -91,6 +91,10 @@
     --ring: hsl(212.7, 26.8%, 83.9);
   }
 
+  /* div {
+    display: inherit;
+  } */
+
   /* .dark {
   --background: hsl(221, 39%, 11%);
   --foreground: hsl(210, 40%, 98%);
@@ -145,7 +149,7 @@
     --color-secondary-200: rgb(186, 230, 253);
     --color-secondary-300: rgb(125, 211, 252);
     --color-secondary-400: rgb(56, 189, 248);
-    --color-secondary-500: rgb(14, 165, 233);
+    --color-secondary-500: #0ea5e92d;
     --color-secondary-600: rgb(2, 132, 199);
     --color-secondary-700: rgb(3, 105, 161);
     --color-secondary-800: rgb(7, 89, 133);
@@ -373,6 +377,61 @@ body {
     @apply border-[1px];
     @apply border-surface-600;
   }
+
+  /* .background {
+    background-color: #111827;
+    background-image: radial-gradient(
+        100% 100% at 40% 100%,
+        #0ea5e980 0%,
+        #ff000000 75%
+      ),
+      radial-gradient(100% 100% at 100% 0%, #6366f17a 0%, #ff000000 50%),
+      radial-gradient(100% 100% at 0% 30%, #6366f133 0%, #ff000000 50%),
+      radial-gradient(100% 100% at 50% 0%, #0ea5e980 0%, #ff000000 75%);
+  } */
+
+  .dark [data-theme="wintry"] {
+    background-color: #111827;
+    background-image: radial-gradient(
+        100% 100% at 40% 100%,
+        #0ea5e95c 0%,
+        #ff000000 75%
+      ),
+      radial-gradient(100% 100% at 100% 0%, #6366f157 0%, #ff000000 50%),
+      radial-gradient(100% 100% at 0% 30%, #6366f12e 0%, #ff000000 50%),
+      radial-gradient(100% 100% at 50% 0%, #0ea5e93b 0%, #ff000000 75%);
+  }
+}
+
+/* [data-theme="wintry"] {
+  backgroundimage: radial-gradient(
+      at 50% 0%,
+      rgba(var(--color-secondary-500) / 0.5) 0px,
+      transparent 75%
+    ),
+    radial-gradient(
+      at 100% 0%,
+      rgba(var(--color-tertiary-500) / 0.4) 0px,
+      transparent 50%
+    );
+  backgroundattachment: "fixed";
+  backgroundposition: "center";
+  backgroundrepeat: "no-repeat";
+  backgroundsize: "cover";
+} */
+
+.dark,
+[data-theme="wintry"] {
+  background-image: radial-gradient(
+      at 50% 0%,
+      rgba(var(--color-secondary-500) / 0.18) 0px,
+      transparent 75%
+    ),
+    radial-gradient(
+      at 100% 0%,
+      rgba(var(--color-tertiary-500) / 0.18) 0px,
+      transparent 50%
+    );
 }
 
 input {

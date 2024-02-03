@@ -1,6 +1,6 @@
 // declare module "svelte-headless-table" {
 //   import("../node_modules/svelte-headless-table/lib/index");
-//   export * from "../node_modules/svelte-headless-table/lib/index";
+//
 // }
 
 // declare module "svelte-headless-table/plugins" {

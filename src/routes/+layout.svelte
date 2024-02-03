@@ -238,6 +238,7 @@
           <li><a href="/sandbox">Sandbox</a></li>
           <li><a href="/table">Table</a></li>
           <li><a href="/logs">Logs</a></li>
+          <li><a href="/sandbox/load">Load</a></li>
           <li><a href="/signup">Sign-up</a></li>
           {#if data?.admin?.id}
             <li><a href="/admin">Admin</a></li>
@@ -296,7 +297,7 @@
       <slot />
     </div>
   </div>
-  <svelte:fragment slot="pageFooter">
+  <svelte:fragment slot="footer">
     <div class="flex justify-center space-x-5 p-8">
       <!-- svelte-ignore a11y-invalid-attribute -->
       <a href="#" class="termly-display-preferences">Consent Preferences</a>

@@ -18,7 +18,7 @@
   import { page } from "$app/stores";
   import { PUBLIC_PB_HOST } from "$env/static/public";
   import PocketBase from "pocketbase";
-  import pb from "$lib/browserclient";
+  // import pb from "$lib/browserclient";
   const flash = getFlash(page);
   export let data: PageData;
   let inputValue: string;

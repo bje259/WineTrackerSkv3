@@ -33,8 +33,8 @@
     top: 50%; /* Center the glow */
     left: 50%; /* Center the glow */
     transform: translate(-50%, -50%); /* Center the glow */
-    width: 70%; /* Make the glow larger than the image */
-    height: 70%; /* Make the glow larger than the image */
+    width: 100%; /* Make the glow larger than the image */
+    height: 100%; /* Make the glow larger than the image */
     animation:
       pulse 5s cubic-bezier(0, 0, 0, 0.5) infinite,
       glow 5s linear infinite;
@@ -42,7 +42,7 @@
 
   .logo-img {
     @apply relative z-10; /* Ensure the image is above the glow */
-    max-width: 65%; /* Makes the image responsive */
+    max-width: 100%; /* Makes the image responsive */
     height: auto; /* Maintains the aspect ratio */
   }
 

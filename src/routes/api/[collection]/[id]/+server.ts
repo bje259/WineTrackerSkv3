@@ -1,12 +1,13 @@
 import { error, json } from "@sveltejs/kit";
 import { ClientResponseError, type RecordOptions } from "pocketbase";
+import { p, pt } from "$lib/utils.js";
 
 export async function GET({ locals, params: { collection, id }, url }) {
   if (!locals.user) error(403, "Forbidden");
   const expand = url.searchParams.get("expand");
   const fields = url.searchParams.get("fields");
   const requestKey = url.searchParams.get("requestKey") || collection + id;
-
+  p("expand", expand, "fields", fields, "requestKey", requestKey);
   const options: RecordOptions = { requestKey };
   if (expand) options.expand = expand;
   if (fields) options.fields = fields;
