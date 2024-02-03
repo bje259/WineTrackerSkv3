@@ -3,7 +3,7 @@
   import { OpenAIEmbeddings } from "@langchain/openai";
   import { Neo4jVectorStore } from "@langchain/community/vectorstores/neo4j_vector";
 
-  import { Button } from "$lib/components/ui/button/index.js";
+  import { Button } from "$lib/components/ui/button/index.ts";
   import { Document } from "@langchain/core/documents";
   import type { EmbeddingsInterface } from "@langchain/core/embeddings";
 

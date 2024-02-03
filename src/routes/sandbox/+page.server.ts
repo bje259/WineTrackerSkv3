@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { error, fail, redirect } from "@sveltejs/kit";
 import { message, superValidate } from "sveltekit-superforms/server";
-import type { PageServerLoad, Actions } from "./$types";
+import type { PageServerLoad, Actions } from "./$types.d.ts";
 import { completionSchema } from "$lib/Schemas";
 import { ClientResponseError } from "pocketbase";
 
