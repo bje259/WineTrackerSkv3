@@ -10,39 +10,43 @@ import type {
   BaseStats,
 } from "../../../lib";
 
-// export async function POST({ locals, params: { collection }, request, url }) {
-//   pt("user: ", locals.user);
-//   pt("admin: ", locals.admin);
-//   if (!locals.user && !locals.admin) error(403, "Forbidden");
-//   const body: WineInfo[] = await request.json();
-//   const bodyTest: WineInfo = body.slice(0, 1)[0];
-//   // const bodyTestString = JSON.stringify(bodyTest);
-//   p("bodyTest:", bodyTest);
-//   // p(`POST locals.pb.collection(${collection}).create(${bodyTest});`);
-//   // p(`POST locals.pb.collection(${collection}).create(${bodyTestString});`);
-//   const foodPairings = bodyTest.foodPairings;
-//   try {
-//     // const data = await locals.pb
-//     //   .collection(collection)
-//     //   .create({ body: bodyTestString });
-//     const data: Response[] = [];
-//     foodPairings.forEach(async (foodPairing) => {
-//       data.push(
-//         await locals.pb
-//           .collection(collection)
-//           .create({ foodPairing: foodPairing }, { requestKey: null })
-//       );
-//     });
-//     p(data);
-//     return json(data);
-//   } catch (e: unknown) {
-//     if (e instanceof ClientResponseError && !e.isAbort) {
-//       p("error", e);
-//       error(e.response.code || 500, e.response.message);
-//     }
-//   }
-//   return json(undefined);
-// }
+export async function POST({ locals, params: { collection }, request, url }) {
+  // pt("user: ", locals.user);
+  // pt("admin: ", locals.admin);
+  // if (!locals.user && !locals.admin) error(403, "Forbidden");
+  const body = await request.json();
+  // const bodyTest = body.slice(0, 1);
+  const bodyTest = body; //{ name: "test", type: "text" };
+  const bodyTestString = JSON.stringify(bodyTest);
+  p("bodyTest:", bodyTest);
+  p(`POST locals.pb.collection(${collection}).create(${bodyTest});`);
+  p(`POST locals.pb.collection(${collection}).create(${bodyTestString});`);
+  // const foodPairings = bodyTest.foodPairings;
+  try {
+    const data = await locals.pb
+      .collection(collection)
+      .create(bodyTest, { requestKey: null });
+    // const data = await locals.pb
+    //   .collection(collection)
+    //   .create({ body: bodyTestString });
+    // const data: Response[] = [];
+    // foodPairings.forEach(async (foodPairing) => {
+    //   data.push(
+    //     await locals.pb
+    //       .collection(collection)
+    //       .create({ foodPairing: foodPairing }, { requestKey: null })
+    //   );
+    // });
+    p("data", JSON.stringify(data));
+    return json(data);
+  } catch (e: unknown) {
+    if (e instanceof ClientResponseError && !e.isAbort) {
+      p("error", e);
+      error(e.response.code || 500, e.response.message);
+    }
+  }
+  return json(undefined);
+}
 
 // export async function POST({ locals, params: { collection }, request, url }) {
 //   pt("user: ", locals.user);
@@ -68,6 +72,76 @@ import type {
 //   return json(undefined);
 // }
 
+// export async function POST({ locals, params: { collection }, request }) {
+//   pt("user: ", locals.user);
+//   pt("admin: ", locals.admin);
+//   if (!locals.user && !locals.admin) error(403, "Forbidden");
+//   const body = await request.json();
+//   p(body);
+//   const bodyTest = body;
+//   const bodyTestString = JSON.stringify(bodyTest);
+//   let newCollection: Response;
+
+//   const currentCollection = await locals.pb.collections.getFullList({
+//     sort: "-created",
+//   });
+
+//   if (currentCollection) {
+//     p("currentCollection: ", currentCollection);
+//     const currentCollectionArray = currentCollection.map(
+//       (collection) => collection.name
+//     );
+//     p("currentCollectionArray: ", currentCollectionArray);
+//     if (currentCollectionArray.includes(collection)) {
+//       p("collection exists");
+//     } else {
+//       p("collection does not exist");
+//       if (bodyTest.name && bodyTest.type && bodyTest.schema) {
+//         try {
+//           const newCollection = await fetch(
+//             `http://localhost:5173/api/collections`,
+//             {
+//               method: "POST",
+//               headers: {
+//                 "Content-Type": "application/json",
+//               },
+//               body: bodyTestString,
+//             }
+//           );
+//           p(newCollection);
+//           // p(newCollection);
+//           // ({
+//           //         name: collection,
+//           //         type: bodyTest.type,
+//           //         schema: bodyTest.schema,
+//           //       });
+//           // if (newCollection.schema === bodyTest.schema) {
+//           //   p("newCollection: ", newCollection);
+//           // } else {
+//           //   throw error(500, "Collection not created");
+//           // }
+//         } catch (e: unknown) {
+//           if (e instanceof ClientResponseError && !e.isAbort) {
+//             error(e.response.code || 500, e.response.message);
+//           }
+//         }
+//       }
+//     }
+//   }
+
+//   try {
+//     const data = await locals.pb.collection(collection).create(body);
+//     p(data);
+//     return json(data);
+//   } catch (e: unknown) {
+//     if (e instanceof ClientResponseError && !e.isAbort) {
+//       error(e.response.code || 500, e.response.message);
+//     }
+//   }
+
+//   return json(undefined);
+// }
+
 export async function GET({ locals, params: { collection }, url }) {
   pt("user: ", locals.user);
   pt("admin: ", locals.admin);
@@ -81,6 +155,7 @@ export async function GET({ locals, params: { collection }, url }) {
   const expand = url.searchParams.get("expand");
   const fields = url.searchParams.get("fields");
   const requestKey = url.searchParams.get("requestKey") || `${collection}List`;
+  const test2 = url.searchParams.get("test2") || "";
 
   const options: ListOptions = { sort, requestKey };
   if (filter) options.filter = filter;
@@ -100,15 +175,40 @@ export async function GET({ locals, params: { collection }, url }) {
       fields: fields,
       requestKey: requestKey,
       options: options,
+      test2: test2,
     },
   ]);
-  p(test);
+  p(JSON.stringify(options, null, 2));
 
   try {
-    const data = await locals.pb
-      .collection(collection)
-      .getList(parseInt(page), parseInt(perPage), options);
-    return json(data);
+    let data;
+    let dataJson;
+    if (test2 === "test2") {
+      data = await fetch("http://127.0.0.1:8090/test2", {
+        method: "GET",
+      });
+      p("test2detected");
+      dataJson = await data.json();
+
+      p("dataJson: ", dataJson);
+    } else {
+      pt(
+        "collection: ",
+        collection,
+        "page: ",
+        parseInt(page),
+        "perPage: ",
+        parseInt(perPage),
+        "options: ",
+        options
+      );
+      data = await locals.pb
+        .collection(collection)
+        .getList(parseInt(page), parseInt(perPage), options);
+      p("data: ", data);
+      p("dataJson: ", dataJson);
+    }
+    return json(dataJson || data);
   } catch (e: unknown) {
     if (e instanceof ClientResponseError && !e.isAbort) {
       error(e.response.code || 500, e.response.message);
@@ -118,21 +218,82 @@ export async function GET({ locals, params: { collection }, url }) {
   return json(undefined);
 }
 
-export async function POST({ locals, params: { collection }, request }) {
-  pt("user: ", locals.user);
-  pt("admin: ", locals.admin);
-  if (!locals.user && !locals.admin) error(403, "Forbidden");
-  const body = await request.json();
-  p(body);
-  try {
-    const data = await locals.pb.collection(collection).create(body);
-    p(data);
-    return json(data);
-  } catch (e: unknown) {
-    if (e instanceof ClientResponseError && !e.isAbort) {
-      error(e.response.code || 500, e.response.message);
-    }
-  }
+// export async function POST({ locals, params: { collection }, request }) {
+//   pt("user: ", locals.user);
+//   pt("admin: ", locals.admin);
+//   if (!locals.user && !locals.admin) error(403, "Forbidden");
+//   const body = await request.json();
+//   p(body);
+// const bodyTest = body;
+// const bodyTestString = JSON.stringify(bodyTest);
 
-  return json(undefined);
-}
+// const currentCollection = await locals.pb.collections.getFullList({
+//   sort: "-created",
+// });
+
+// if (currentCollection) {
+//   p("currentCollection: ", currentCollection);
+//   const currentCollectionArray = currentCollection.map(
+//     (collection) => collection.name
+//   );
+//   p("currentCollectionArray: ", currentCollectionArray);
+//   if (currentCollectionArray.includes(collection)) {
+//     p("collection exists");
+//   } else {
+//     p("collection does not exist");
+//     if (bodyTest.name && bodyTest.type && bodyTest.schema) {
+//       try {
+//         const newCollection = await locals.pb.collections.create({
+//           name: collection,
+//           type: bodyTest.type,
+//           schema: bodyTest.schema,
+//         });
+//         if (newCollection.schema === bodyTest.schema) {
+//           p("newCollection: ", newCollection);
+//         } else {
+//           throw error(500, "Collection not created");
+//         }
+//       } catch (e: unknown) {
+//         if (e instanceof ClientResponseError && !e.isAbort) {
+//           error(e.response.code || 500, e.response.message);
+//         }
+//       }
+//     }
+//   }
+// }
+
+//   try {
+//     const data = await locals.pb.collection(collection).create(body);
+//     p(data);
+//     return json(data);
+//   } catch (e: unknown) {
+//     if (e instanceof ClientResponseError && !e.isAbort) {
+//       error(e.response.code || 500, e.response.message);
+//     }
+//   }
+
+//   return json(undefined);
+// }
+
+// "body" : {
+//   "name": "testExpand",
+//   "type": "base",
+//   "schema": [
+//     {
+//       "name": "expand",
+//       "type": "text",
+//       "required": "true",
+//     },
+//     {
+//       "name": "status",
+//       "type": "boolean",
+//     },
+//   ],
+// }
+
+// {"Allergens":"Contains sulfites",
+// "Grapes":"Dolcetto"
+// "Region":"United States / Texas / Texas High Plains"
+// "Wine Name":"Wilmeth Vineyard Reserve Dolcetto"
+// "Wine style":"Texas Red"
+// "Winery":"Becker Vineyards"}

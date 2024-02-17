@@ -2,6 +2,8 @@ import type { User, Admin } from "$lib/types";
 import { redirect } from "sveltekit-flash-message/server";
 import type { LayoutServerLoad } from "./$types";
 import { loadFlash } from "sveltekit-flash-message/server";
+import dotenv from "dotenv";
+dotenv.config();
 
 import {
   ADMIN_EMAIL,

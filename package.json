@@ -12,7 +12,8 @@
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
     "test:integration": "playwright test",
-    "test:unit": "vitest"
+    "test:unit": "vitest",
+    "typegen": "pocketbase-typegen --db ./pb_data/data.db"
   },
   "devDependencies": {
     "@melt-ui/pp": "^0.3.0",
@@ -69,10 +70,11 @@
     "@skeletonlabs/skeleton": "^2.8.0",
     "@sveltejs/adapter-vercel": "^5.1.0",
     "ai": "^2.2.33",
-    "apify-client": "^2.8.4",
+    "apify-client": "^2.8.6",
     "bits-ui": "^0.16.0",
     "cmdk-sv": "^0.0.13",
     "crawlee": "^3.7.3",
+    "dotenv": "^16.4.2",
     "flat": "^6.0.1",
     "fs-extra": "^11.2.0",
     "highlight.js": "11.9.0",

@@ -158,8 +158,8 @@ export const userSchema = z.object({
 export const userAdds = userSchema.extend({
   id: z.string().optional(),
   verified: z.boolean().optional(),
-  created: z.date().optional(),
-  updated: z.date().optional(),
+  created: z.union([z.date(), z.string()]).optional(),
+  updated: z.union([z.date(), z.string()]).optional(),
   emailVisibility: z.boolean().optional(),
   avatar: z.string().optional(),
 });

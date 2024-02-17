@@ -10,7 +10,11 @@
   import { Button } from "$lib/components/ui/button";
   import * as Card from "$lib/components/ui/card";
   import * as FormCommand from "$lib/components/ui/command/";
-  import type { User } from "$lib/types";
+  // import type { User } from "$lib/types";
+  import type {
+    UsersResponse as User,
+    BottlesDBResponse,
+  } from "$lib/pocketbase-types";
   import { cn } from "$lib/utils";
   import {
     CalendarDate,

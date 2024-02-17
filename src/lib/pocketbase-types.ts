@@ -1,18 +1,24 @@
-import { z } from "zod";
+/**
+ * This file was @generated using pocketbase-typegen
+ */
+
 import type PocketBase from "pocketbase";
 import type { RecordService } from "pocketbase";
+import { z } from "zod";
 
 export enum Collections {
+  AppRoles = "AppRoles",
   BaseStats = "BaseStats",
   BottlesDB = "BottlesDB",
   InterestingFacts = "Interesting_Facts",
   Recommendedvintage = "Recommendedvintage",
   Stylestats = "Stylestats",
+  UserRole = "UserRole",
+  UserRoleAssignments = "UserRoleAssignments",
+  UserRoleMap = "UserRoleMap",
   WineFacts = "WineFacts",
   WineInfo = "WineInfo",
   WineInfoData = "WineInfoData",
-
-  WineInfoDataArray = "WineInfoDataArray",
   FoodPairings = "foodPairings",
   Users = "users",
 }
@@ -127,16 +133,13 @@ export const WineInfoDataRecordSchema = z.object({
   StyleStats_body_rating: z.number().optional(),
   Varietal: z.string().optional(),
   WineName: z.string().optional(),
-  Summary: z.string().optional(),
 });
-
-export const WineInfoDataRecordArraySchema = z.array(WineInfoDataRecordSchema);
 
 export const FoodPairingsRecordSchema = z.object({
   foodPairing: z.string().optional(),
 });
 
-export const FoodPairingsRecordSchemaArray = z.array(z.string());
+export const FoodPairingsRecordSchemaArray = z.array(FoodPairingsRecordSchema);
 
 export const UsersRecordSchema = z.object({
   avatar: z.string().optional(),
@@ -258,7 +261,6 @@ export type WineInfoDataRecord = {
   StyleStats_body_rating?: number;
   Varietal?: string;
   WineName?: string;
-  Summary?: string;
 };
 
 export type FoodPairingsRecord = {
@@ -314,6 +316,7 @@ export const WineFactsResponseSchema = WineFactsRecordSchema.extend(
 export const WineInfoResponseSchema = WineInfoRecordSchema.extend(
   BaseSystemFieldsSchema.shape
 );
+
 export const WineInfoDataResponseSchema = WineInfoDataRecordSchema.extend(
   BaseSystemFieldsSchema.shape
 );
@@ -371,244 +374,3 @@ export type TypedPocketBase = PocketBase & {
   collection(idOrName: "foodPairings"): RecordService<FoodPairingsResponse>;
   collection(idOrName: "users"): RecordService<UsersResponse>;
 };
-
-export interface WineData {
-  //   wineFacts: Record<string, any>;
-  wineFacts: WineFacts;
-  code: string;
-  wineryRating: number;
-  foodPairings: string[];
-  style: string;
-  varietal: string;
-  //   stylestats: {
-  //     description: string;
-  //     interestingFacts: string;
-  //     bodyRating: number;
-  //     bodyDesc: string;
-  //     acidityRating: number;
-  //     acidityDesc: string;
-  //     BaseStats: Record<string, number>;
-  //   };
-  styleStats: Stylestats;
-  recommended_vintages: Recommendedvintage[] | Recommendedvintage | string;
-  image: string;
-  summary?: string;
-}
-
-export interface WineInfo {
-  wineFacts: WineFacts;
-  code?: string;
-  wineryRating: number;
-  foodPairings: string[];
-  style: string;
-  varietal: string;
-  styleStats: Stylestats;
-  recommended_vintages: Recommendedvintage[] | Recommendedvintage | string;
-  image: string;
-  summary?: string;
-}
-
-export interface Recommendedvintage {
-  year: number;
-  type: string;
-}
-
-export interface Stylestats {
-  Description: string;
-  "Interesting Facts": string[] | string;
-  "Body Rating": number;
-  "Body Description": string;
-  "Acidity Rating": number;
-  "Acidity Description": string;
-  BaseStats: BaseStats;
-}
-
-export interface BaseStats {
-  acidity?: number;
-  fizziness?: number;
-  intensity?: number;
-  sweetness?: number;
-  tannin?: number;
-  Error?: string;
-}
-
-export interface WineFacts {
-  "Wine Name"?: string;
-  wineName?: string;
-  Winery?: string;
-  Grapes?: string;
-  Region?: string;
-  "Wine style"?: string;
-  Allergens?: string;
-  "Alcohol content"?: string;
-  "Wine description"?: string;
-  data?: string;
-}
-
-export interface WineFlatData {
-  "wineFacts.Wine Name"?: string;
-  "wineFacts.Winery"?: string;
-  "wineFacts.Grapes"?: string;
-  "wineFacts.Region"?: string;
-  "wineFacts.Wine style"?: string;
-  "wineFacts.Allergens"?: string;
-  wineryRating: number;
-  "foodPairings.0": string;
-  "foodPairings.1"?: string;
-  "foodPairings.2"?: string;
-  style: string;
-  varietal: string;
-  "style_stats.Description": string;
-  "style_stats.Interesting Facts"?: string;
-  "style_stats.Body Rating": number;
-  "style_stats.Body Description": string;
-  "style_stats.Acidity Rating": number;
-  "style_stats.Acidity Description": string;
-  "style_stats.BaseStats.acidity"?: number;
-  "style_stats.BaseStats.fizziness"?: any;
-  "style_stats.BaseStats.intensity"?: number;
-  "style_stats.BaseStats.sweetness"?: number;
-  "style_stats.BaseStats.tannin"?: number;
-  "recommended_vintages.0.year"?: number;
-  "recommended_vintages.0.type"?: string;
-  "recommended_vintages.1.year"?: number;
-  "recommended_vintages.1.type"?: string;
-  image: string;
-  "wineFacts.Alcohol content"?: string;
-  "foodPairings.3"?: string;
-  "style_stats.Interesting Facts.0"?: string;
-  "recommended_vintages.2.year"?: number;
-  "recommended_vintages.2.type"?: string;
-  "recommended_vintages.3.year"?: number;
-  "recommended_vintages.3.type"?: string;
-  "wineFacts.Wine description"?: string;
-  "style_stats.Interesting Facts.1"?: string;
-  "style_stats.Interesting Facts.2"?: string;
-  recommended_vintages?: string;
-  "foodPairings.4"?: string;
-  "style_stats.Interesting Facts.3"?: string;
-  "style_stats.Interesting Facts.4"?: string;
-  "recommended_vintages.4.year"?: number;
-  "recommended_vintages.4.type"?: string;
-  "recommended_vintages.5.year"?: number;
-  "recommended_vintages.5.type"?: string;
-  "wineFacts.data"?: string;
-  "style_stats.BaseStats.Error"?: string;
-  "recommended_vintages.year"?: number;
-  "recommended_vintages.type"?: string;
-  "recommended_vintages.6.year"?: number;
-  "recommended_vintages.6.type"?: string;
-  "recommended_vintages.7.year"?: number;
-  "recommended_vintages.7.type"?: string;
-}
-
-// db conversion functions
-
-// Define a generic function for stripping system fields from a response object
-function stripSystemFields<T extends BaseSystemFields, R>(response: T): R {
-  const { id, created, updated, collectionId, collectionName, ...record } =
-    response;
-  return record as R;
-}
-
-function transformFoodPairingsToStringArray(
-  foodPairings: FoodPairingsRecord[]
-): string[] {
-  const validation = FoodPairingsRecordSchemaArray.safeParse(foodPairings);
-  if (!validation.success) {
-    throw new Error("Invalid food pairings data");
-  }
-  return validation.data.map((fp) => fp || "");
-}
-
-function transformStringArrayToFoodPairings(
-  foodPairings: string[]
-): FoodPairingsRecord[] {
-  return foodPairings.map((fp) => ({ foodPairing: fp }));
-}
-
-function transformRecommendedvintageToString(
-  recommendedvintage: RecommendedvintageRecord[]
-): string {
-  return JSON.stringify(recommendedvintage);
-}
-
-function transformStringToRecommendedvintage(
-  recommendedvintage: string
-): RecommendedvintageRecord[] {
-  return JSON.parse(recommendedvintage);
-}
-
-function transformStylestatsToString(stylestats: StylestatsRecord): string {
-  return JSON.stringify(stylestats);
-}
-
-function transformStringToStylestats(stylestats: string): StylestatsRecord {
-  return JSON.parse(stylestats);
-}
-
-function transformWineFactsToString(wineFacts: WineFactsRecord): string {
-  return JSON.stringify(wineFacts);
-}
-
-function transformStringToWineFacts(wineFacts: string): WineFactsRecord {
-  return JSON.parse(wineFacts);
-}
-
-function transformWineInfoToString(wineInfo: WineInfoRecord): string {
-  return JSON.stringify(wineInfo);
-}
-
-function transformStringToWineInfo(wineInfo: string): WineInfoRecord {
-  return JSON.parse(wineInfo);
-}
-
-function transformBaseStatsToString(baseStats: BaseStatsRecord): string {
-  return JSON.stringify(baseStats);
-}
-
-function transformStringToBaseStats(baseStats: string): BaseStatsRecord {
-  return JSON.parse(baseStats);
-}
-
-export async function validateZodSchema<T>(
-  collection: Collections,
-  data: T
-): Promise<boolean> {
-  const schema = getZodSchema(collection);
-  try {
-    if (!schema) throw new Error("No schema found");
-    schema.parse(data);
-    return true;
-  } catch (error) {
-    console.error(`Failed to validate data for ${collection}`, error);
-    return false;
-  }
-}
-function getZodSchema(collection: Collections) {
-  switch (collection) {
-    case Collections.WineFacts:
-      return WineFactsRecordSchema;
-    case Collections.WineInfo:
-      return WineInfoRecordSchema;
-    case Collections.WineInfoData:
-      return WineInfoDataRecordSchema;
-    case Collections.WineInfoDataArray:
-      return WineInfoDataRecordArraySchema;
-    case Collections.FoodPairings:
-      return FoodPairingsRecordSchema;
-    case Collections.Users:
-      return UsersRecordSchema;
-    case Collections.Stylestats:
-      return StylestatsRecordSchema;
-    case Collections.Recommendedvintage:
-      return RecommendedvintageRecordSchema;
-    case Collections.InterestingFacts:
-      return InterestingFactsRecordSchema;
-    case Collections.BottlesDB:
-      return BottlesDBRecordSchema;
-    case Collections.BaseStats:
-      return BaseStatsRecordSchema;
-  }
-  return null;
-}

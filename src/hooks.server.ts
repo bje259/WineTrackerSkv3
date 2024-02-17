@@ -5,12 +5,14 @@ import { serializeNonPOJOs } from "$lib/utils";
 import type { UserDB as User, Admin } from "$lib/types";
 import { PUBLIC_PB_HOST } from "$env/static/public";
 import { ADMIN_USER_ID } from "$env/static/private";
+import type { TypedPocketBase, UsersResponse } from "$lib/pocketbase-types";
+import { Collections } from "$lib/pocketbase-types";
 
 const allowedHeaders = ["retry-after", "content-type"];
 
 /** @type {import('@sveltejs/kit').Handle} */
 export const handle: Handle = async ({ event, resolve }) => {
-  event.locals.pb = new PocketBase(PUBLIC_PB_HOST);
+  event.locals.pb = new PocketBase(PUBLIC_PB_HOST) as TypedPocketBase;
 
   // load the store data from the request cookie string
   event.locals.pb.authStore.loadFromCookie(
@@ -33,7 +35,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     }
   } catch (_) {
     // clear the auth store on failed refresh
-    console.log("auth refresh failed");
+    // console.log("auth refresh failed");
     event.locals.pb.authStore.clear();
   }
 
@@ -41,16 +43,20 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.admin = serializeNonPOJOs<Admin>(
       event.locals.pb.authStore.model as Admin
     );
+    // const tempUser = await event.locals.pb
+    //   .collection("users")
+    //   .getOne<User>(ADMIN_USER_ID);
     const tempUser = await event.locals.pb
-      .collection("users")
-      .getOne<User>(ADMIN_USER_ID);
-    event.locals.user = serializeNonPOJOs<User>(tempUser);
-  } else if (event.locals.pb.authStore.isValid) {
-    event.locals.user = serializeNonPOJOs<User>(
-      event.locals.pb.authStore.model as User
-    );
+      .collection(Collections.Users)
+      .getOne<UsersResponse>(ADMIN_USER_ID);
+    event.locals.user = serializeNonPOJOs(tempUser);
+  } else if (
+    event.locals.pb.authStore.isValid &&
+    event.locals.pb.authStore.model
+  ) {
+    event.locals.user = serializeNonPOJOs(event.locals.pb.authStore.model);
   } else {
-    console.log("hooks clearing user");
+    // console.log("hooks clearing user");
     event.locals.user = <User>{};
   }
 

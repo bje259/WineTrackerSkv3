@@ -213,8 +213,8 @@ export interface Admin {
   email?: string;
   password?: string;
   verified?: boolean;
-  created?: string;
-  updated?: string;
+  created?: string | Date;
+  updated?: string | Date;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

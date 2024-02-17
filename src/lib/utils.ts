@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { cubicOut } from "svelte/easing";
 import type { TransitionConfig } from "svelte/transition";
+import type { Collections } from "./WineTypes";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -121,7 +122,7 @@ const options = {
   threshold: 0,
 };
 
-export const lazyLoad = (image, src) => {
+export const lazyLoad = (image: HTMLImageElement, src: string) => {
   const loaded = () => {
     image.classList.add("visible"); // doesn't work in REPL
     image.style.opacity = "1"; // REPL hack to apply loading animation

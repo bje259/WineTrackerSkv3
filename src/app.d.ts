@@ -7,31 +7,42 @@ import type { User, Admin, BottleRecordsSchema } from "$lib/types";
 import type Writable from "svelte/store";
 import PocketBase from "pocketbase";
 import { crudSchema } from "$lib/Schemas";
+import { z } from "zod";
+import { UserDB as User, Admin } from "$lib/types";
+import { TypedPocketBase } from "$lib/pocketbase-types";
+import { ValidAuthProviders } from "$lib/types";
+import type {
+  UserRecord,
+  BottlesDBRecord,
+  UserDBRecord,
+  BottlesDBResponse,
+} from "$lib/pocketbase-types";
+
 type BottlesDB = z.infer<typeof crudSchema>[];
-type ValidAuthProviders = string[];
+// type ValidAuthProviders = string[];
 
 declare global {
   namespace App {
     interface Locals {
-      pb: PocketBase;
-      user?: User;
+      pb: TypedPocketBase;
+      user?: UserRecord;
       admin?: Admin;
     }
     // trying to define the interface below broke many things
     interface PageData {
       flash?: { type: "success" | "error"; message: string };
-      user?: User;
+      user?: UserRecord;
       admin?: Admin;
       form?: SuperValidated;
       loginPageData?: {
         form?: SuperValidated<typeof loginUserDto>;
         validAuthProviders?: ValidAuthProviders;
-        user?: User;
+        user?: UserRecord;
         admin?: Admin;
       };
       bottlePreLoad?: {
         form: SuperValidated<typeof crudSchema>;
-        bottlesDB: BottleRecordsSchema;
+        bottlesDB: BottlesDBResponse[];
       };
       validAuthProviders?: ValidAuthProviders;
     }
@@ -39,20 +50,20 @@ declare global {
 
     // interface Platform {}
     interface PageState {
-      user?: User;
+      user?: UserRecord;
       flash?: { type: "success" | "error"; message: string };
       admin?: Admin;
       form?: SuperValidated;
-      bottlesDB?: BottleRecordsSchema;
+      bottlesDB?: BottlesDBResponse[];
       loginPageData?: {
         form?: SuperValidated<typeof loginUserDto>;
         validAuthProviders?: ValidAuthProviders;
-        user?: User;
+        user?: UserRecord;
         admin?: Admin;
       };
       bottlePreLoad?: {
         form?: SuperValidated<typeof crudSchema>;
-        bottlesDB?: BottleRecordsSchema;
+        bottlesDB?: BottlesDBResponse[];
       };
       validAuthProviders?: ValidAuthProviders;
     }

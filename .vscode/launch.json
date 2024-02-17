@@ -68,12 +68,12 @@
       "url": "http://localhost:5173",
       "urlFilter": "*localhost:5173",
       "webRoot": "${workspaceFolder}",
-      "userDataDir": "${workspaceFolder}/.vscode/chrome",
-      "runtimeArgs": [
-        "--load-extension=${workspaceFolder}/.vscode/chrome/Default/Extensions/kfidecgcdjjfpeckbblhmfkhmlgecoff/2.0.1_0",
-        "--load-extension=${workspaceFolder}/.vscode/chrome/Default/Extensions/bgelkjgjabbfoeiicgoddeadicoofcfk/1.1.0_0",
-        "--load-extension=${workspaceFolder}/.vscode/chrome/Default/Extensions/extension"
-      ]
+      "userDataDir": "${workspaceFolder}/.vscode/chrome"
+      // "runtimeArgs": [
+      //   "--load-extension=${workspaceFolder}/.vscode/chrome/Default/Extensions/kfidecgcdjjfpeckbblhmfkhmlgecoff/2.0.1_0",
+      //   "--load-extension=${workspaceFolder}/.vscode/chrome/Default/Extensions/bgelkjgjabbfoeiicgoddeadicoofcfk/1.1.0_0",
+      //   "--load-extension=${workspaceFolder}/.vscode/chrome/Default/Extensions/extension"
+      // ]
     },
     {
       "type": "pwa-msedge",

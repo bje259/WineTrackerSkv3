@@ -1,0 +1,150 @@
+[
+  {
+    "baseStats": "k2pgxwwrsxek381",
+    "collectionId": "n9i6ax2yzcl9280",
+    "collectionName": "WineInfoRelationships",
+    "expand": {
+      "foodPairings": {
+        "collectionId": "d7awiqxjd2p2yi6",
+        "collectionName": "foodPairings",
+        "created": "2024-02-04 04:24:35.769Z",
+        "foodPairing": "Lamb",
+        "id": "0t17ix3enqtyl3t",
+        "updated": "2024-02-04 04:24:35.769Z"
+      },
+      "wineFacts": {
+        "Alcohol_content": "",
+        "Allergens": "Contains sulfites",
+        "Grapes": "Dolcetto",
+        "Region": "United States / Texas / Texas High Plains",
+        "Wine_Name": "Wilmeth Vineyard Reserve Dolcetto",
+        "Wine_description": "",
+        "Wine_style": "Texas Red",
+        "Winery": "Becker Vineyards",
+        "collectionId": "5c4eq7xx1tdk0bg",
+        "collectionName": "WineFacts",
+        "created": "2024-02-04 04:38:58.093Z",
+        "data": "",
+        "id": "anch1adphb1layi",
+        "updated": "2024-02-07 05:36:57.173Z"
+      }
+    },
+    "foodPairings": "0t17ix3enqtyl3t",
+    "id": "j1mt1acvl8i78tz",
+    "interestingFacts": "rh7ycvimd53vi0o",
+    "recVin": "7dvgoidqt43u6cf",
+    "wineFacts": "anch1adphb1layi",
+    "wineName": "Wilmeth Vineyard Reserve Dolcetto"
+  },
+  {
+    "baseStats": "k2pgxwwrsxek381",
+    "collectionId": "n9i6ax2yzcl9280",
+    "collectionName": "WineInfoRelationships",
+    "expand": {
+      "foodPairings": {
+        "collectionId": "d7awiqxjd2p2yi6",
+        "collectionName": "foodPairings",
+        "created": "2024-02-04 04:24:35.769Z",
+        "foodPairing": "Lamb",
+        "id": "0t17ix3enqtyl3t",
+        "updated": "2024-02-04 04:24:35.769Z"
+      },
+      "wineFacts": {
+        "Alcohol_content": "",
+        "Allergens": "Contains sulfites",
+        "Grapes": "Dolcetto",
+        "Region": "United States / Texas / Texas High Plains",
+        "Wine_Name": "Wilmeth Vineyard Reserve Dolcetto",
+        "Wine_description": "",
+        "Wine_style": "Texas Red",
+        "Winery": "Becker Vineyards",
+        "collectionId": "5c4eq7xx1tdk0bg",
+        "collectionName": "WineFacts",
+        "created": "2024-02-04 04:38:58.093Z",
+        "data": "",
+        "id": "anch1adphb1layi",
+        "updated": "2024-02-07 05:36:57.173Z"
+      }
+    },
+    "foodPairings": "0t17ix3enqtyl3t",
+    "id": "j1mt1acvl8i78tz",
+    "interestingFacts": "rh7ycvimd53vi0o",
+    "recVin": "hm9a992zfc22ovm",
+    "wineFacts": "anch1adphb1layi",
+    "wineName": "Wilmeth Vineyard Reserve Dolcetto"
+  },
+  {
+    "baseStats": "k2pgxwwrsxek381",
+    "collectionId": "n9i6ax2yzcl9280",
+    "collectionName": "WineInfoRelationships",
+    "expand": {
+      "foodPairings": {
+        "collectionId": "d7awiqxjd2p2yi6",
+        "collectionName": "foodPairings",
+        "created": "2024-02-04 04:24:12.417Z",
+        "foodPairing": "Game (deer, venison)",
+        "id": "l7rsvfrki7oamr2",
+        "updated": "2024-02-04 04:24:12.417Z"
+      },
+      "wineFacts": {
+        "Alcohol_content": "",
+        "Allergens": "Contains sulfites",
+        "Grapes": "Dolcetto",
+        "Region": "United States / Texas / Texas High Plains",
+        "Wine_Name": "Wilmeth Vineyard Reserve Dolcetto",
+        "Wine_description": "",
+        "Wine_style": "Texas Red",
+        "Winery": "Becker Vineyards",
+        "collectionId": "5c4eq7xx1tdk0bg",
+        "collectionName": "WineFacts",
+        "created": "2024-02-04 04:38:58.093Z",
+        "data": "",
+        "id": "anch1adphb1layi",
+        "updated": "2024-02-07 05:36:57.173Z"
+      }
+    },
+    "foodPairings": "l7rsvfrki7oamr2",
+    "id": "j1mt1acvl8i78tz",
+    "interestingFacts": "rh7ycvimd53vi0o",
+    "recVin": "7dvgoidqt43u6cf",
+    "wineFacts": "anch1adphb1layi",
+    "wineName": "Wilmeth Vineyard Reserve Dolcetto"
+  },
+  {
+    "baseStats": "k2pgxwwrsxek381",
+    "collectionId": "n9i6ax2yzcl9280",
+    "collectionName": "WineInfoRelationships",
+    "expand": {
+      "foodPairings": {
+        "collectionId": "d7awiqxjd2p2yi6",
+        "collectionName": "foodPairings",
+        "created": "2024-02-04 04:24:12.417Z",
+        "foodPairing": "Game (deer, venison)",
+        "id": "l7rsvfrki7oamr2",
+        "updated": "2024-02-04 04:24:12.417Z"
+      },
+      "wineFacts": {
+        "Alcohol_content": "",
+        "Allergens": "Contains sulfites",
+        "Grapes": "Dolcetto",
+        "Region": "United States / Texas / Texas High Plains",
+        "Wine_Name": "Wilmeth Vineyard Reserve Dolcetto",
+        "Wine_description": "",
+        "Wine_style": "Texas Red",
+        "Winery": "Becker Vineyards",
+        "collectionId": "5c4eq7xx1tdk0bg",
+        "collectionName": "WineFacts",
+        "created": "2024-02-04 04:38:58.093Z",
+        "data": "",
+        "id": "anch1adphb1layi",
+        "updated": "2024-02-07 05:36:57.173Z"
+      }
+    },
+    "foodPairings": "l7rsvfrki7oamr2",
+    "id": "j1mt1acvl8i78tz",
+    "interestingFacts": "rh7ycvimd53vi0o",
+    "recVin": "hm9a992zfc22ovm",
+    "wineFacts": "anch1adphb1layi",
+    "wineName": "Wilmeth Vineyard Reserve Dolcetto"
+  }
+]

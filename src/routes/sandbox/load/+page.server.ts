@@ -14,14 +14,14 @@ export const load = (async ({ locals, cookies }) => {
     } as const;
     throw redirect(303, "/login", message, cookies);
   }
-  if (!locals.pb.authStore.isAdmin && !locals.admin?.id) {
-    console.log("Not admin");
-    const message = {
-      type: "error",
-      message: "You must be an admin to access this page",
-    } as const;
-    throw redirect(303, "/", message, cookies);
-  }
+  // if (!locals.pb.authStore.isAdmin && !locals.admin?.id) {
+  //   console.log("Not admin");
+  //   const message = {
+  //     type: "error",
+  //     message: "You must be an admin to access this page",
+  //   } as const;
+  //   throw redirect(303, "/", message, cookies);
+  // }
 
   // try {
   //   if (!locals.pb.authStore.isValid) {

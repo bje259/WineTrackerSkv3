@@ -14,7 +14,7 @@
     Stylestats,
     Recommendedvintage,
     WineInfo,
-  } from "$lib/index.js";
+  } from "$lib/WineTypes.js";
   import { onMount } from "svelte";
   export let data: PageData;
   import { browser } from "$app/environment";
@@ -27,11 +27,13 @@
   import { Textarea } from "$lib/components/ui/textarea";
   import { Input } from "$lib/components/ui/input";
   import { Label } from "$lib/components/ui/label";
+  import SummaryResults from "../../../SummaryResults.json";
+  import WineInfoData1 from "../../../WineInfoData1.json";
 
   let bodyValue = "";
   let methodValue = "";
   let pathValue = "";
-  let qOutput = "";
+  let qOutput: any = "";
 
   function capitalizeWords(input: string) {
     return input
@@ -39,6 +41,46 @@
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
+  }
+
+  async function formatSummary() {
+    p("Summary Results: ", SummaryResults);
+    const parsed = SummaryResults.map((item: string) => {
+      p("item", item);
+      const [codePart, summaryPart] = item.split("\n");
+      const code = codePart?.replace("Code: ", "")?.trim();
+      const summary = summaryPart?.replace("Summary: ", "")?.trim();
+      return { Code: code ?? "N/A", Summary: summary ?? "N/A" };
+    });
+    p(parsed);
+    const updatedWID = WineInfoData1.map((item: any) => {
+      const summary = parsed.find((pitem: any) => item?.Code === pitem?.Code);
+      return { ...item, Summary: summary?.Summary ?? "N/A" };
+    });
+    p(updatedWID);
+
+    try {
+      await fetch("/api/loadApify2", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedWID),
+      }).then(async (response) => {
+        console.log(response);
+        let tempOutput = [];
+        try {
+          tempOutput = await response.json();
+        } catch (error) {
+          console.log(error);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    console.log("done updating WineInfoData1");
+
+    // return parsed;
   }
 
   function downloadJSON(jsonData: any, filename: string) {
@@ -69,7 +111,7 @@
   }
 
   async function runQuery(path: string, method: string, body: string) {
-    p("params: ", path, method, body);
+    // p("params: ", path, method, body);
     qOutput = "";
     try {
       if (method === "GET") {
@@ -91,10 +133,32 @@
         });
         const data = await response.json();
         qOutput = data;
+        p("data", data);
       }
     } catch (error) {
       console.log(error);
     }
+  }
+  async function summarizeJson(): Promise<void> {
+    try {
+      await runQuery("/api/WineInfoData", "GET", "");
+      // p("check1", qOutput);
+      const parsed = qOutput?.items ?? qOutput ?? [];
+      // p("check2", parsed);
+      const test = parsed.map((item: any) => flatten(item));
+      p("check3", test[0]);
+      // const testLoad = test.map((item: any) => {
+      //   return {
+      //     WineName: item?.["WineName"] ?? "N/A",
+      //     WineInfo: item,
+      //   };
+      // });
+      p("check4", test[0]);
+      await runQuery("/api/summarize", "POST", JSON.stringify(test));
+    } catch (error) {
+      console.log(error);
+    }
+    p("Summarization done");
   }
 
   async function runCode(path: string, method: string, body: string) {
@@ -103,9 +167,9 @@
     try {
       const response = await fetch(path, {
         method: method,
-        headers: {
-          "Content-Type": "application/json",
-        },
+        // headers: {
+        //   "Content-Type": "application/json",
+        // },
         body: body,
       });
       const data = await response.json();
@@ -219,22 +283,23 @@
   <div class="grid grid-cols-1">
     <Button
       on:click={async () => {
-        const data = output;
-        // await pb.collection('example').create(data);
-        p(data);
-        await fetch("/api/WineInfo", {
-          method: "POST",
-          body: JSON.stringify(data),
-        }).then(async (response) => {
-          console.log(response);
-          let tempOutput;
-          try {
-            tempOutput = await response.json();
-          } catch (error) {
-            console.log(error);
-          }
-          p(tempOutput);
-        });
+        await formatSummary();
+        // const data = output;
+        // // await pb.collection('example').create(data);
+        // p(data);
+        // await fetch("/api/WineInfo", {
+        //   method: "POST",
+        //   body: JSON.stringify(data),
+        // }).then(async (response) => {
+        //   console.log(response);
+        //   let tempOutput;
+        //   try {
+        //     tempOutput = await response.json();
+        //   } catch (error) {
+        //     console.log(error);
+        //   }
+        //   p(tempOutput);
+        // });
       }}>Test</Button
     >
 
@@ -242,16 +307,28 @@
     <Button
       on:click={(e) => {
         e.preventDefault();
-        let flattenedData = output;
-        let flatData = flattenedData.map((item) => flatten(item));
+        let flattenedData = qOutput;
+        // let flatData = flattenedData.map((item) => flatten(item));
+        let flatData = flattenedData;
         p(flatData);
-        if (flatData) downloadJSON(flatData, "flattenedData.json");
+        if (flatData) downloadJSON(flatData, "download.json");
       }}>Download Json</Button
+    >
+
+    <Button
+      on:click={async (e) => {
+        e.preventDefault();
+        // let flattenedData = JSON.parse(qOutput);
+        // let flatData = flattenedData.map((item) => flatten(item));
+        // let flatData = flattenedData.slice(0, 1);
+        // p(flatData);
+        await summarizeJson();
+      }}>Summarize Json</Button
     >
     <!-- This button pulls the dataset from apify and generates JSOn output for the Svelte non-script code -->
     <Button
       on:click={async () => {
-        await fetch("/api/loadApify", {
+        await fetch("/api/loadApify2", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -299,6 +376,7 @@
   <!-- API test output  -->
   {#if qOutput}
     <div class="grid grid-cols-1">
+      <!-- {@html qOutput.toString().replace(/\n/g, "<br/>")} -->
       <pre>{JSON.stringify(qOutput, null, 2)}</pre>
     </div>
   {/if}

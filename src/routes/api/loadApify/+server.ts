@@ -1,18 +1,33 @@
 import type { RequestHandler } from "./$types.d.ts";
-import { ApifyDatasetLoader } from "langchain/document_loaders/web/apify_dataset";
-import { HNSWLib } from "@langchain/community/vectorstores/hnswlib";
-import { OpenAIEmbeddings, OpenAI } from "@langchain/openai";
-import { RetrievalQAChain } from "langchain/chains";
-import { Document } from "@langchain/core/documents";
-import fs from "fs";
 import type {
-  WineData,
   WineInfo,
   WineFacts,
   Stylestats,
   Recommendedvintage,
-  BaseStats,
 } from "$lib/index.js";
+import type {
+  WineFactsRecord,
+  WineInfoRecord,
+  FoodPairingsRecord,
+  StylestatsRecord,
+  RecommendedvintageRecord,
+  InterestingFactsRecord,
+  BaseStatsRecord,
+  RecordIdString,
+} from "$lib/WineTypes.js";
+import {
+  WineFactsRecordSchema,
+  Collections,
+  WineInfoRecordSchema,
+  FoodPairingsRecordSchema,
+  UsersRecordSchema,
+  StylestatsRecordSchema,
+  RecommendedvintageRecordSchema,
+  InterestingFactsRecordSchema,
+  BottlesDBRecordSchema,
+  BaseStatsRecordSchema,
+  FoodPairingsRecordSchemaArray,
+} from "$lib/WineTypes.js";
 import { p, pt } from "$lib/utils.js";
 
 /*
@@ -38,9 +53,11 @@ import { p, pt } from "$lib/utils.js";
  * Handles GET requests to fetch and process wine data from Apify dataset.
  * @returns {Promise<Response>} JSON response with processed wine data.
  */
-export const GET: RequestHandler = async () => {
+export const GET: RequestHandler = async ({ locals }) => {
+  //debug switch
   const dbg = false;
   let response: any = undefined;
+  // Fetch data from Apify dataset
   try {
     response = await fetchData(
       "https://api.apify.com/v2/datasets/LUjKSEKRJNBQZeRO8/items?clean=true&format=json"
@@ -52,8 +69,8 @@ export const GET: RequestHandler = async () => {
     console.log(error);
   }
   const baseProtocol = "https:";
-  let data: Partial<WineData>[] = [];
-  let summaryData: WineData[] = [];
+  let data: Partial<WineInfo>[] = [];
+  let summaryData: WineInfo[] = [];
   try {
     if (response !== undefined) {
       data = await response.json();
@@ -63,16 +80,51 @@ export const GET: RequestHandler = async () => {
   } catch (error) {
     console.log(error);
   }
-
+  /////TEMP LIMIT DATA
+  // data = data.slice(0, 1);
+  //call process data for further processing
   if (Array.isArray(data) && data.length > 0) {
-    summaryData = data.map((d: any, idx: number): WineData => {
-      if (dbg) debugLog(d, idx);
-      return processData(d, baseProtocol, dbg);
-    });
+    summaryData = await Promise.all(
+      data.map(async (d: any, idx: number): Promise<WineInfo> => {
+        if (dbg) debugLog(d, idx);
+        return await processData(d, baseProtocol, dbg, locals);
+      })
+    );
   }
+  // let keymap = new Map<string>(data.map((d) => {key:d.key,code:d.code}));
+  // p("data", data[0]);
+  // const outputMap = data.map((d) => {
+  // return {
+  // code: d["code"],
+  // name: d[d["key"] + "_facts"]["wineName"],
+  // };
+  // });
+
+  // p("output map", outputMap);
+  const { foodPairings, wineFacts } = summaryData[0];
+  console.log("foodPairings", foodPairings);
+  console.log("wineFacts", wineFacts);
+  //test schema validation
+  const testSchema = WineFactsRecordSchema;
+  const testSchema2 = FoodPairingsRecordSchema;
+  const checkSchema = await validateZodSchema<WineFactsRecord>(
+    Collections.WineFacts,
+    wineFacts
+  );
+  const checkSchema2 = await validateZodSchema<FoodPairingsRecord[]>(
+    Collections.FoodPairings,
+    foodPairings as FoodPairingsRecord[]
+  );
+  console.log("checkSchema", checkSchema);
+  console.log("checkSchema2", checkSchema2);
+
   return Response.json(summaryData);
 };
 
+function keyCode(key: string) {
+  const endIdx = key.lastIndexOf("_");
+  return key.substring(endIdx + 1);
+}
 /**
  * Fetches data from a given URL.
  * @param {string} url - The URL to fetch data from.
@@ -101,13 +153,18 @@ function debugLog(d: any, idx: number): void {
 }
 
 /**
- * Processes a single dataset entry into a WineData object.
+ * Processes a single dataset entry into a WineInfo object.
  * @param {any} d - The dataset entry.
  * @param {string} baseProtocol - The base protocol for image URLs.
  * @param {boolean} dbg - Debug flag.
- * @returns {WineData} The processed WineData object.
+ * @returns {WineInfo} The processed WineInfo object.
  */
-function processData(d: any, baseProtocol: string, dbg: boolean): WineData {
+async function processData(
+  d: any,
+  baseProtocol: string,
+  dbg: boolean,
+  locals: App.Locals
+): Promise<WineInfo> {
   if (!d.key || !d[d["key"] + "_data"] || !d[d["key"] + "_facts"])
     throw Error("Missing data");
   const factsKey: WineFacts = d[d["key"] + "_facts"];
@@ -124,13 +181,15 @@ function processData(d: any, baseProtocol: string, dbg: boolean): WineData {
     if (dbg) debugErrorLog(d, dataKey, styleKey, recommendedVintages, factsKey);
     return generateEmptyObject();
   }
+  // Generate WineInfo object
   return generateDataObject(
     factsKey,
     dataKey,
     styleKey,
     recommendedVintages,
     baseProtocol,
-    imageLoc
+    imageLoc,
+    locals
   );
 }
 
@@ -175,10 +234,10 @@ function debugErrorLog(
 }
 
 /**
- * Generates an empty WineData object with default values.
- * @returns {WineData} The empty WineData object.
+ * Generates an empty WineInfo object with default values.
+ * @returns {WineInfo} The empty WineInfo object.
  */
-function generateEmptyObject(): WineData {
+function generateEmptyObject(): WineInfo {
   return {
     wineFacts: {
       data: "missing",
@@ -204,33 +263,392 @@ function generateEmptyObject(): WineData {
 }
 
 /**
- * Generates a WineData object from dataset entry fields.
+ * Generates a WineInfo object from dataset entry fields.
  * @param {any} factsKey - The facts key of the entry.
  * @param {any} dataKey - The data key of the entry.
  * @param {any} styleKey - The style key of the entry.
  * @param {any} recommendedVintages - The recommended vintages of the entry.
  * @param {string} baseProtocol - The base protocol for image URLs.
  * @param {string} imageLoc - The image location of the entry.
- * @returns {WineData} The generated WineData object.
+ * @returns {WineInfo} The generated WineInfo object.
  */
-function generateDataObject(
+async function generateDataObject(
   factsKey: any,
   dataKey: any,
   styleKey: any,
   recommendedVintages: any,
   baseProtocol: string,
-  imageLoc: string
-): WineData {
+  imageLoc: string,
+  locals: App.Locals
+): Promise<WineInfo> {
+  const wineFacts = mapFacts(factsKey);
+  const wineryRating: number =
+    dataKey["winery"]?.["statistics"]?.["ratings_average"] ?? 0;
+  const foodPairings: string[] =
+    dataKey["foods"]?.map((f: any) => f["name"]) ?? [];
+  const style: string = styleKey ? styleKey?.["name"] : "N/A";
+  const varietal: string = styleKey ? styleKey["varietal_name"] : "N/A";
+  const styleStats = mapStyleStats(styleKey);
+  const recommended_vintages = mapRecommendedVintages(recommendedVintages);
+  const image = baseProtocol + (imageLoc ?? "");
+  // await createDBRecords(
+  //   wineFacts,
+  //   wineryRating,
+  //   foodPairings,
+  //   style,
+  //   varietal,
+  //   styleStats,
+  //   recommended_vintages,
+  //   image,
+  //   locals
+  // );
   return {
-    wineFacts: mapFacts(factsKey),
-    wineryRating: dataKey["winery"]?.["statistics"]?.["ratings_average"] ?? 0,
-    foodPairings: dataKey["foods"]?.map((f: any) => f["name"]) ?? [],
-    style: styleKey ? styleKey?.["name"] : "N/A",
-    varietal: styleKey ? styleKey["varietal_name"] : "N/A",
-    styleStats: mapStyleStats(styleKey),
-    recommended_vintages: mapRecommendedVintages(recommendedVintages),
-    image: baseProtocol + (imageLoc ?? ""),
+    wineFacts: wineFacts,
+    wineryRating: wineryRating,
+    foodPairings: foodPairings,
+    style: style,
+    varietal: varietal,
+    styleStats: styleStats,
+    recommended_vintages: recommended_vintages,
+    image: image,
   };
+}
+
+async function postPBData<T>(
+  collection: Collections,
+  data: Partial<T>,
+  locals: App.Locals
+): Promise<{ success: boolean; ids?: string[]; id?: string }> {
+  p("Start of post Function", data);
+  debugger;
+  if (Array.isArray(data)) {
+    const ids = await Promise.all(
+      data.map(async (d) => {
+        if (d) {
+          let result: { success: boolean; id?: string } = { success: false };
+          try {
+            result = await postPBData(collection, d, locals);
+            if (!result.success) {
+              console.error(`Failed to post data to ${collection}`);
+            }
+            return result.id;
+          } catch (error) {
+            console.error(`Failed to post data to ${collection}`, error);
+          }
+          return result.id;
+        }
+      })
+    );
+    return {
+      success: true,
+      ids: ids.filter((id) => id !== undefined) as string[],
+    };
+  }
+
+  try {
+    const response = await fetch(`http://localhost:5173/api/${collection}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      // Handle non-2xx responses as unsuccessful
+      console.error("Failed to post data", await response.text());
+      return { success: false };
+    }
+    const responseData = await response.json();
+    // Assuming the ID is returned under a property named 'id'
+    p(responseData, "response data");
+    const id = responseData.id;
+    return { success: true, id };
+  } catch (error) {
+    console.error("Error posting data", error);
+    return { success: false };
+  }
+}
+
+async function validateZodSchema<T>(
+  collection: Collections,
+  data: T
+): Promise<boolean> {
+  const schema = getZodSchema(collection);
+  try {
+    if (!schema) throw new Error("No schema found");
+    schema.parse(data);
+    return true;
+  } catch (error) {
+    console.error(`Failed to validate data for ${collection}`, error);
+    return false;
+  }
+  return true;
+}
+
+function getZodSchema(collection: Collections) {
+  switch (collection) {
+    case Collections.WineFacts:
+      return WineFactsRecordSchema;
+    case Collections.WineInfo:
+      return WineInfoRecordSchema;
+    case Collections.FoodPairings:
+      return FoodPairingsRecordSchemaArray;
+    case Collections.Users:
+      return UsersRecordSchema;
+    case Collections.Stylestats:
+      return StylestatsRecordSchema;
+    case Collections.Recommendedvintage:
+      return RecommendedvintageRecordSchema;
+    case Collections.InterestingFacts:
+      return InterestingFactsRecordSchema;
+    case Collections.BottlesDB:
+      return BottlesDBRecordSchema;
+    case Collections.BaseStats:
+      return BaseStatsRecordSchema;
+  }
+  return null;
+}
+
+async function createDBRecords(
+  wineFacts: WineFactsRecord,
+  wineryRating: number,
+  foodPairings: string[],
+  style: string,
+  varietal: string,
+  styleStats: Stylestats,
+  recommended_vintages: Recommendedvintage[] | string,
+  image: string,
+  locals: App.Locals
+): Promise<void> {
+  p("checking locals", locals.pb.authStore);
+  try {
+    if (!locals.pb.authStore.isValid) {
+      throw new Error("Unauthorized");
+    }
+  } catch (e: any) {
+    // if (e.status === 401) throw redirect(303, "/login");
+    // else throw error(500, e);
+    console.log("error!!!!!!!!!!", e);
+  }
+  const wineInfo: WineInfo = {
+    wineFacts,
+    wineryRating,
+    foodPairings,
+    style,
+    varietal,
+    styleStats,
+    recommended_vintages,
+    image,
+  };
+  /*
+    Order of processing and substitutions
+    1. WineFacts
+    2. BaseStats
+    3. InterestingFacts
+    4. Recommendedvintage
+    5. Stylestats - Use BaseStatsID and InterestingFactsID
+    6. FoodPairings
+    7. WineInfo - Use FoodPairingsID, RecommendedvintageID, StylestatsID, WineFactsID
+}*/
+  try {
+    const arrayOrder = {
+      WineFacts: 1,
+      BaseStats: 2,
+      InterestingFacts: 3,
+      Recommendedvintage: 4,
+      Stylestats: 5,
+      FoodPairings: 6,
+      WineInfo: 7,
+    };
+    const dataPrep = Object.entries(wineInfo).map(([key, value]) => {
+      const collection = key as Collections;
+      const order = arrayOrder[key as keyof typeof arrayOrder];
+      const data = { [key]: value };
+      return { collection, data, order };
+    });
+    let WineResponses: any[] = [];
+
+    dataPrep.sort((a, b) => a.order - b.order);
+    WineResponses = dataPrep.map(async ({ collection, data }) => {
+      console.log("collection", collection);
+      let BaseStatsID = "";
+      let InterestingFactsIDs = [""];
+      let FoodPairingsIDs = [""];
+      let WineFactsID = "";
+      let RecommendedvintageIDs = [""];
+      let StylestatsID = "";
+
+      if (collection === "WineFacts") {
+        if (!validateZodSchema<WineFactsRecord>(collection, data)) {
+          throw new Error(`Invalid data for ${collection}`);
+        }
+        const response = await postPBData<WineFactsRecord>(
+          collection,
+          data,
+          locals
+        );
+        if (!response.success) {
+          console.error(`Failed to post data to ${collection}`);
+        }
+        WineFactsID = response?.id ?? "";
+        return {
+          [collection]: WineFactsID,
+        };
+      }
+      if (collection === "BaseStats") {
+        if (!validateZodSchema<BaseStatsRecord>(collection, data)) {
+          throw new Error(`Invalid data for ${collection}`);
+        }
+        const response = await postPBData<BaseStatsRecord>(
+          collection,
+          data,
+          locals
+        );
+        if (!response.success) {
+          console.error(`Failed to post data to ${collection}`);
+        }
+        BaseStatsID = response?.id ?? "";
+        return {
+          [collection]: BaseStatsID,
+        };
+      }
+      if (collection === "Interesting_Facts") {
+        if (!validateZodSchema<InterestingFactsRecord>(collection, data)) {
+          throw new Error(`Invalid data for ${collection}`);
+        }
+        const response = await postPBData<InterestingFactsRecord>(
+          collection,
+          data,
+          locals
+        );
+        if (!response.success) {
+          console.error(`Failed to post data to ${collection}`);
+        }
+        InterestingFactsIDs = response?.ids ?? [];
+        return {
+          [collection]: InterestingFactsIDs,
+        };
+      }
+      if (collection === "Recommendedvintage") {
+        if (!validateZodSchema<RecommendedvintageRecord>(collection, data)) {
+          throw new Error(`Invalid data for ${collection}`);
+        }
+        const response = await postPBData<RecommendedvintageRecord>(
+          collection,
+          data,
+          locals
+        );
+        if (!response.success) {
+          console.error(`Failed to post data to ${collection}`);
+        }
+        RecommendedvintageIDs = response?.ids ?? [];
+        return {
+          [collection]: RecommendedvintageIDs,
+        };
+      }
+      if (collection === "Stylestats") {
+        if (!validateZodSchema<StylestatsRecord>(collection, data)) {
+          throw new Error(`Invalid data for ${collection}`);
+        }
+        data["BaseStats"] = BaseStatsID;
+        data["Interesting_Facts"] = InterestingFactsIDs;
+        data["FoodPairings"] = FoodPairingsIDs;
+        data["WineFacts"] = WineFactsID;
+        data["Recommendedvintage"] = RecommendedvintageIDs;
+        const response = await postPBData<StylestatsRecord>(
+          collection,
+          data,
+          locals
+        );
+        if (!response.success) {
+          console.error(`Failed to post data to ${collection}`);
+        }
+        StylestatsID = response?.id ?? "";
+        return {
+          [collection]: StylestatsID,
+        };
+      }
+      if (collection === "foodPairings") {
+        if (!validateZodSchema<FoodPairingsRecord>(collection, data)) {
+          throw new Error(`Invalid data for ${collection}`);
+        }
+        const response = await postPBData<FoodPairingsRecord>(
+          collection,
+          data,
+          locals
+        );
+        if (!response.success) {
+          console.error(`Failed to post data to ${collection}`);
+        }
+        FoodPairingsIDs = response?.ids ?? [];
+        return {
+          [collection]: FoodPairingsIDs,
+        };
+      }
+      if (collection === "WineInfo") {
+        if (!validateZodSchema<WineInfoRecord>(collection, data)) {
+          throw new Error(`Invalid data for ${collection}`);
+        }
+        data["WineFacts"] = WineFactsID;
+        data["BaseStats"] = BaseStatsID;
+        data["Interesting_Facts"] = InterestingFactsIDs;
+        data["Recommendedvintage"] = RecommendedvintageIDs;
+        data["Stylestats"] = StylestatsID;
+        data["FoodPairings"] = FoodPairingsIDs;
+        const response = await postPBData<WineInfoRecord>(
+          collection,
+          data,
+          locals
+        );
+        if (!response.success) {
+          console.error(`Failed to post data to ${collection}`);
+        }
+        return {
+          [collection]: response?.id,
+        };
+      }
+
+      return {};
+    });
+    // WineResponses = dataPrep.map(async ({ collection, data }) => {
+    //   console.log("collection", collection);
+    //   let BaseStatsID = "";
+    //   let InterestingFactsIDs = [""];
+    //   let FoodPairingsIDs = [""];
+    //   let WineFactsID = "";
+    //   let RecommendedvintageIDs = [""];
+    //   let StylestatsID = "";
+    // });
+    const wineInfoIdMapping: Record<string, string | string[]> = Object.assign(
+      {},
+      ...WineResponses
+    );
+    if (Object.entries(wineInfoIdMapping["FoodPairings"]).length < 2) {
+      console.log("FoodPairings not found");
+      wineInfoIdMapping["FoodPairings"] = ["N/A", ""];
+    }
+
+    console.log(WineResponses);
+    const wineInfoRecord: WineInfoRecord = {
+      foodPairings: [...wineInfoIdMapping["FoodPairings"]],
+      image: image as string,
+      recommended_vintages: [...wineInfoIdMapping["Recommended_Vintages"]],
+      style: style as string,
+      stylestats: wineInfoIdMapping["Stylestats"] as string,
+      wineFacts: wineInfoIdMapping["WineFacts"] as string,
+      wineryRating: wineryRating as number,
+    };
+    const response = await postPBData<WineInfoRecord>(
+      Collections.WineInfo,
+      wineInfoRecord,
+      locals
+    );
+    if (!response.success) {
+      throw new Error("Failed to post data to WineInfo");
+    }
+  } catch (error) {
+    console.error("Failed to create DB records", error);
+  }
 }
 
 /**
@@ -284,6 +702,7 @@ function mapStyleStats(styleKey: any): Stylestats {
  * @param {any} recommendedVintages - The recommended vintages of the entry.
  * @returns {Recommendedvintage[] | string} The mapped recommended vintages or a default string.
  */
+
 function mapRecommendedVintages(
   recommendedVintages: any
 ): Recommendedvintage[] | string {
