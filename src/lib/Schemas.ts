@@ -214,3 +214,12 @@ export const adminToolsSchema = z.object({
 export const resetPassSchema = z.object({
   email: z.string().email(),
 });
+
+export const AdminSchema = z.object({
+  id: z.string(),
+  email: z.string().email(),
+  verified: z.boolean(),
+  created: z.string().datetime(),
+  updated: z.string().datetime(),
+  password: z.string(),
+});

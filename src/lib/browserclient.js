@@ -9,6 +9,6 @@ if (browser) {
   pb.authStore.onChange(() => {
     document.cookie = pb.authStore.exportToCookie({ httpOnly: false });
   });
-  console.log("browserclient.js: pb.authStore", pb.authStore);
+  // console.log("browserclient.js: pb.authStore", pb.authStore);
 }
 export default pb; // it is safe to be global in this case

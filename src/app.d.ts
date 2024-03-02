@@ -9,14 +9,18 @@ import PocketBase from "pocketbase";
 import { crudSchema } from "$lib/Schemas";
 import { z } from "zod";
 import { UserDB as User, Admin } from "$lib/types";
-import { TypedPocketBase } from "$lib/pocketbase-types";
+import { TypedPocketBase } from "$lib/WineTypes";
 import { ValidAuthProviders } from "$lib/types";
 import type {
-  UserRecord,
+  UsersRecord,
+  UsersResponse,
   BottlesDBRecord,
   UserDBRecord,
   BottlesDBResponse,
-} from "$lib/pocketbase-types";
+} from "$lib/WineTypes";
+import type { WineInfoDataRecord, UserRecro } from "$lib/WineTypes";
+import type { RouterOutputs } from "$lib/trpc/router";
+import { PO } from "$lib/utils";
 
 type BottlesDB = z.infer<typeof crudSchema>[];
 // type ValidAuthProviders = string[];
@@ -25,12 +29,16 @@ declare global {
   namespace App {
     interface Locals {
       pb: TypedPocketBase;
-      user?: UserRecord;
+      user?: UsersRecord;
       admin?: Admin;
+      userId?: string;
+      log?: PO;
     }
     // trying to define the interface below broke many things
     interface PageData {
       flash?: { type: "success" | "error"; message: string };
+      wineInfoData?: WineInfoDataRecord;
+      testMatchRoute?: RouterOutputs["testMatchRoute"];
       user?: UserRecord;
       admin?: Admin;
       form?: SuperValidated;
@@ -53,6 +61,7 @@ declare global {
       user?: UserRecord;
       flash?: { type: "success" | "error"; message: string };
       admin?: Admin;
+      wineInfoData?: WineInfoDataRecord;
       form?: SuperValidated;
       bottlesDB?: BottlesDBResponse[];
       loginPageData?: {

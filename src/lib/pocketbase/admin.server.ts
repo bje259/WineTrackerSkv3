@@ -16,3 +16,5 @@ export async function pbAsAdmin() {
   pb.authStore.clear();
   throw new Error("ADMIN_USER/ADMIN_PASS not valid");
 }
+
+export default pbAsAdmin;

@@ -1,0 +1,1632 @@
+{
+  "key": "https___www.vivino.com_CA_en_wines_170239331",
+  "code": "170239331",
+  "https___www.vivino.com_CA_en_wines_170239331_facts": {
+    "wineName": "Tallent Vineyard Barbera",
+    "Winery": "Becker Vineyards",
+    "Grapes": "Barbera",
+    "Region": "United States / Texas / Texas Hill Country",
+    "Wine style": "Texas Red",
+    "Alcohol content": "14.2%",
+    "Allergens": "Contains sulfites"
+  },
+  "https___www.vivino.com_CA_en_wines_170239331_data": {
+    "vintage": {
+      "id": 170239331,
+      "seo_name": "becker-vineyards-tallent-vineyard-barbera-uv",
+      "name": "Becker Vineyards Tallent Vineyard Barbera",
+      "statistics": {
+        "status": "Normal",
+        "ratings_count": 88,
+        "ratings_average": 4.1,
+        "labels_count": 0,
+        "reviews_count": 7
+      },
+      "organic_certification_id": null,
+      "certified_biodynamic": null,
+      "image": {
+        "location": "//images.vivino.com/labels/0dDLrB3mRR2CGtCru1k72g.jpg",
+        "variations": {
+          "large": "//images.vivino.com/thumbs/0dDLrB3mRR2CGtCru1k72g_375x500.jpg",
+          "medium": "//images.vivino.com/thumbs/0dDLrB3mRR2CGtCru1k72g_150x200.jpg",
+          "medium_square": "//images.vivino.com/thumbs/0dDLrB3mRR2CGtCru1k72g_150x150.jpg",
+          "small_square": "//images.vivino.com/thumbs/0dDLrB3mRR2CGtCru1k72g_80x80.jpg"
+        }
+      },
+      "wine": {
+        "id": 10293726,
+        "name": "Tallent Vineyard Barbera",
+        "seo_name": "tallent-vineyard-barbera",
+        "type_id": 1,
+        "vintage_type": 0,
+        "is_natural": false,
+        "region": {
+          "id": 303,
+          "name": "Texas Hill Country",
+          "name_en": "",
+          "seo_name": "texas-hill-country",
+          "country": {
+            "code": "us",
+            "name": "United States",
+            "native_name": "United States",
+            "seo_name": "united-states",
+            "currency": {
+              "code": "USD",
+              "name": "US Dollars",
+              "prefix": "$",
+              "suffix": null
+            },
+            "regions_count": 364,
+            "users_count": 12739842,
+            "wines_count": 208993,
+            "wineries_count": 28363,
+            "most_used_grapes": [
+              {
+                "id": 2,
+                "name": "Cabernet Sauvignon",
+                "seo_name": "cabernet-sauvignon",
+                "has_detailed_info": true,
+                "wines_count": 801751,
+                "parent_grape_id": null
+              },
+              {
+                "id": 14,
+                "name": "Pinot Noir",
+                "seo_name": "pinot-noir",
+                "has_detailed_info": true,
+                "wines_count": 572334,
+                "parent_grape_id": null
+              },
+              {
+                "id": 5,
+                "name": "Chardonnay",
+                "seo_name": "chardonnay",
+                "has_detailed_info": true,
+                "wines_count": 604208,
+                "parent_grape_id": null
+              }
+            ]
+          },
+          "parent_id": 299,
+          "background_image": null,
+          "class": {
+            "typecast_map": {
+              "background_image": {},
+              "class": {}
+            }
+          },
+          "statistics": {
+            "wineries_count": 30,
+            "wines_count": 596,
+            "sub_regions_count": 2,
+            "parent_regions_count": 1
+          },
+          "parent_regions": [
+            {
+              "id": 299,
+              "name": "Texas",
+              "name_en": "",
+              "seo_name": "texas",
+              "country": {
+                "code": "us",
+                "name": "United States",
+                "native_name": "United States",
+                "seo_name": "united-states",
+                "currency": {
+                  "code": "USD",
+                  "name": "US Dollars",
+                  "prefix": "$",
+                  "suffix": null
+                },
+                "regions_count": 364,
+                "users_count": 12739842,
+                "wines_count": 208993,
+                "wineries_count": 28363,
+                "most_used_grapes": [
+                  {
+                    "id": 2,
+                    "name": "Cabernet Sauvignon",
+                    "seo_name": "cabernet-sauvignon",
+                    "has_detailed_info": true,
+                    "wines_count": 801751,
+                    "parent_grape_id": null
+                  },
+                  {
+                    "id": 14,
+                    "name": "Pinot Noir",
+                    "seo_name": "pinot-noir",
+                    "has_detailed_info": true,
+                    "wines_count": 572334,
+                    "parent_grape_id": null
+                  },
+                  {
+                    "id": 5,
+                    "name": "Chardonnay",
+                    "seo_name": "chardonnay",
+                    "has_detailed_info": true,
+                    "wines_count": 604208,
+                    "parent_grape_id": null
+                  }
+                ]
+              },
+              "parent_id": null,
+              "background_image": null,
+              "class": {
+                "typecast_map": {
+                  "background_image": {},
+                  "class": {}
+                }
+              },
+              "statistics": {
+                "wineries_count": 506,
+                "wines_count": 5824,
+                "sub_regions_count": 9,
+                "parent_regions_count": 0
+              }
+            }
+          ],
+          "sub_regions": [
+            {
+              "id": 2010,
+              "name": "Bell Mountain",
+              "name_en": "",
+              "seo_name": "bell-mountain",
+              "country": {
+                "code": "us",
+                "name": "United States",
+                "native_name": "United States",
+                "seo_name": "united-states",
+                "currency": {
+                  "code": "USD",
+                  "name": "US Dollars",
+                  "prefix": "$",
+                  "suffix": null
+                },
+                "regions_count": 364,
+                "users_count": 12739842,
+                "wines_count": 208993,
+                "wineries_count": 28363,
+                "most_used_grapes": [
+                  {
+                    "id": 2,
+                    "name": "Cabernet Sauvignon",
+                    "seo_name": "cabernet-sauvignon",
+                    "has_detailed_info": true,
+                    "wines_count": 801751,
+                    "parent_grape_id": null
+                  },
+                  {
+                    "id": 14,
+                    "name": "Pinot Noir",
+                    "seo_name": "pinot-noir",
+                    "has_detailed_info": true,
+                    "wines_count": 572334,
+                    "parent_grape_id": null
+                  },
+                  {
+                    "id": 5,
+                    "name": "Chardonnay",
+                    "seo_name": "chardonnay",
+                    "has_detailed_info": true,
+                    "wines_count": 604208,
+                    "parent_grape_id": null
+                  }
+                ]
+              },
+              "parent_id": 303,
+              "background_image": null,
+              "class": {
+                "typecast_map": {
+                  "background_image": {},
+                  "class": {}
+                }
+              },
+              "statistics": {
+                "wineries_count": 0,
+                "wines_count": 6,
+                "sub_regions_count": 0,
+                "parent_regions_count": 2
+              }
+            },
+            {
+              "id": 2012,
+              "name": "Fredericksburg in the Texas Hill County",
+              "name_en": "",
+              "seo_name": "fredericksburg-in-the-texas-hill-county",
+              "country": {
+                "code": "us",
+                "name": "United States",
+                "native_name": "United States",
+                "seo_name": "united-states",
+                "currency": {
+                  "code": "USD",
+                  "name": "US Dollars",
+                  "prefix": "$",
+                  "suffix": null
+                },
+                "regions_count": 364,
+                "users_count": 12739842,
+                "wines_count": 208993,
+                "wineries_count": 28363,
+                "most_used_grapes": [
+                  {
+                    "id": 2,
+                    "name": "Cabernet Sauvignon",
+                    "seo_name": "cabernet-sauvignon",
+                    "has_detailed_info": true,
+                    "wines_count": 801751,
+                    "parent_grape_id": null
+                  },
+                  {
+                    "id": 14,
+                    "name": "Pinot Noir",
+                    "seo_name": "pinot-noir",
+                    "has_detailed_info": true,
+                    "wines_count": 572334,
+                    "parent_grape_id": null
+                  },
+                  {
+                    "id": 5,
+                    "name": "Chardonnay",
+                    "seo_name": "chardonnay",
+                    "has_detailed_info": true,
+                    "wines_count": 604208,
+                    "parent_grape_id": null
+                  }
+                ]
+              },
+              "parent_id": 303,
+              "background_image": null,
+              "class": {
+                "typecast_map": {
+                  "background_image": {},
+                  "class": {}
+                }
+              },
+              "statistics": {
+                "wineries_count": 4,
+                "wines_count": 64,
+                "sub_regions_count": 0,
+                "parent_regions_count": 2
+              }
+            }
+          ],
+          "grapes": [
+            {
+              "id": 19,
+              "name": "Tempranillo",
+              "seo_name": "tempranillo",
+              "has_detailed_info": true,
+              "wines_count": 172842,
+              "parent_grape_id": null
+            },
+            {
+              "id": 2,
+              "name": "Cabernet Sauvignon",
+              "seo_name": "cabernet-sauvignon",
+              "has_detailed_info": true,
+              "wines_count": 801751,
+              "parent_grape_id": null
+            },
+            {
+              "id": 22,
+              "name": "Mourvedre",
+              "seo_name": "mourvedre",
+              "has_detailed_info": true,
+              "wines_count": 101132,
+              "parent_grape_id": null
+            }
+          ],
+          "review_status": "Reviewed",
+          "description": "",
+          "sponsored": false,
+          "background_video": null,
+          "updated_at": "2019-03-07T16:14:48Z",
+          "created_at": "2019-03-07T16:14:48Z"
+        },
+        "review_status": 2,
+        "winery": {
+          "id": 3440,
+          "name": "Becker Vineyards",
+          "seo_name": "becker-vineyards",
+          "status": 0,
+          "review_status": "Completed",
+          "background_image": null,
+          "statistics": {
+            "ratings_count": 18761,
+            "ratings_average": 3.8,
+            "labels_count": 123200,
+            "wines_count": 86
+          },
+          "region": {
+            "id": 299,
+            "name": "Texas",
+            "name_en": "",
+            "seo_name": "texas",
+            "country": {
+              "code": "us",
+              "name": "United States",
+              "native_name": "United States",
+              "seo_name": "united-states",
+              "currency": {
+                "code": "USD",
+                "name": "US Dollars",
+                "prefix": "$",
+                "suffix": null
+              },
+              "regions_count": 364,
+              "users_count": 12739842,
+              "wines_count": 208993,
+              "wineries_count": 28363,
+              "most_used_grapes": [
+                {
+                  "id": 2,
+                  "name": "Cabernet Sauvignon",
+                  "seo_name": "cabernet-sauvignon",
+                  "has_detailed_info": true,
+                  "wines_count": 801751,
+                  "parent_grape_id": null
+                },
+                {
+                  "id": 14,
+                  "name": "Pinot Noir",
+                  "seo_name": "pinot-noir",
+                  "has_detailed_info": true,
+                  "wines_count": 572334,
+                  "parent_grape_id": null
+                },
+                {
+                  "id": 5,
+                  "name": "Chardonnay",
+                  "seo_name": "chardonnay",
+                  "has_detailed_info": true,
+                  "wines_count": 604208,
+                  "parent_grape_id": null
+                }
+              ]
+            },
+            "parent_id": null,
+            "background_image": null,
+            "class": {
+              "typecast_map": {
+                "background_image": {},
+                "class": {}
+              }
+            },
+            "statistics": {
+              "wineries_count": 506,
+              "wines_count": 5810,
+              "sub_regions_count": 0,
+              "parent_regions_count": 0
+            }
+          },
+          "business_name": "Becker Vineyards",
+          "description": "",
+          "specialists_notes": "",
+          "phone": "830 644 2681",
+          "email": "info@beckervineyards.com",
+          "facebook": "https://www.facebook.com/pages/becker-vineyards/148742522221",
+          "instagram": "@beckervineyards",
+          "is_claimed": false,
+          "twitter": "@BeckerVineyards",
+          "website": "http://www.beckervineyards.com",
+          "winemaker": "Richard Becker",
+          "wine_maker": {
+            "id": 1585,
+            "name": "Richard Becker"
+          },
+          "address": {
+            "title": null,
+            "name": null,
+            "street": null,
+            "street2": null,
+            "neighborhood": null,
+            "city": "Stonewall",
+            "zip": "78671",
+            "state": null,
+            "country": null,
+            "company": null,
+            "phone": null,
+            "external_id": null,
+            "residential": null,
+            "vat_number": null,
+            "vat_code": null,
+            "addition": null
+          },
+          "image": null,
+          "location": {
+            "latitude": 30.202946,
+            "longitude": -98.70851
+          },
+          "winery_group": null,
+          "first_wines": [],
+          "sponsored_entity_type": null,
+          "sponsored_entity": null
+        },
+        "statistics": {
+          "status": "Normal",
+          "ratings_count": 88,
+          "ratings_average": 4.1,
+          "labels_count": 347,
+          "vintages_count": 10
+        },
+        "rank": {
+          "country": {
+            "description": "Rank within United States",
+            "total": 182842,
+            "rank": 26731
+          },
+          "region": {
+            "description": "Rank within Wine Region",
+            "total": 5464,
+            "rank": 273
+          },
+          "winery": {
+            "description": "Rank within Winery",
+            "total": 83,
+            "rank": 28
+          },
+          "wine_type": {
+            "description": "Rank within all Red Wine",
+            "total": 718092,
+            "rank": 120768
+          },
+          "global": {
+            "description": "Global Rank",
+            "total": 1456454,
+            "rank": 208027
+          }
+        },
+        "hidden": false,
+        "vintages": [
+          {
+            "id": 173201951,
+            "seo_name": "becker-vineyards-tallent-vineyard-barbera-2021",
+            "name": "Becker Vineyards Tallent Vineyard Barbera 2021",
+            "statistics": {
+              "status": "BelowThreshold",
+              "ratings_count": 1,
+              "ratings_average": 0,
+              "labels_count": 1,
+              "reviews_count": 1
+            },
+            "year": 2021,
+            "grapes": null,
+            "has_valid_ratings": false
+          },
+          {
+            "id": 176069704,
+            "seo_name": "becker-vineyards-tallent-vineyard-barbera-2020",
+            "name": "Becker Vineyards Tallent Vineyard Barbera 2020",
+            "statistics": {
+              "status": "BelowThreshold",
+              "ratings_count": 8,
+              "ratings_average": 0,
+              "labels_count": 36,
+              "reviews_count": 4
+            },
+            "year": 2020,
+            "grapes": null,
+            "has_valid_ratings": false
+          },
+          {
+            "id": 170239332,
+            "seo_name": "becker-vineyards-tallent-vineyard-barbera-2019",
+            "name": "Becker Vineyards Tallent Vineyard Barbera 2019",
+            "statistics": {
+              "status": "Normal",
+              "ratings_count": 62,
+              "ratings_average": 4.1,
+              "labels_count": 303,
+              "reviews_count": 24
+            },
+            "year": 2019,
+            "grapes": null,
+            "has_valid_ratings": true
+          },
+          {
+            "id": 176801697,
+            "seo_name": "becker-vineyards-tallent-vineyard-barbera-2016",
+            "name": "Becker Vineyards Tallent Vineyard Barbera 2016",
+            "statistics": {
+              "status": "BelowThreshold",
+              "ratings_count": 1,
+              "ratings_average": 0,
+              "labels_count": 1,
+              "reviews_count": 1
+            },
+            "year": 2016,
+            "grapes": null,
+            "has_valid_ratings": false
+          },
+          {
+            "id": 170239331,
+            "seo_name": "becker-vineyards-tallent-vineyard-barbera-uv",
+            "name": "Becker Vineyards Tallent Vineyard Barbera",
+            "statistics": {
+              "status": "Normal",
+              "ratings_count": 88,
+              "ratings_average": 4.1,
+              "labels_count": 0,
+              "reviews_count": 7
+            },
+            "year": 0,
+            "grapes": null,
+            "has_valid_ratings": true
+          }
+        ],
+        "description": "",
+        "grapes": [
+          {
+            "id": 31,
+            "name": "Barbera",
+            "seo_name": "barbera",
+            "has_detailed_info": true,
+            "wines_count": 49745,
+            "parent_grape_id": null
+          }
+        ],
+        "foods": [
+          {
+            "id": 4,
+            "name": "Beef",
+            "background_image": {
+              "location": "//images.vivino.com/backgrounds/foods/4_beef.png",
+              "variations": {
+                "small": "//images.vivino.com/backgrounds/foods/thumbs/4_beef_932x810.png"
+              }
+            },
+            "seo_name": "beef"
+          },
+          {
+            "id": 8,
+            "name": "Lamb",
+            "background_image": {
+              "location": "//images.vivino.com/backgrounds/foods/8_lamb.png",
+              "variations": {
+                "small": "//images.vivino.com/backgrounds/foods/thumbs/8_lamb_932x810.png"
+              }
+            },
+            "seo_name": "lamb"
+          },
+          {
+            "id": 11,
+            "name": "Game (deer, venison)",
+            "background_image": {
+              "location": "//images.vivino.com/backgrounds/foods/11_venison.png",
+              "variations": {
+                "small": "//images.vivino.com/backgrounds/foods/thumbs/11_venison_932x810.png"
+              }
+            },
+            "seo_name": "game"
+          }
+        ],
+        "non_vintage": false,
+        "alcohol": 14.2,
+        "sweetness_id": null,
+        "closure": null,
+        "vintage_mask_raw": null,
+        "updated_at": "2021-12-25T15:30:23Z",
+        "created_at": "2021-12-22T07:42:37Z",
+        "is_first_wine": false,
+        "style": {
+          "id": 670,
+          "seo_name": "texas-red",
+          "regional_name": "Texas",
+          "varietal_name": "Red",
+          "name": "Texas Red",
+          "image": null,
+          "background_image": null,
+          "description": null,
+          "blurb": null,
+          "interesting_facts": null,
+          "body": 4,
+          "body_description": "Full-bodied",
+          "acidity": 2,
+          "acidity_description": "Medium",
+          "country": {
+            "code": "us",
+            "name": "United States",
+            "native_name": "United States",
+            "seo_name": "united-states",
+            "currency": {
+              "code": "USD",
+              "name": "US Dollars",
+              "prefix": "$",
+              "suffix": null
+            },
+            "regions_count": 364,
+            "users_count": 12739842,
+            "wines_count": 208993,
+            "wineries_count": 28363,
+            "most_used_grapes": [
+              {
+                "id": 2,
+                "name": "Cabernet Sauvignon",
+                "seo_name": "cabernet-sauvignon",
+                "has_detailed_info": true,
+                "wines_count": 801751,
+                "parent_grape_id": null
+              },
+              {
+                "id": 14,
+                "name": "Pinot Noir",
+                "seo_name": "pinot-noir",
+                "has_detailed_info": true,
+                "wines_count": 572334,
+                "parent_grape_id": null
+              },
+              {
+                "id": 5,
+                "name": "Chardonnay",
+                "seo_name": "chardonnay",
+                "has_detailed_info": true,
+                "wines_count": 604208,
+                "parent_grape_id": null
+              }
+            ]
+          },
+          "wine_type_id": 1,
+          "food": [
+            {
+              "id": 4,
+              "name": "Beef",
+              "background_image": {
+                "location": "//images.vivino.com/backgrounds/foods/4_beef.png",
+                "variations": {
+                  "small": "//images.vivino.com/backgrounds/foods/thumbs/4_beef_932x810.png"
+                }
+              },
+              "seo_name": "beef"
+            },
+            {
+              "id": 8,
+              "name": "Lamb",
+              "background_image": {
+                "location": "//images.vivino.com/backgrounds/foods/8_lamb.png",
+                "variations": {
+                  "small": "//images.vivino.com/backgrounds/foods/thumbs/8_lamb_932x810.png"
+                }
+              },
+              "seo_name": "lamb"
+            },
+            {
+              "id": 11,
+              "name": "Game (deer, venison)",
+              "background_image": {
+                "location": "//images.vivino.com/backgrounds/foods/11_venison.png",
+                "variations": {
+                  "small": "//images.vivino.com/backgrounds/foods/thumbs/11_venison_932x810.png"
+                }
+              },
+              "seo_name": "game"
+            }
+          ],
+          "grapes": null,
+          "region": {
+            "id": 299,
+            "name": "Texas",
+            "name_en": "",
+            "seo_name": "texas",
+            "country": {
+              "code": "us",
+              "name": "United States",
+              "native_name": "United States",
+              "seo_name": "united-states",
+              "currency": {
+                "code": "USD",
+                "name": "US Dollars",
+                "prefix": "$",
+                "suffix": null
+              },
+              "regions_count": 364,
+              "users_count": 12739842,
+              "wines_count": 208993,
+              "wineries_count": 28363,
+              "most_used_grapes": [
+                {
+                  "id": 2,
+                  "name": "Cabernet Sauvignon",
+                  "seo_name": "cabernet-sauvignon",
+                  "has_detailed_info": true,
+                  "wines_count": 801751,
+                  "parent_grape_id": null
+                },
+                {
+                  "id": 14,
+                  "name": "Pinot Noir",
+                  "seo_name": "pinot-noir",
+                  "has_detailed_info": true,
+                  "wines_count": 572334,
+                  "parent_grape_id": null
+                },
+                {
+                  "id": 5,
+                  "name": "Chardonnay",
+                  "seo_name": "chardonnay",
+                  "has_detailed_info": true,
+                  "wines_count": 604208,
+                  "parent_grape_id": null
+                }
+              ]
+            },
+            "parent_id": null,
+            "background_image": null,
+            "class": {
+              "typecast_map": {
+                "background_image": {},
+                "class": {}
+              }
+            },
+            "statistics": {
+              "wineries_count": 506,
+              "wines_count": 5824,
+              "sub_regions_count": 9,
+              "parent_regions_count": 0
+            }
+          },
+          "parent_style_id": 482,
+          "hidden": false,
+          "statistics": {
+            "wines_count": 2564,
+            "aggregated_wines_count": 3352
+          },
+          "vintage_mask": "1<",
+          "baseline_structure": {
+            "acidity": 3,
+            "fizziness": null,
+            "intensity": 4,
+            "sweetness": 1.5,
+            "tannin": 4
+          }
+        },
+        "has_valid_ratings": true
+      },
+      "description": "",
+      "wine_critic_reviews": [],
+      "awards": [],
+      "ratings_distribution": {
+        "1": 0,
+        "2": 3,
+        "3": 17,
+        "4": 59,
+        "5": 9
+      },
+      "ranking": {
+        "country": {
+          "description": "Rank within United States",
+          "total": 1167620,
+          "rank": 53061
+        },
+        "region": {
+          "description": "Rank within Wine Region",
+          "total": 24358,
+          "rank": 197
+        },
+        "winery": {
+          "description": "Rank within Winery",
+          "total": 913,
+          "rank": 10
+        },
+        "global": {
+          "description": "Global Rank",
+          "total": 10617412,
+          "rank": 274131
+        }
+      },
+      "recommended_drinking_window": {
+        "start_year": null,
+        "end_year": null,
+        "status": 0
+      },
+      "wine_facts": {},
+      "winemaker": null,
+      "wine_maker": null,
+      "grape_composition": {},
+      "year": "",
+      "grapes": null,
+      "has_valid_ratings": true
+    },
+    "carts": null,
+    "full_region": null,
+    "tastes": null,
+    "wine": {
+      "id": 10293726,
+      "name": "Tallent Vineyard Barbera",
+      "seo_name": "tallent-vineyard-barbera",
+      "type_id": 1,
+      "vintage_type": 0,
+      "is_natural": false,
+      "region": {
+        "id": 303,
+        "name": "Texas Hill Country",
+        "name_en": "",
+        "seo_name": "texas-hill-country",
+        "country": {
+          "code": "us",
+          "name": "United States",
+          "native_name": "United States",
+          "seo_name": "united-states",
+          "currency": {
+            "code": "USD",
+            "name": "US Dollars",
+            "prefix": "$",
+            "suffix": null
+          },
+          "regions_count": 364,
+          "users_count": 12739842,
+          "wines_count": 208993,
+          "wineries_count": 28363,
+          "most_used_grapes": [
+            {
+              "id": 2,
+              "name": "Cabernet Sauvignon",
+              "seo_name": "cabernet-sauvignon",
+              "has_detailed_info": true,
+              "wines_count": 801751,
+              "parent_grape_id": null
+            },
+            {
+              "id": 14,
+              "name": "Pinot Noir",
+              "seo_name": "pinot-noir",
+              "has_detailed_info": true,
+              "wines_count": 572334,
+              "parent_grape_id": null
+            },
+            {
+              "id": 5,
+              "name": "Chardonnay",
+              "seo_name": "chardonnay",
+              "has_detailed_info": true,
+              "wines_count": 604208,
+              "parent_grape_id": null
+            }
+          ]
+        },
+        "parent_id": 299,
+        "background_image": null,
+        "class": {
+          "typecast_map": {
+            "background_image": {},
+            "class": {}
+          }
+        },
+        "statistics": {
+          "wineries_count": 30,
+          "wines_count": 593,
+          "sub_regions_count": 0,
+          "parent_regions_count": 1
+        }
+      },
+      "review_status": 2,
+      "winery": {
+        "id": 3440,
+        "name": "Becker Vineyards",
+        "seo_name": "becker-vineyards",
+        "status": 0,
+        "review_status": "Completed",
+        "background_image": null,
+        "statistics": {
+          "ratings_count": 18761,
+          "ratings_average": 3.8,
+          "labels_count": 123200,
+          "wines_count": 86
+        },
+        "region": {
+          "id": 299,
+          "name": "Texas",
+          "name_en": "",
+          "seo_name": "texas",
+          "country": {
+            "code": "us",
+            "name": "United States",
+            "native_name": "United States",
+            "seo_name": "united-states",
+            "currency": {
+              "code": "USD",
+              "name": "US Dollars",
+              "prefix": "$",
+              "suffix": null
+            },
+            "regions_count": 364,
+            "users_count": 12739842,
+            "wines_count": 208993,
+            "wineries_count": 28363,
+            "most_used_grapes": [
+              {
+                "id": 2,
+                "name": "Cabernet Sauvignon",
+                "seo_name": "cabernet-sauvignon",
+                "has_detailed_info": true,
+                "wines_count": 801751,
+                "parent_grape_id": null
+              },
+              {
+                "id": 14,
+                "name": "Pinot Noir",
+                "seo_name": "pinot-noir",
+                "has_detailed_info": true,
+                "wines_count": 572334,
+                "parent_grape_id": null
+              },
+              {
+                "id": 5,
+                "name": "Chardonnay",
+                "seo_name": "chardonnay",
+                "has_detailed_info": true,
+                "wines_count": 604208,
+                "parent_grape_id": null
+              }
+            ]
+          },
+          "parent_id": null,
+          "background_image": null,
+          "class": {
+            "typecast_map": {
+              "background_image": {},
+              "class": {}
+            }
+          },
+          "statistics": {
+            "wineries_count": 506,
+            "wines_count": 5810,
+            "sub_regions_count": 0,
+            "parent_regions_count": 0
+          }
+        }
+      },
+      "image": {
+        "location": "//images.vivino.com/labels/0dDLrB3mRR2CGtCru1k72g.jpg",
+        "variations": {
+          "large": "//images.vivino.com/thumbs/0dDLrB3mRR2CGtCru1k72g_375x500.jpg",
+          "medium": "//images.vivino.com/thumbs/0dDLrB3mRR2CGtCru1k72g_150x200.jpg",
+          "medium_square": "//images.vivino.com/thumbs/0dDLrB3mRR2CGtCru1k72g_150x150.jpg",
+          "small_square": "//images.vivino.com/thumbs/0dDLrB3mRR2CGtCru1k72g_80x80.jpg"
+        }
+      },
+      "statistics": {
+        "status": "Normal",
+        "ratings_count": 88,
+        "ratings_average": 4.1,
+        "labels_count": 347,
+        "vintages_count": 10
+      },
+      "rank": null,
+      "hidden": false,
+      "vintages": [
+        {
+          "id": 173201951,
+          "seo_name": "becker-vineyards-tallent-vineyard-barbera-2021",
+          "name": "Becker Vineyards Tallent Vineyard Barbera 2021",
+          "statistics": {
+            "status": "BelowThreshold",
+            "ratings_count": 1,
+            "ratings_average": 0,
+            "labels_count": 1,
+            "reviews_count": 1
+          },
+          "year": 2021,
+          "grapes": null,
+          "has_valid_ratings": false
+        },
+        {
+          "id": 176069704,
+          "seo_name": "becker-vineyards-tallent-vineyard-barbera-2020",
+          "name": "Becker Vineyards Tallent Vineyard Barbera 2020",
+          "statistics": {
+            "status": "BelowThreshold",
+            "ratings_count": 8,
+            "ratings_average": 0,
+            "labels_count": 36,
+            "reviews_count": 4
+          },
+          "year": 2020,
+          "grapes": null,
+          "has_valid_ratings": false
+        },
+        {
+          "id": 170239332,
+          "seo_name": "becker-vineyards-tallent-vineyard-barbera-2019",
+          "name": "Becker Vineyards Tallent Vineyard Barbera 2019",
+          "statistics": {
+            "status": "Normal",
+            "ratings_count": 62,
+            "ratings_average": 4.1,
+            "labels_count": 303,
+            "reviews_count": 24
+          },
+          "year": 2019,
+          "grapes": null,
+          "has_valid_ratings": true
+        },
+        {
+          "id": 173324211,
+          "seo_name": "becker-vineyards-tallent-vineyard-barbera-2018",
+          "name": "Becker Vineyards Tallent Vineyard Barbera 2018",
+          "statistics": {
+            "status": "BelowThreshold",
+            "ratings_count": 0,
+            "ratings_average": 0,
+            "labels_count": 1,
+            "reviews_count": 0
+          },
+          "year": 2018,
+          "grapes": null,
+          "has_valid_ratings": false
+        },
+        {
+          "id": 174390569,
+          "seo_name": "becker-vineyards-tallent-vineyard-barbera-2017",
+          "name": "Becker Vineyards Tallent Vineyard Barbera 2017",
+          "statistics": {
+            "status": "BelowThreshold",
+            "ratings_count": 0,
+            "ratings_average": 0,
+            "labels_count": 0,
+            "reviews_count": 0
+          },
+          "year": 2017,
+          "grapes": null,
+          "has_valid_ratings": false
+        },
+        {
+          "id": 176801697,
+          "seo_name": "becker-vineyards-tallent-vineyard-barbera-2016",
+          "name": "Becker Vineyards Tallent Vineyard Barbera 2016",
+          "statistics": {
+            "status": "BelowThreshold",
+            "ratings_count": 1,
+            "ratings_average": 0,
+            "labels_count": 1,
+            "reviews_count": 1
+          },
+          "year": 2016,
+          "grapes": null,
+          "has_valid_ratings": false
+        },
+        {
+          "id": 175509507,
+          "seo_name": "becker-vineyards-tallent-vineyard-barbera-2015",
+          "name": "Becker Vineyards Tallent Vineyard Barbera 2015",
+          "statistics": {
+            "status": "BelowThreshold",
+            "ratings_count": 0,
+            "ratings_average": 0,
+            "labels_count": 1,
+            "reviews_count": 0
+          },
+          "year": 2015,
+          "grapes": null,
+          "has_valid_ratings": false
+        },
+        {
+          "id": 174055873,
+          "seo_name": "becker-vineyards-tallent-vineyard-barbera-2014",
+          "name": "Becker Vineyards Tallent Vineyard Barbera 2014",
+          "statistics": {
+            "status": "BelowThreshold",
+            "ratings_count": 0,
+            "ratings_average": 0,
+            "labels_count": 1,
+            "reviews_count": 0
+          },
+          "year": 2014,
+          "grapes": null,
+          "has_valid_ratings": false
+        },
+        {
+          "id": 174134656,
+          "seo_name": "becker-vineyards-tallent-vineyard-barbera-2010",
+          "name": "Becker Vineyards Tallent Vineyard Barbera 2010",
+          "statistics": {
+            "status": "BelowThreshold",
+            "ratings_count": 0,
+            "ratings_average": 0,
+            "labels_count": 0,
+            "reviews_count": 0
+          },
+          "year": 2010,
+          "grapes": null,
+          "has_valid_ratings": false
+        },
+        {
+          "id": 170239331,
+          "seo_name": "becker-vineyards-tallent-vineyard-barbera-uv",
+          "name": "Becker Vineyards Tallent Vineyard Barbera",
+          "statistics": {
+            "status": "Normal",
+            "ratings_count": 88,
+            "ratings_average": 4.1,
+            "labels_count": 0,
+            "reviews_count": 7
+          },
+          "year": 0,
+          "grapes": null,
+          "has_valid_ratings": true
+        }
+      ],
+      "description": "",
+      "grapes": [
+        {
+          "id": 31,
+          "name": "Barbera",
+          "seo_name": "barbera",
+          "has_detailed_info": true,
+          "wines_count": 49745,
+          "parent_grape_id": null
+        }
+      ],
+      "foods": [
+        {
+          "id": 4,
+          "name": "Beef",
+          "background_image": {
+            "location": "//images.vivino.com/backgrounds/foods/4_beef.png",
+            "variations": {
+              "small": "//images.vivino.com/backgrounds/foods/thumbs/4_beef_932x810.png"
+            }
+          },
+          "seo_name": "beef"
+        },
+        {
+          "id": 8,
+          "name": "Lamb",
+          "background_image": {
+            "location": "//images.vivino.com/backgrounds/foods/8_lamb.png",
+            "variations": {
+              "small": "//images.vivino.com/backgrounds/foods/thumbs/8_lamb_932x810.png"
+            }
+          },
+          "seo_name": "lamb"
+        },
+        {
+          "id": 11,
+          "name": "Game (deer, venison)",
+          "background_image": {
+            "location": "//images.vivino.com/backgrounds/foods/11_venison.png",
+            "variations": {
+              "small": "//images.vivino.com/backgrounds/foods/thumbs/11_venison_932x810.png"
+            }
+          },
+          "seo_name": "game"
+        }
+      ],
+      "non_vintage": false,
+      "alcohol": 14.2,
+      "sweetness_id": null,
+      "closure": null,
+      "vintage_mask_raw": null,
+      "updated_at": "2021-12-25T15:30:23Z",
+      "created_at": "2021-12-22T07:42:37Z",
+      "is_first_wine": false,
+      "style": {
+        "id": 670,
+        "seo_name": "texas-red",
+        "regional_name": "Texas",
+        "varietal_name": "Red",
+        "name": "Texas Red",
+        "image": null,
+        "background_image": null,
+        "description": null,
+        "blurb": null,
+        "interesting_facts": null,
+        "body": 4,
+        "body_description": "Full-bodied",
+        "acidity": 2,
+        "acidity_description": "Medium",
+        "country": {
+          "code": "us",
+          "name": "United States",
+          "native_name": "United States",
+          "seo_name": "united-states",
+          "currency": {
+            "code": "USD",
+            "name": "US Dollars",
+            "prefix": "$",
+            "suffix": null
+          },
+          "regions_count": 364,
+          "users_count": 12739842,
+          "wines_count": 208993,
+          "wineries_count": 28363,
+          "most_used_grapes": [
+            {
+              "id": 2,
+              "name": "Cabernet Sauvignon",
+              "seo_name": "cabernet-sauvignon",
+              "has_detailed_info": true,
+              "wines_count": 801751,
+              "parent_grape_id": null
+            },
+            {
+              "id": 14,
+              "name": "Pinot Noir",
+              "seo_name": "pinot-noir",
+              "has_detailed_info": true,
+              "wines_count": 572334,
+              "parent_grape_id": null
+            },
+            {
+              "id": 5,
+              "name": "Chardonnay",
+              "seo_name": "chardonnay",
+              "has_detailed_info": true,
+              "wines_count": 604208,
+              "parent_grape_id": null
+            }
+          ]
+        },
+        "wine_type_id": 1,
+        "food": [
+          {
+            "id": 4,
+            "name": "Beef",
+            "background_image": {
+              "location": "//images.vivino.com/backgrounds/foods/4_beef.png",
+              "variations": {
+                "small": "//images.vivino.com/backgrounds/foods/thumbs/4_beef_932x810.png"
+              }
+            },
+            "seo_name": "beef"
+          },
+          {
+            "id": 8,
+            "name": "Lamb",
+            "background_image": {
+              "location": "//images.vivino.com/backgrounds/foods/8_lamb.png",
+              "variations": {
+                "small": "//images.vivino.com/backgrounds/foods/thumbs/8_lamb_932x810.png"
+              }
+            },
+            "seo_name": "lamb"
+          },
+          {
+            "id": 11,
+            "name": "Game (deer, venison)",
+            "background_image": {
+              "location": "//images.vivino.com/backgrounds/foods/11_venison.png",
+              "variations": {
+                "small": "//images.vivino.com/backgrounds/foods/thumbs/11_venison_932x810.png"
+              }
+            },
+            "seo_name": "game"
+          }
+        ],
+        "grapes": null,
+        "region": {
+          "id": 299,
+          "name": "Texas",
+          "name_en": "",
+          "seo_name": "texas",
+          "country": {
+            "code": "us",
+            "name": "United States",
+            "native_name": "United States",
+            "seo_name": "united-states",
+            "currency": {
+              "code": "USD",
+              "name": "US Dollars",
+              "prefix": "$",
+              "suffix": null
+            },
+            "regions_count": 364,
+            "users_count": 12739842,
+            "wines_count": 208993,
+            "wineries_count": 28363,
+            "most_used_grapes": [
+              {
+                "id": 2,
+                "name": "Cabernet Sauvignon",
+                "seo_name": "cabernet-sauvignon",
+                "has_detailed_info": true,
+                "wines_count": 801751,
+                "parent_grape_id": null
+              },
+              {
+                "id": 14,
+                "name": "Pinot Noir",
+                "seo_name": "pinot-noir",
+                "has_detailed_info": true,
+                "wines_count": 572334,
+                "parent_grape_id": null
+              },
+              {
+                "id": 5,
+                "name": "Chardonnay",
+                "seo_name": "chardonnay",
+                "has_detailed_info": true,
+                "wines_count": 604208,
+                "parent_grape_id": null
+              }
+            ]
+          },
+          "parent_id": null,
+          "background_image": null,
+          "class": {
+            "typecast_map": {
+              "background_image": {},
+              "class": {}
+            }
+          },
+          "statistics": {
+            "wineries_count": 506,
+            "wines_count": 5824,
+            "sub_regions_count": 9,
+            "parent_regions_count": 0
+          }
+        },
+        "parent_style_id": 482,
+        "hidden": false,
+        "statistics": {
+          "wines_count": 2564,
+          "aggregated_wines_count": 3352
+        },
+        "vintage_mask": "1<",
+        "baseline_structure": {
+          "acidity": 3,
+          "fizziness": null,
+          "intensity": 4,
+          "sweetness": 1.5,
+          "tannin": 4
+        }
+      },
+      "has_valid_ratings": true
+    },
+    "highlights": [
+      {
+        "vintage_id": 170239332,
+        "highlight_type": "best_user_rated",
+        "message": "This vintage rates better than any other year for this wine",
+        "icon": "https://images.vivino.com/highlights/icon/best_user_rated.svg",
+        "metadata": {
+          "price": null,
+          "wine_id": 10293726,
+          "toplist": null,
+          "ws_award": null,
+          "critic_review_id": null,
+          "ratings_average": 4.1,
+          "ratings_count": 62,
+          "vintage_year": "2019",
+          "rank_type": "global",
+          "ranks": {
+            "country": {
+              "description": "Rank within United States",
+              "total": 1167620,
+              "rank": 91168
+            },
+            "region": {
+              "description": "Rank within Wine Region",
+              "total": 24358,
+              "rank": 559
+            },
+            "winery": {
+              "description": "Rank within Winery",
+              "total": 913,
+              "rank": 41
+            },
+            "global": {
+              "description": "Global Rank",
+              "total": 10617412,
+              "rank": 560268
+            }
+          },
+          "style": {
+            "id": 670,
+            "seo_name": "texas-red",
+            "regional_name": "Texas",
+            "varietal_name": "Red",
+            "name": "Texas Red",
+            "image": null,
+            "background_image": null,
+            "description": null,
+            "blurb": null,
+            "interesting_facts": null,
+            "body": 4,
+            "body_description": "Full-bodied",
+            "acidity": 2,
+            "acidity_description": "Medium",
+            "country": {
+              "code": "us",
+              "name": "United States",
+              "native_name": "United States",
+              "seo_name": "united-states",
+              "currency": {
+                "code": "USD",
+                "name": "US Dollars",
+                "prefix": "$",
+                "suffix": null
+              },
+              "regions_count": 364,
+              "users_count": 12739842,
+              "wines_count": 208993,
+              "wineries_count": 28363,
+              "most_used_grapes": [
+                {
+                  "id": 2,
+                  "name": "Cabernet Sauvignon",
+                  "seo_name": "cabernet-sauvignon",
+                  "has_detailed_info": true,
+                  "wines_count": 801751,
+                  "parent_grape_id": null
+                },
+                {
+                  "id": 14,
+                  "name": "Pinot Noir",
+                  "seo_name": "pinot-noir",
+                  "has_detailed_info": true,
+                  "wines_count": 572334,
+                  "parent_grape_id": null
+                },
+                {
+                  "id": 5,
+                  "name": "Chardonnay",
+                  "seo_name": "chardonnay",
+                  "has_detailed_info": true,
+                  "wines_count": 604208,
+                  "parent_grape_id": null
+                }
+              ]
+            },
+            "wine_type_id": 1,
+            "food": [
+              {
+                "id": 4,
+                "name": "Beef",
+                "background_image": {
+                  "location": "//images.vivino.com/backgrounds/foods/4_beef.png",
+                  "variations": {
+                    "small": "//images.vivino.com/backgrounds/foods/thumbs/4_beef_932x810.png"
+                  }
+                },
+                "seo_name": "beef"
+              },
+              {
+                "id": 8,
+                "name": "Lamb",
+                "background_image": {
+                  "location": "//images.vivino.com/backgrounds/foods/8_lamb.png",
+                  "variations": {
+                    "small": "//images.vivino.com/backgrounds/foods/thumbs/8_lamb_932x810.png"
+                  }
+                },
+                "seo_name": "lamb"
+              },
+              {
+                "id": 11,
+                "name": "Game (deer, venison)",
+                "background_image": {
+                  "location": "//images.vivino.com/backgrounds/foods/11_venison.png",
+                  "variations": {
+                    "small": "//images.vivino.com/backgrounds/foods/thumbs/11_venison_932x810.png"
+                  }
+                },
+                "seo_name": "game"
+              }
+            ],
+            "grapes": null,
+            "region": {
+              "id": 299,
+              "name": "Texas",
+              "name_en": "",
+              "seo_name": "texas",
+              "country": {
+                "code": "us",
+                "name": "United States",
+                "native_name": "United States",
+                "seo_name": "united-states",
+                "currency": {
+                  "code": "USD",
+                  "name": "US Dollars",
+                  "prefix": "$",
+                  "suffix": null
+                },
+                "regions_count": 364,
+                "users_count": 12739842,
+                "wines_count": 208993,
+                "wineries_count": 28363,
+                "most_used_grapes": [
+                  {
+                    "id": 2,
+                    "name": "Cabernet Sauvignon",
+                    "seo_name": "cabernet-sauvignon",
+                    "has_detailed_info": true,
+                    "wines_count": 801751,
+                    "parent_grape_id": null
+                  },
+                  {
+                    "id": 14,
+                    "name": "Pinot Noir",
+                    "seo_name": "pinot-noir",
+                    "has_detailed_info": true,
+                    "wines_count": 572334,
+                    "parent_grape_id": null
+                  },
+                  {
+                    "id": 5,
+                    "name": "Chardonnay",
+                    "seo_name": "chardonnay",
+                    "has_detailed_info": true,
+                    "wines_count": 604208,
+                    "parent_grape_id": null
+                  }
+                ]
+              },
+              "parent_id": null,
+              "background_image": null,
+              "class": {
+                "typecast_map": {
+                  "background_image": {},
+                  "class": {}
+                }
+              },
+              "statistics": {
+                "wineries_count": 506,
+                "wines_count": 5824,
+                "sub_regions_count": 9,
+                "parent_regions_count": 0
+              }
+            },
+            "parent_style_id": 482,
+            "hidden": false,
+            "statistics": {
+              "wines_count": 2564,
+              "aggregated_wines_count": 3352
+            },
+            "vintage_mask": "1<",
+            "baseline_structure": {
+              "acidity": 3,
+              "fizziness": null,
+              "intensity": 4,
+              "sweetness": 1.5,
+              "tannin": 4
+            }
+          }
+        },
+        "vintage_year": 2019
+      }
+    ],
+    "recommended_vintages": [
+      {
+        "vintage": {
+          "id": 170239332,
+          "seo_name": "becker-vineyards-tallent-vineyard-barbera-2019",
+          "name": "Becker Vineyards Tallent Vineyard Barbera 2019",
+          "statistics": {
+            "status": "Normal",
+            "ratings_count": 62,
+            "ratings_average": 4.1,
+            "labels_count": 303,
+            "reviews_count": 24
+          },
+          "year": 2019,
+          "grapes": null,
+          "has_valid_ratings": true
+        },
+        "type": "best_user_rated",
+        "highlight_icon": "https://images.vivino.com/highlights/icon/best_user_rated.svg",
+        "price": null
+      }
+    ],
+    "prices_and_availabilities": [],
+    "price_range": {
+      "currency": {
+        "code": "CAD",
+        "name": "Canadian Dollars",
+        "prefix": "$",
+        "suffix": null
+      },
+      "price_range": {
+        "minimum": 0,
+        "maximum": 500,
+        "currency_code": "CAD"
+      },
+      "defaults": {
+        "minimum": 10,
+        "maximum": 60,
+        "currency_code": "CAD"
+      }
+    },
+    "subtotal_price": null
+  }
+}

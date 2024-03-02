@@ -4,7 +4,7 @@ import { ZodObject, z, type ZodSchema, type ZodTypeAny, ZodArray } from "zod";
 import {
   WineInfoRecordSchema,
   StylestatsRecordSchema,
-} from "./pocketbase-types";
+} from "$lib/WineTypes.js";
 // import { renderDate } from "$lib/utils/date";
 
 // export const string2PrettyDate = z

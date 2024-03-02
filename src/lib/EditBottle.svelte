@@ -14,7 +14,7 @@
   import type {
     UsersResponse as User,
     BottlesDBResponse,
-  } from "$lib/pocketbase-types";
+  } from "$lib/WineTypes.js";
   import { cn } from "$lib/utils";
   import {
     CalendarDate,

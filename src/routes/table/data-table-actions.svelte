@@ -25,7 +25,7 @@
   import { writable, type Writable } from "svelte/store";
   import { superForm, type SuperForm } from "sveltekit-superforms/client";
   import { number, z } from "zod";
-
+  import { type UsersResponse } from "$lib/WineTypes.js";
   export let dialogBottle: Writable<string>;
   export let BottleId: string;
   export let dataStore: Writable<BottleRecordsTableSchema>;
@@ -33,7 +33,7 @@
     rowDataId: string,
     newValue: BottleRecordTableSchema | null
   ) => void;
-  const user: Writable<User> = getContext("user");
+  const user: Writable<UsersResponse> = getContext("user");
   let openDDL = writable<boolean>(false);
   // let editBottleDialog2 = writable<boolean>(false);
   let editBottleDialog2 = false;

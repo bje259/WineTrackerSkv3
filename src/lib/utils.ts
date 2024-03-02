@@ -147,3 +147,36 @@ export const lazyLoad = (image: HTMLImageElement, src: string) => {
     },
   };
 };
+
+export async function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export class PO {
+  #dbg: boolean;
+  constructor(debug: boolean = false) {
+    this.#dbg = debug;
+  }
+  public p(...args: any[]) {
+    // console.log("Debug mode is:", this.#dbg);
+    if (this.#dbg) p(...args);
+  }
+  public pt(...args: any[]) {
+    if (this.#dbg) pt(...args);
+  }
+  public on() {
+    this.#dbg = true;
+  }
+  public onP(...args: any[]) {
+    p(...args);
+  }
+  public onPT(...args: any[]) {
+    pt(...args);
+  }
+  public off() {
+    this.#dbg = false;
+  }
+  public toString() {
+    return `PO: debug is ${this.#dbg}`;
+  }
+}

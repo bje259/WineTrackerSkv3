@@ -31,10 +31,11 @@
   import type { SuperValidated, ZodValidation } from "sveltekit-superforms";
   import editBottlePage from "./+page.svelte";
   import Alert from "$components/ui/alert/alert.svelte";
+  import type { UsersRecord, UsersResponse } from "$lib/WineTypes.js";
   import { writable } from "svelte/store";
   import type { SuperForm } from "sveltekit-superforms/client";
   export let data: PageData;
-  const user: Writable<User> = getContext("user");
+  const user: Writable<UsersResponse> = getContext("user");
   let bottles = data.bottlesDB;
   let bottles2: BottleRecordsSchema = [];
   const debug: Writable<boolean> = getContext("debug");

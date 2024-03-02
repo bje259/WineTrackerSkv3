@@ -69,6 +69,8 @@
     "@langchain/openai": "^0.0.14",
     "@skeletonlabs/skeleton": "^2.8.0",
     "@sveltejs/adapter-vercel": "^5.1.0",
+    "@trpc/client": "^10.45.1",
+    "@trpc/server": "^10.45.1",
     "ai": "^2.2.33",
     "apify-client": "^2.8.6",
     "bits-ui": "^0.16.0",
@@ -83,6 +85,7 @@
     "neo4j-driver": "^5.17.0",
     "openai": "^4.26.0",
     "playwright": "^1.41.2",
+    "trpc-sveltekit": "^3.5.26",
     "zod-to-ts": "^1.2.0"
   },
   "resolutions": {

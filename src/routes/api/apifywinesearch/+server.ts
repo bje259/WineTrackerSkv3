@@ -1,5 +1,5 @@
 import type { RequestHandler } from "./$types";
-import { p, pt } from "$lib/utils.js";
+import { p, pt, PO } from "$lib/utils.js";
 import { error, json } from "@sveltejs/kit";
 import { APIFY_TOKEN } from "$env/static/private";
 import {
@@ -8,8 +8,9 @@ import {
   type DatasetClient,
   type Dataset,
 } from "apify-client";
-
+let log = new PO();
 export const DELETE: RequestHandler = async ({ locals, fetch }) => {
+  log = locals.log || log;
   const client = new ApifyClient({
     token: APIFY_TOKEN,
   });
@@ -17,7 +18,7 @@ export const DELETE: RequestHandler = async ({ locals, fetch }) => {
   //   // await client.dataset("bje259~remoteWineResults3").delete();
   //   await client.dataset("bje259~remoteWineInputData").delete();
   // } catch (e) {
-  //   p("error: ", e);
+  //   log.p("error: ", e);
   //   // return error(500, "Internal Server Error");
   // }
 
@@ -29,7 +30,7 @@ export const DELETE: RequestHandler = async ({ locals, fetch }) => {
       .getOrCreate("remoteWineResults3");
     return json(createDataset);
   } catch (e) {
-    p("createDataset error: ", e);
+    log.p("createDataset error: ", e);
     return error(500, "Internal Server Error");
   }
 
@@ -37,8 +38,9 @@ export const DELETE: RequestHandler = async ({ locals, fetch }) => {
 };
 
 export const GET: RequestHandler = async ({ locals, url, fetch }) => {
+  log = locals.log || log;
   const params = url.searchParams.get("searchTerms") || "Malbec";
-  p("params: ", params);
+  log.p("params: ", params);
   const client = new ApifyClient({
     token: APIFY_TOKEN,
   });
@@ -54,7 +56,7 @@ export const GET: RequestHandler = async ({ locals, url, fetch }) => {
   //     }
   //   );
   //   const runResp = await run.json();
-  //   p("runResp: ", runResp);
+  //   log.p("runResp: ", runResp);
   //   return json(runResp);
   // } catch (e) {
   //   return error(500, "Internal Server Error");
@@ -62,9 +64,9 @@ export const GET: RequestHandler = async ({ locals, url, fetch }) => {
   try {
     // await client.dataset("bje259~remoteWineResults3").delete();
     await client.dataset("bje259/remoteWineInputData").delete();
-    // p("skip delete");
+    // log.p("skip delete");
   } catch (e) {
-    p("error: ", e);
+    log.p("error: ", e);
     // return error(500, "Internal Server Error");
   }
   await sleep(5000);
@@ -74,12 +76,15 @@ export const GET: RequestHandler = async ({ locals, url, fetch }) => {
       .getOrCreate("remoteWineInputData");
     // return json(createDataset);
   } catch (e) {
-    p("createDataset error: ", e);
+    log.p("createDataset error: ", e);
     return error(500, "Internal Server Error");
   }
   const testInput = [
     {
-      Search_Term: "Becker Vineyards Reserve Merlot",
+      Search_Term: "Becker Vineyards Primavera",
+    },
+    {
+      Search_Term: "Irwin Family Tempranillo Piedra Rojo Block 22",
     },
   ];
   await waitForNewDataset(client, "remoteWineInputData");
@@ -97,7 +102,7 @@ export const GET: RequestHandler = async ({ locals, url, fetch }) => {
     //   }
     // );
     // const runResp = await run.json();
-    // p("runResp: ", runResp);
+    // log.p("runResp: ", runResp);
     // return json({ runRes: runResp, items: items });
     const { items } = await client
       .dataset("bje259/remoteWineInputData")
@@ -111,7 +116,7 @@ export const GET: RequestHandler = async ({ locals, url, fetch }) => {
   //   "https://api.apify.com/v2/datasets/aoW9MflHbcOqnsYKv/items"
   // );
   // const data = await response.json();
-  // p("data: ", data);
+  // log.p("data: ", data);
 
   // return json(data);
 };
@@ -120,10 +125,13 @@ export const GET: RequestHandler = async ({ locals, url, fetch }) => {
  * @param {RequestHandler} { locals, request, fetch }
  * @returns {Response}
  */
-export const POST: RequestHandler = async ({ locals, request, fetch }) => {
+export const POST: RequestHandler = async ({ locals, request, fetch, url }) => {
+  log = locals.log || log;
   const client = new ApifyClient({
     token: APIFY_TOKEN,
   });
+  const params = url.searchParams.get("searchTerms") || "Malbec";
+  log.p("params: ", params);
   const currentDatasets = await client.datasets().list();
   if (
     currentDatasets.items.find((item) => item.name === "remoteWineInputData")
@@ -132,26 +140,31 @@ export const POST: RequestHandler = async ({ locals, request, fetch }) => {
       // await client.dataset("bje259~remoteWineResults3").delete();
       await client.dataset("bje259/remoteWineInputData").delete();
     } catch (e) {
-      p("error: ", e);
+      log.p("error: ", e);
       // return error(500, "Internal Server Error");
     }
   }
   //first request to get the current dataset id
-  //const body = await request.json();
+  // const body = await request.json();
   //////testing
-  const body = [
-    {
-      Search_Term: "Becker Vineyards Reserve Merlot",
-    },
-  ];
-
-  p("body: ", body);
+  // const body = [
+  //   {
+  //     Search_Term: "Becker Vineyards Reserve Merlot",
+  //   },
+  // ];
+  const searchTerms = params.split(",");
+  const body = searchTerms.map((term) => {
+    return {
+      Search_Term: term,
+    };
+  });
+  log.p("body: ", body);
   if (Array.isArray(body)) {
-    p("body is array");
+    log.p("body is array");
   } else {
     return error(400, "Bad Request, not an array");
   }
-  p("jsonStringified: ", JSON.stringify(body));
+  log.p("jsonStringified: ", JSON.stringify(body));
 
   // let currentID = "0";
   // try {
@@ -163,7 +176,7 @@ export const POST: RequestHandler = async ({ locals, request, fetch }) => {
   //   );
   //   // get current data for input
   //   const currDataJson = await currData.json();
-  //   p("currDataJson: ", currDataJson);
+  //   log.p("currDataJson: ", currDataJson);
   //   if (Array.isArray(currDataJson.data.items)) {
   //     currentID = currDataJson.data.items.find(
   //       (item: any) => item.name === "remoteWineInputData"
@@ -172,11 +185,11 @@ export const POST: RequestHandler = async ({ locals, request, fetch }) => {
   //     return error(500, "Internal Server Error");
   //   }
   // } catch (e) {
-  //   p("currData error: ", e);
+  //   log.p("currData error: ", e);
   //   return error(500, "Internal Server Error");
   // }
 
-  // p("currentID: ", currentID);
+  // log.p("currentID: ", currentID);
   //delete current input data
   // try {
   //   // const deleteResp = await fetch(
@@ -187,7 +200,7 @@ export const POST: RequestHandler = async ({ locals, request, fetch }) => {
   //   // );
   //   await client.dataset("bje259/remoteWineInputData").delete();
   // } catch (e) {
-  //   p("deleteResp error: ", e);
+  //   log.p("deleteResp error: ", e);
   //   return error(500, "Internal Server Error");
   // }
   //create new input data dataset
@@ -217,12 +230,12 @@ export const POST: RequestHandler = async ({ locals, request, fetch }) => {
   //     },
   //   });
   // } catch (e) {
-  //   p("createDataset error: ", e);
+  //   log.p("createDataset error: ", e);
   //   return error(500, "Internal Server Error");
   // }
 
   // const createDatasetResp = await createDataset.json();
-  // p("createDatasetResp: ", createDatasetResp);
+  // log.p("createDatasetResp: ", createDatasetResp);
   // const newInputId = createDataset.id;
   // //update new input data
   // const updateDataset = await fetch(
@@ -237,7 +250,7 @@ export const POST: RequestHandler = async ({ locals, request, fetch }) => {
   // );
   // try {
   //   const updateInputData = await updateDataset.json();
-  //   p("updateInputData: ", updateInputData);
+  //   log.p("updateInputData: ", updateInputData);
   //   // return json(updateInputData);
   // } catch (e) {
   //   return error(500, "Internal Server Error");
@@ -247,38 +260,39 @@ export const POST: RequestHandler = async ({ locals, request, fetch }) => {
   let createDataset: Dataset;
   try {
     createDataset = await client.datasets().getOrCreate("remoteWineInputData");
-    p("createDataset: ", createDataset);
+    log.p("createDataset: ", createDataset);
     // return json(createDataset);
   } catch (e) {
-    p("createDataset error: ", e);
+    log.p("createDataset error: ", e);
     return error(500, "Internal Server Error");
   }
 
   try {
     await waitForNewDataset(client, "remoteWineInputData");
-    p(
+    log.p(
       "Trying: ",
       `/v2/datasets/bje259/remoteWineInputData.pushItems(${JSON.stringify(body)})`
     );
     // const listDS = await client.datasets().list();
-    // p("listDS: ", listDS);
+    // log.p("listDS: ", listDS);
 
     // createDataset = await client.datasets().getOrCreate("remoteWineInputData");
-    // p("createDataset: ", createDataset);
+    // log.p("createDataset: ", createDataset);
     // return json(createDataset);
     await client.dataset("bje259/remoteWineInputData").pushItems(body);
   } catch (e) {
-    p("pushItems error: ", e);
+    log.p("pushItems error: ", e);
     return error(500, "Internal Server Error");
   }
 
   await sleep(5000);
   const check = await client.dataset("bje259/remoteWineInputData").listItems();
-  p("check: ", check);
+  log.p("check: ", check);
   //format input for run
   const inputFormatted = {
     searchTermsUrl: `https://api.apify.com/v2/datasets/bje259~remoteWineInputData/items?token=${APIFY_TOKEN}&clean=true&format=json`,
     maxCrawlPages: 50,
+    noDetail: false,
   };
   //run the actor
   const myActor = client.actor("bje259/winesearch2");
@@ -297,7 +311,7 @@ export const POST: RequestHandler = async ({ locals, request, fetch }) => {
     // );
     runResp = run;
     // const runResp = await run.json();
-    p("runResp: ", runResp);
+    log.p("runResp: ", runResp);
     // return json(runResp);
   } catch (e) {
     return error(500, "Internal Server Error");
@@ -316,13 +330,13 @@ export const POST: RequestHandler = async ({ locals, request, fetch }) => {
   //     }
   //   );
   //   const runResp = await run.json();
-  //   p("runResp: ", runResp);
+  //   log.p("runResp: ", runResp);
   //   return json(runResp);
   // } catch (e) {
   //   return error(500, "Internal Server Error");
   // }
   const results = await client.dataset("bje259/remoteWineResults3").listItems();
-  p("results: ", results);
+  log.p("results: ", results);
 
   client.dataset("bje259/remoteWineInputData").delete();
   return json(results);
@@ -344,15 +358,15 @@ async function waitForNewDataset(
     try {
       dataset = await client.dataset(`bje259/${datasetName}`).get();
       if (dataset) {
-        p("done waiting!");
+        log.p("done waiting!");
         break;
       } else {
-        p("waiting 5 seconds for dataset");
+        log.p("waiting 5 seconds for dataset");
         await sleep(5000);
       }
       // return dataset;
     } catch (e) {
-      p("waitForNewDataset error: ", e);
+      log.p("waitForNewDataset error: ", e);
       await sleep(5000);
     }
   }

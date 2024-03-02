@@ -5,7 +5,7 @@ import type { PageServerLoad, Actions } from "./$types";
 import { loginUserDto } from "$lib/Schemas";
 import { ClientResponseError } from "pocketbase";
 const validAuthProviders = ["google"];
-import type { PageData } from "../$types";
+import type { PageData } from "./$types";
 import type { Admin } from "$lib/types";
 import { setFlash } from "sveltekit-flash-message/server";
 import { redirect } from "sveltekit-flash-message/server";
@@ -15,7 +15,10 @@ import {
   ADMIN_USER_ID,
   USER_ADMIN_ID,
 } from "$env/static/private";
-
+import { z } from "zod";
+import { UsersRecordSchema } from "$lib/WineTypes.js";
+process.env.ADMIN_EMAIL = ADMIN_EMAIL;
+process.env.ADMIN_PASSWORD = ADMIN_PASSWORD;
 export const load = async ({ locals, parent, cookies }) => {
   if (locals.pb.authStore.isValid) {
     console.log("already logged in");
@@ -72,8 +75,8 @@ export const actions: Actions = {
         } as const;
         redirect(303, "/", message, cookies);
       }
-      if (locals.pb.authStore.isValid)
-        locals.user = {
+      if (locals.pb.authStore.isValid) {
+        const tempuser = UsersRecordSchema.parse({
           username: locals.pb.authStore?.model?.username,
           email: locals.pb.authStore?.model?.email,
           id: locals.pb.authStore?.model?.id,
@@ -83,7 +86,10 @@ export const actions: Actions = {
           updated: locals.pb.authStore?.model?.updated,
           emailVisibility: locals.pb.authStore?.model?.emailVisibility,
           avatar: locals.pb.authStore?.model?.avatar,
-        };
+          UserRoles: locals.pb.authStore?.model?.UserRoles,
+        });
+        locals.user = tempuser;
+      }
     } catch (err) {
       console.log("Error at catch bottom login: ", err);
       const e = err as ClientResponseError;
@@ -103,7 +109,7 @@ export const actions: Actions = {
     }
     const message = {
       type: "success",
-      message: "Logged successfully!",
+      message: "Logged In successfully!",
     } as const;
     throw redirect(303, "/", message, cookies);
   },

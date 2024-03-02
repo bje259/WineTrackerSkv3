@@ -12,13 +12,15 @@ import {
 import { Document } from "langchain/document";
 import SummaryResults from "../../SummaryWineInfoData.json";
 import { p, pt } from "$lib/utils";
-
+// console.log(process.env.NEO4J_PASSWORD);
 // Configuration object for Neo4j connection and other related settings
 const config = {
-  url: "neo4j+s://347fd78c.databases.neo4j.io", // URL for the Neo4j instance
+  // url: "neo4j+s://347fd78c.databases.neo4j.io", // URL for the Neo4j instance
+  url: "neo4j://localhost:7687",
   username: "neo4j", // Username for Neo4j authentication
-  password: process.env.NEO4J_PASSWORD ?? "", // Password for Neo4j authentication
-  indexName: "vector", // Name of the vector index
+  password: process.env.NEO4J_PASSWORD ?? "",
+  database: "winedb", // Password for Neo4j authentication
+  indexName: "wine_embed", //"vector", // Name of the vector index
   keywordIndexName: "keyword", // Name of the keyword index if using hybrid search
   searchType: "vector" as const, // Type of search (e.g., vector, hybrid)
   nodeLabel: "ChunkTest", // Label for the nodes in the graph
@@ -51,7 +53,7 @@ const neo4jVectorIndex = await Neo4jVectorStore.fromExistingIndex(
   config
 );
 
-const results = await neo4jVectorIndex.similaritySearch("Saint-Émilion", 3);
+const results = await neo4jVectorIndex.similaritySearch("Barbera", 3);
 try {
   const jsonresults = await Promise.all(
     results.map(async (result) => {
