@@ -2,10 +2,10 @@ import type { User, Admin } from "$lib/types";
 import { redirect } from "sveltekit-flash-message/server";
 import type { LayoutServerLoad } from "./$types";
 import { loadFlash } from "sveltekit-flash-message/server";
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 import { createContext } from "$lib/trpc/context";
 import { router, createCallerFactory } from "$lib/trpc/router";
-dotenv.config();
+// dotenv.config();
 import { PO } from "$lib/utils";
 
 import {
