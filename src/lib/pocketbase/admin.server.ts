@@ -1,5 +1,5 @@
 import { PUBLIC_PB_HOST } from "$env/static/public";
-import { USER_ADMIN_ID, ADMIN_PASSWORD } from "$env/static/private";
+import { ADMIN_EMAIL, ADMIN_PASSWORD } from "$env/static/private";
 import Pocketbase from "pocketbase";
 
 /**
@@ -7,7 +7,7 @@ import Pocketbase from "pocketbase";
  */
 export async function pbAsAdmin() {
   const pb = new Pocketbase(PUBLIC_PB_HOST);
-  await pb.admins.authWithPassword(USER_ADMIN_ID, ADMIN_PASSWORD);
+  await pb.admins.authWithPassword(ADMIN_EMAIL, ADMIN_PASSWORD);
 
   if (pb.authStore.isValid) {
     return pb;
