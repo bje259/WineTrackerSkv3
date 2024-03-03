@@ -1,0 +1,108 @@
+diff --git a/node_modules/apify-client/dist/http_client.js b/node_modules/apify-client/dist/http_client.js
+index 470a3f6..46f4b57 100644
+--- a/node_modules/apify-client/dist/http_client.js
++++ b/node_modules/apify-client/dist/http_client.js
+@@ -2,7 +2,7 @@
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.HttpClient = void 0;
+ const tslib_1 = require("tslib");
+-const os_1 = tslib_1.__importDefault(require("os"));
++// const os_1 = tslib_1.__importDefault(require("os"));
+ const consts_1 = require("@apify/consts");
+ const agentkeepalive_1 = tslib_1.__importDefault(require("agentkeepalive"));
+ const async_retry_1 = tslib_1.__importDefault(require("async-retry"));
+@@ -130,8 +130,9 @@ class HttpClient {
+         if ((0, utils_1.isNode)()) {
+             // Works only in Node. Cannot be set in browser
+             const isAtHome = !!process.env[consts_1.APIFY_ENV_VARS.IS_AT_HOME];
+-            const userAgent = `ApifyClient/${version} (${os_1.default.type()}; Node/${process.version}); isAtHome/${isAtHome}`;
+-            this.axios.defaults.headers['User-Agent'] = userAgent;
++            // const userAgent = `ApifyClient/${version} (${os.type()}; Node/${process.version}); isAtHome/${isAtHome}`;
++            this.axios.defaults.headers['User-Agent'] = `ApifyClient/${version}; Node`;
++            // this.axios.defaults.headers['User-Agent'] = userAgent;
+         }
+         // Attach Authorization header for all requests if token was provided
+         if (token) {
+diff --git a/node_modules/apify-client/dist/utils.js b/node_modules/apify-client/dist/utils.js
+index 46d7d84..4235ff9 100644
+--- a/node_modules/apify-client/dist/utils.js
++++ b/node_modules/apify-client/dist/utils.js
+@@ -2,8 +2,8 @@
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.cast = exports.PaginationIterator = exports.getVersionData = exports.isStream = exports.isBuffer = exports.isNode = exports.sliceArrayByByteLength = exports.maybeGzipValue = exports.stringifyWebhooksToBase64 = exports.parseDateFields = exports.catchNotFoundOrThrow = exports.pluckData = void 0;
+ const tslib_1 = require("tslib");
+-const util_1 = tslib_1.__importDefault(require("util"));
+-const zlib_1 = tslib_1.__importDefault(require("zlib"));
++// const util_1 = tslib_1.__importDefault(require("util"));
++// const zlib_1 = tslib_1.__importDefault(require("zlib"));
+ const ow_1 = tslib_1.__importDefault(require("ow"));
+ const NOT_FOUND_STATUS_CODE = 404;
+ const RECORD_NOT_FOUND_TYPE = 'record-not-found';
+@@ -90,26 +90,58 @@ function stringifyWebhooksToBase64(webhooks) {
+     return btoa(String.fromCharCode(...uint8Array));
+ }
+ exports.stringifyWebhooksToBase64 = stringifyWebhooksToBase64;
+-let gzipPromise;
+-if (isNode())
+-    gzipPromise = util_1.default.promisify(zlib_1.default.gzip);
++// let gzipPromise;
++// if (isNode())
++//     gzipPromise = util_1.default.promisify(zlib_1.default.gzip);
+ /**
+  * Gzip provided value, otherwise returns undefined.
+  */
+ async function maybeGzipValue(value) {
+-    if (!isNode())
+-        return;
+-    if (typeof value !== 'string' && !Buffer.isBuffer(value))
++    // if (!isNode())
++    //     return;
++    // if (typeof value !== 'string' && !Buffer.isBuffer(value))
++    if (typeof value !== 'string' && !(value instanceof Uint8Array))
+         return;
++    const encoder = new TextEncoder();
++    const encoded = typeof value === 'string' ? encoder.encode(value) : value;
++    if (encoded.byteLength < MIN_GZIP_BYTES)
++        return encoded;
++    const stream = toStream(encoded);
++    if (typeof CompressionStream !== 'undefined') {
++        const compressionStream = stream.pipeThrough(new CompressionStream('gzip'));
++        const reader = compressionStream === null || compressionStream === void 0 ? void 0 : compressionStream.getReader();
++        let result = new Uint8Array();
++        while (true) {
++            const { done, value } = (await (reader === null || reader === void 0 ? void 0 : reader.read())) || {};
++            if (done)
++                break;
++            const tmp = new Uint8Array(result.length + value.length);
++            tmp.set(result);
++            tmp.set(value, result.length);
++            result = tmp;
++        }
++        return result;
++
+     // Request compression is not that important so let's
+     // skip it instead of throwing for unsupported types.
+-    const areDataLargeEnough = Buffer.byteLength(value) >= MIN_GZIP_BYTES;
+-    if (areDataLargeEnough) {
+-        return gzipPromise(value);
++    // const areDataLargeEnough = Buffer.byteLength(value) >= MIN_GZIP_BYTES;
++    // if (areDataLargeEnough) {
++    //     return gzipPromise(value);
+     }
+     return undefined;
+ }
+ exports.maybeGzipValue = maybeGzipValue;
++function toStream(input) {
++    const stream = new ReadableStream({
++        start(controller) {
++            controller.enqueue(input);
++            controller.close();
++        },
++    });
++    return stream;
++    // eslint-disable-next-line no-confusing-arrow
++}
++
+ /**
+  * Helper function slice the items from array to fit the max byte length.
+  */
