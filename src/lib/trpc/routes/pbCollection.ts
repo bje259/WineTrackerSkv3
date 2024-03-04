@@ -8,6 +8,9 @@ import {
   protectedProcedure,
   publicProcedure,
   middleware,
+  adminProcedure,
+  overrideProcedure,
+  override,
 } from "$lib/trpc/middleware";
 import { p, pt, PO } from "$lib/utils.js";
 import type {
@@ -84,7 +87,7 @@ const getRecordListInputSchema = z.object({
 });
 
 export const pbCollection = t.router({
-  getList: publicProcedure.use(logger).query(async ({ ctx }) => {
+  getList: overrideProcedure.use(logger).query(async ({ ctx }) => {
     try {
       const collection = await ctx.pb.collections.getFullList<Collections>();
       return collection;
@@ -97,7 +100,7 @@ export const pbCollection = t.router({
       }
     }
   }),
-  getRecords: publicProcedure
+  getRecords: adminProcedure
     .use(logger)
     .input((input) => {
       try {

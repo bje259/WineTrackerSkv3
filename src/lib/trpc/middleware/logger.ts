@@ -16,6 +16,6 @@ export const logger = t.middleware(async ({ path, ctx, type, next }) => {
   if (browser) log.p(`${type} ${path} starting... ${metadata}`);
   const result = await next();
   const ms = Date.now() - start;
-  log.p(`${result.ok ? "OK" : "ERR"} ${type} ${path} - ${ms}ms`);
+  log.onP(`${result.ok ? "OK" : "ERR"} ${type} ${path} - ${ms}ms`);
   return result;
 });

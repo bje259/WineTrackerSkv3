@@ -8,10 +8,11 @@ import {
   middleware,
   publicProcedure,
   protectedProcedure,
+  adminProcedure,
 } from "../middleware/";
 const { auth, logger } = middleware;
 
-export const testMatchRoute = protectedProcedure
+export const testMatchRoute = adminProcedure
   .use(logger)
   .query(async ({ ctx }) => {
     const client = new ApifyClient({

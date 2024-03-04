@@ -3,7 +3,12 @@ import type { Context } from "$lib/trpc/context";
 import { sleep } from "$lib/utils";
 import { t } from "$lib/trpc/t";
 import middleware from "$lib/trpc/middleware";
-import { protectedProcedure } from "$lib/trpc/middleware";
+import {
+  protectedProcedure,
+  adminProcedure,
+  overrideProcedure,
+  publicProcedure,
+} from "$lib/trpc/middleware";
 import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 import { z } from "zod";
 // import { APIFY_TOKEN } from "$env/static/private";
@@ -15,20 +20,17 @@ import { testMatchRoute } from "./routes/testMatchRoute";
 import { p, pt } from "$lib/utils";
 import { pbCollection } from "$lib/trpc/routes/pbCollection";
 // export const t = initTRPC.context<Context>().create();
-const { auth, logger, admin } = middleware;
+const { auth, logger, admin, override } = middleware;
 
 // const publicProcedure = t.procedure;
 
 // const protectedProcedure = publicProcedure.use(auth);
 
 export const router = t.router({
-  greeting: protectedProcedure
-    .use(logger)
-    .use(admin)
-    .query(async ({ ctx: { userId } }) => {
-      await sleep(500); // 👈 simulate an expensive operation
-      return `Hello,${userId}. tRPC v10 @ ${new Date().toLocaleTimeString()}`;
-    }),
+  greeting: publicProcedure.use(logger).query(async ({ ctx: { userId } }) => {
+    await sleep(500); // 👈 simulate an expensive operation
+    return `Hello,${userId}. tRPC v10 @ ${new Date().toLocaleTimeString()}`;
+  }),
   testMatchRoute: testMatchRoute,
   pbCollection: pbCollection,
 });

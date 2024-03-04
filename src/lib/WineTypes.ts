@@ -845,7 +845,7 @@ export async function convertFulltoWID(
   try {
     validateData(dataKey, styleKey, recommendedVintages, imageLoc, code);
   } catch (error) {
-    log.p("error", error);
+    log.p("WineTypes.convertFulltoWID error", error);
     throw new Error(error as string);
   }
   let temp: WineInfoDataRecord = {} as WineInfoDataRecord;
@@ -866,7 +866,7 @@ export async function convertFulltoWID(
       temp as WineInfoDataRecord
     );
   } catch (error) {
-    log.p("error", error);
+    log.p("WineTypes.convertFulltoWID error", error);
     throw new Error(error as string);
   }
   // resultObj = validateWineType<WineInfoDataRecord>(

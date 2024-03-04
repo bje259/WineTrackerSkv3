@@ -9,16 +9,16 @@ import type { PageData } from "./$types";
 import type { Admin } from "$lib/types";
 import { setFlash } from "sveltekit-flash-message/server";
 import { redirect } from "sveltekit-flash-message/server";
-import {
-  ADMIN_EMAIL,
-  ADMIN_PASSWORD,
-  ADMIN_USER_ID,
-  USER_ADMIN_ID,
-} from "$env/static/private";
+// import {
+//   ADMIN_EMAIL,
+//   ADMIN_PASSWORD,
+//   ADMIN_USER_ID,
+//   USER_ADMIN_ID,
+// } from "$env/static/private";
 import { z } from "zod";
 import { UsersRecordSchema } from "$lib/WineTypes.js";
-process.env.ADMIN_EMAIL = ADMIN_EMAIL;
-process.env.ADMIN_PASSWORD = ADMIN_PASSWORD;
+// process.env.ADMIN_EMAIL = ADMIN_EMAIL;
+// process.env.ADMIN_PASSWORD = ADMIN_PASSWORD;
 export const load = async ({ locals, parent, cookies }) => {
   if (locals.pb.authStore.isValid) {
     console.log("already logged in");
@@ -64,17 +64,17 @@ export const actions: Actions = {
       //   locals.pb.authStore.clear();
       //   throw new Error("Not Verified");
       // }
-      if (locals.user?.id === ADMIN_USER_ID && locals.pb.authStore.isValid) {
-        console.log("logged in as user, setting admin");
-        await locals.pb.admins.authWithPassword(ADMIN_EMAIL, ADMIN_PASSWORD);
-        locals.admin = await locals.pb.admins.getOne<Admin>(USER_ADMIN_ID);
-        console.log("Layout Admin", locals.admin);
-        const message = {
-          type: "success",
-          message: "Logged in as admin",
-        } as const;
-        redirect(303, "/", message, cookies);
-      }
+      // if (locals.user?.id === ADMIN_USER_ID && locals.pb.authStore.isValid) {
+      //   console.log("logged in as user, setting admin");
+      //   await locals.pb.admins.authWithPassword(ADMIN_EMAIL, ADMIN_PASSWORD);
+      //   locals.admin = await locals.pb.admins.getOne<Admin>(USER_ADMIN_ID);
+      //   console.log("Layout Admin", locals.admin);
+      //   const message = {
+      //     type: "success",
+      //     message: "Logged in as admin",
+      //   } as const;
+      //   redirect(303, "/", message, cookies);
+      // }
       if (locals.pb.authStore.isValid) {
         const tempuser = UsersRecordSchema.parse({
           username: locals.pb.authStore?.model?.username,

@@ -36,10 +36,11 @@ export async function createContext(event: RequestEvent) {
     user: UsersRecord;
     admin?: Admin;
     log: PO;
+    userRoles?: Partial<UserRoleAssignmentsRecord>[];
   };
   const log = event?.locals?.log || defPO;
   // const log = defPO;
-  log.p("Test", log.toString());
+  // log.p("Test", log.toString());
   log.p("createContext event", event);
   log.p("PUBLIC_PB_HOST", PUBLIC_PB_HOST);
   event.locals.pb = new PocketBase(PUBLIC_PB_HOST) as TypedPocketBase;
@@ -122,9 +123,10 @@ export async function createReqContext(event: RequestEvent) {
   let reqCtx: Context;
   const log = event?.locals?.log || defPO;
   // const log = defPO;
-  event.locals.log = defPO;
+  // event.locals.log = defPO;
   try {
-    const Admin = AdminSchema.partial().parse(locals.admin);
+    let Admin: Admin | undefined;
+    if (locals.admin) Admin = AdminSchema.partial().parse(locals.admin);
     const User = UsersRecordSchema.parse(locals.user);
     const UserId = z.string().parse(locals.userId);
     const pb = locals.pb;
@@ -141,7 +143,7 @@ export async function createReqContext(event: RequestEvent) {
     };
     return reqCtx;
   } catch (error) {
-    log.p(error);
+    log.p("req context err: ", error);
     // throw new TRPCError({
     //   code: "INTERNAL_SERVER_ERROR",
     //   message: "Error parsing context",
